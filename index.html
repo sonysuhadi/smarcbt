@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#aaff00">
+    <title>Smart CBT</title>
+
+    <style>
+        :root {
+            --lime: #aaff00;
+            --lime-soft: #b6ff00;
+            --blue: #2948ed;
+            --blue-dark: #1836d0;
+            --red: #ff3030;
+            --red-dark: #df1d1d;
+            --text: #111;
+            --muted: #555;
+            --border: #dedede;
+            --radius: 24px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            min-height: 100%;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            min-height: 100vh;
+            min-height: 100dvh;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #fff;
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        button,
+        input {
+            font: inherit;
+        }
+
+        button {
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+
+        .page {
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .hero {
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding:
+                clamp(18px, 4vw, 42px)
+                max(16px, env(safe-area-inset-right))
+                max(28px, env(safe-area-inset-bottom))
+                max(16px, env(safe-area-inset-left));
+        }
+
+        /* =========================
+           ILLUSTRATION
+        ========================= */
+
+        .illustration {
+            width: min(470px, 90vw);
+            height: clamp(230px, 34vw, 330px);
+            min-height: 220px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .student {
+            width: 230px;
+            height: 220px;
+            position: relative;
+            transform: scale(clamp(.72, 1, 1));
+            transform-origin: center;
+        }
+
+        .head {
+            position: absolute;
+            width: 65px;
+            height: 75px;
+            border: 3px solid #222;
+            border-radius: 45% 45% 48% 48%;
+            background: #fff;
+            left: 92px;
+            top: 25px;
+            z-index: 3;
+        }
+
+        .hair {
+            position: absolute;
+            width: 72px;
+            height: 43px;
+            background: #222;
+            border-radius: 50% 55% 20% 20%;
+            left: 88px;
+            top: 8px;
+            transform: rotate(-8deg);
+            z-index: 4;
+        }
+
+        .body {
+            position: absolute;
+            width: 125px;
+            height: 145px;
+            border: 3px solid #222;
+            border-radius: 55px 55px 10px 10px;
+            background: #222;
+            left: 62px;
+            top: 90px;
+            z-index: 1;
+        }
+
+        .book {
+            position: absolute;
+            width: 115px;
+            height: 80px;
+            background: var(--lime);
+            border: 3px solid #222;
+            left: 20px;
+            top: 110px;
+            transform: rotate(-15deg);
+            z-index: 6;
+            border-radius: 5px;
+        }
+
+        .book::after {
+            content: "";
+            position: absolute;
+            width: 3px;
+            height: 75px;
+            background: #222;
+            left: 55px;
+            top: 0;
+        }
+
+        .arm {
+            position: absolute;
+            width: 100px;
+            height: 18px;
+            background: #fff;
+            border: 3px solid #222;
+            border-radius: 20px;
+            z-index: 7;
+        }
+
+        .arm.left {
+            left: 30px;
+            top: 155px;
+            transform: rotate(18deg);
+        }
+
+        .arm.right {
+            left: 115px;
+            top: 150px;
+            transform: rotate(-15deg);
+        }
+
+        .globe {
+            position: absolute;
+            width: 125px;
+            height: 125px;
+            border-radius: 50%;
+            background: var(--lime-soft);
+            border: 2px solid #222;
+            left: calc(50% - 170px);
+            top: 18px;
+            opacity: .9;
+        }
+
+        .globe::before,
+        .globe::after {
+            content: "";
+            position: absolute;
+            border: 2px solid #222;
+            border-radius: 50%;
+        }
+
+        .globe::before {
+            width: 55px;
+            height: 115px;
+            left: 32px;
+            top: 3px;
+        }
+
+        .globe::after {
+            width: 115px;
+            height: 50px;
+            left: 3px;
+            top: 35px;
+        }
+
+        .symbol {
+            position: absolute;
+            font-size: clamp(21px, 3vw, 27px);
+            color: #222;
+            font-family: Georgia, serif;
+        }
+
+        .s1 { left: 7%; top: 7%; }
+        .s2 { right: 16%; top: 9%; }
+        .s3 { right: 3%; top: 37%; }
+        .s4 { left: 12%; bottom: 12%; }
+        .s5 { right: 15%; bottom: 12%; }
+
+        /* =========================
+           EXAM CARD
+        ========================= */
+
+        .exam-card {
+            width: min(760px, 100%);
+            background: var(--lime);
+            border-radius: clamp(20px, 3vw, 30px);
+            padding: clamp(22px, 4vw, 32px);
+            box-shadow: 0 10px 25px rgba(0,0,0,.08);
+        }
+
+        .title {
+            text-align: center;
+            font-size: clamp(22px, 4vw, 38px);
+            font-weight: 900;
+            line-height: 1.12;
+            margin-bottom: clamp(20px, 3vw, 28px);
+        }
+
+        .label {
+            text-align: center;
+            font-size: clamp(16px, 2.4vw, 20px);
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .input-area {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto auto;
+            gap: 10px;
+            align-items: stretch;
+        }
+
+        .input-wrapper {
+            min-width: 0;
+        }
+
+        input {
+            width: 100%;
+            height: 62px;
+            border: 0;
+            border-radius: 13px;
+            padding: 0 18px;
+            font-size: 16px;
+            outline: none;
+            background: #fff;
+            box-shadow: inset 0 0 0 1px #ddd;
+            color: #111;
+        }
+
+        input::placeholder {
+            color: #888;
+        }
+
+        input:focus {
+            box-shadow: inset 0 0 0 3px #333;
+        }
+
+        .enter-button,
+        .cancel-button {
+            height: 62px;
+            min-width: 118px;
+            padding: 0 22px;
+            border: none;
+            border-radius: 13px;
+            color: #fff;
+            font-size: 17px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: transform .18s ease, background .18s ease;
+        }
+
+        .enter-button {
+            background: var(--blue);
+        }
+
+        .enter-button:hover {
+            background: var(--blue-dark);
+            transform: translateY(-2px);
+        }
+
+        .cancel-button {
+            background: var(--red);
+        }
+
+        .cancel-button:hover {
+            background: var(--red-dark);
+            transform: translateY(-2px);
+        }
+
+        .enter-button:active,
+        .cancel-button:active {
+            transform: scale(.98);
+        }
+
+        /* =========================
+           INFO
+        ========================= */
+
+        .info {
+            width: min(760px, 100%);
+            padding: 28px 4px 20px;
+        }
+
+        .info-title {
+            color: #e32222;
+            font-size: clamp(19px, 3vw, 24px);
+            font-weight: 900;
+            margin-bottom: 18px;
+        }
+
+        .features {
+            display: grid;
+            gap: 14px;
+        }
+
+        .feature {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: clamp(14px, 2vw, 16px);
+            line-height: 1.4;
+        }
+
+        .icon {
+            width: 52px;
+            min-width: 52px;
+            height: 52px;
+            border: 2px solid #555;
+            border-radius: 9px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            background: #fff;
+        }
+
+        /* =========================
+           MODAL
+        ========================= */
+
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.55);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            z-index: 100;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-box {
+            width: min(460px, 100%);
+            background: #fff;
+            border-radius: 22px;
+            padding: 28px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,.3);
+        }
+
+        .modal-box h2 {
+            margin-bottom: 12px;
+            font-size: 24px;
+        }
+
+        .modal-box p {
+            color: var(--muted);
+            line-height: 1.5;
+            margin-bottom: 22px;
+            font-size: 15px;
+        }
+
+        .modal-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .modal-buttons button {
+            height: 50px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .close-btn {
+            background: #eee;
+        }
+
+        .continue-btn {
+            background: var(--blue);
+            color: #fff;
+        }
+
+        /* =========================
+           TABLET
+        ========================= */
+
+        @media (min-width: 601px) and (max-width: 1024px) {
+            .hero {
+                max-width: 850px;
+            }
+
+            .illustration {
+                height: 290px;
+            }
+
+            .exam-card {
+                width: min(720px, 94vw);
+            }
+
+            .info {
+                width: min(720px, 94vw);
+            }
+        }
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 600px) {
+            .hero {
+                justify-content: flex-start;
+                padding-top: 10px;
+            }
+
+            .illustration {
+                width: 100%;
+                height: 225px;
+                min-height: 225px;
+            }
+
+            .student {
+                transform: scale(.72);
+            }
+
+            .globe {
+                width: 95px;
+                height: 95px;
+                left: calc(50% - 155px);
+                top: 18px;
+            }
+
+            .globe::before {
+                width: 42px;
+                height: 87px;
+                left: 25px;
+                top: 2px;
+            }
+
+            .globe::after {
+                width: 87px;
+                height: 38px;
+                left: 2px;
+                top: 27px;
+            }
+
+            .s1 { left: 3%; }
+            .s2 { right: 8%; }
+            .s3 { right: 0; }
+            .s4 { left: 5%; }
+            .s5 { right: 8%; }
+
+            .exam-card {
+                padding: 21px 16px 18px;
+                border-radius: 20px;
+            }
+
+            .title {
+                font-size: clamp(21px, 6.3vw, 29px);
+                margin-bottom: 20px;
+            }
+
+            .label {
+                font-size: 16px;
+            }
+
+            .input-area {
+                grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+                gap: 9px;
+            }
+
+            .input-wrapper {
+                grid-column: 1 / -1;
+            }
+
+            input {
+                height: 56px;
+                font-size: 15px;
+            }
+
+            .enter-button,
+            .cancel-button {
+                width: 100%;
+                min-width: 0;
+                height: 54px;
+                padding: 0 10px;
+                font-size: 16px;
+            }
+
+            .cancel-button {
+                grid-column: 1;
+                grid-row: 2;
+            }
+
+            .enter-button {
+                grid-column: 2;
+                grid-row: 2;
+            }
+
+            .info {
+                padding: 24px 2px 10px;
+            }
+
+            .features {
+                gap: 12px;
+            }
+
+            .feature {
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .icon {
+                width: 45px;
+                min-width: 45px;
+                height: 45px;
+                font-size: 21px;
+            }
+
+            .modal {
+                padding: 14px;
+            }
+
+            .modal-box {
+                padding: 24px 18px;
+                border-radius: 18px;
+            }
+        }
+
+        /* =========================
+           VERY SMALL PHONES
+        ========================= */
+
+        @media (max-width: 380px) {
+            .illustration {
+                height: 200px;
+                min-height: 200px;
+            }
+
+            .student {
+                transform: scale(.61);
+            }
+
+            .globe {
+                left: calc(50% - 135px);
+                transform: scale(.82);
+            }
+
+            .symbol {
+                font-size: 19px;
+            }
+
+            .exam-card {
+                padding: 18px 13px 15px;
+            }
+
+            .title {
+                font-size: 20px;
+            }
+
+            .label {
+                font-size: 15px;
+            }
+
+            .feature {
+                font-size: 13px;
+            }
+
+            .icon {
+                width: 40px;
+                min-width: 40px;
+                height: 40px;
+                font-size: 18px;
+            }
+        }
+
+        /* =========================
+           LANDSCAPE PHONE
+        ========================= */
+
+        @media (max-width: 900px) and (orientation: landscape) {
+            .hero {
+                padding-top: 10px;
+            }
+
+            .illustration {
+                height: 180px;
+                min-height: 180px;
+            }
+
+            .student {
+                transform: scale(.55);
+            }
+
+            .globe {
+                transform: scale(.72);
+                top: 0;
+            }
+
+            .exam-card {
+                max-width: 760px;
+            }
+
+            .info {
+                padding-top: 18px;
+            }
+        }
+
+        /* =========================
+           ACCESSIBILITY
+        ========================= */
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                scroll-behavior: auto !important;
+                transition: none !important;
+                animation: none !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="page">
+
+    <main class="hero">
+
+        <!-- ILUSTRASI -->
+        <section class="illustration" aria-label="Ilustrasi Smart CBT">
+
+            <div class="symbol s1">f(x)</div>
+            <div class="symbol s2">☆</div>
+            <div class="symbol s3">⚙</div>
+            <div class="symbol s4">x²</div>
+            <div class="symbol s5">x⁻ʸ</div>
+
+            <div class="globe"></div>
+
+            <div class="student">
+                <div class="hair"></div>
+                <div class="head"></div>
+                <div class="body"></div>
+                <div class="book"></div>
+                <div class="arm left"></div>
+                <div class="arm right"></div>
+            </div>
+
+        </section>
+
+        <!-- FORM UJIAN -->
+        <section class="exam-card">
+
+            <h1 class="title">
+                SILAHKAN SCAN BARCODE ATAU<br>
+                MASUKKAN LINK UJIAN ANDA
+            </h1>
+
+            <div class="label">
+                Masukkan Link Ujian Anda di Sini!
+            </div>
+
+            <div class="input-area">
+
+                <div class="input-wrapper">
+                    <input
+                        id="examLink"
+                        type="url"
+                        inputmode="url"
+                        placeholder="Masukkan link ujian..."
+                        autocomplete="off"
+                        autocapitalize="none"
+                        spellcheck="false"
+                        aria-label="Link ujian"
+                    >
+                </div>
+
+                <button
+                    type="button"
+                    class="cancel-button"
+                    id="cancelButton">
+                    CANCEL
+                </button>
+
+                <button
+                    type="button"
+                    class="enter-button"
+                    id="enterButton">
+                    ENTER
+                </button>
+
+            </div>
+
+        </section>
+
+        <!-- INFORMASI -->
+        <section class="info">
+
+            <h2 class="info-title">
+                INFORMASI PENGGUNAAN
+            </h2>
+
+            <div class="features">
+
+                <div class="feature">
+                    <div class="icon">🌐</div>
+                    <div>
+                        Anda dapat menggunakan browser dan membuka
+                        halaman lain sesuai kebutuhan.
+                    </div>
+                </div>
+
+                <div class="feature">
+                    <div class="icon">↔</div>
+                    <div>
+                        Split screen dan perpindahan aplikasi
+                        tidak dibatasi oleh sistem.
+                    </div>
+                </div>
+
+                <div class="feature">
+                    <div class="icon">🔊</div>
+                    <div>
+                        Perangkat audio dapat digunakan sesuai
+                        kebutuhan ujian.
+                    </div>
+                </div>
+
+                <div class="feature">
+                    <div class="icon">↩</div>
+                    <div>
+                        Tombol Back, Home, dan Recent Apps
+                        tetap dapat digunakan.
+                    </div>
+                </div>
+
+                <div class="feature">
+                    <div class="icon">📌</div>
+                    <div>
+                        Tidak menggunakan mode kiosk atau
+                        penguncian perangkat.
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<!-- MODAL KONFIRMASI -->
+<div
+    class="modal"
+    id="modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="modalTitle">
+
+    <div class="modal-box">
+
+        <h2 id="modalTitle">Konfirmasi</h2>
+
+        <p>
+            Anda akan membuka halaman ujian pada tab baru.
+            Pastikan link yang dimasukkan sudah benar.
+        </p>
+
+        <div class="modal-buttons">
+
+            <button
+                type="button"
+                class="close-btn"
+                id="closeModalButton">
+                Batal
+            </button>
+
+            <button
+                type="button"
+                class="continue-btn"
+                id="confirmButton">
+                Buka Ujian
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+    "use strict";
+
+    let selectedUrl = "";
+
+    const examLink = document.getElementById("examLink");
+    const modal = document.getElementById("modal");
+    const enterButton = document.getElementById("enterButton");
+    const cancelButton = document.getElementById("cancelButton");
+    const closeModalButton = document.getElementById("closeModalButton");
+    const confirmButton = document.getElementById("confirmButton");
+
+    function normalizeUrl(value) {
+        let url = value.trim();
+
+        if (!url) {
+            return null;
+        }
+
+        if (!/^https?:\/\//i.test(url)) {
+            url = "https://" + url;
+        }
+
+        try {
+            const parsed = new URL(url);
+
+            if (!["http:", "https:"].includes(parsed.protocol)) {
+                return null;
+            }
+
+            return parsed.href;
+        } catch {
+            return null;
+        }
+    }
+
+    function openExamDialog() {
+        const url = normalizeUrl(examLink.value);
+
+        if (!url) {
+            alert("Silakan masukkan link ujian yang valid.");
+            examLink.focus();
+            return;
+        }
+
+        selectedUrl = url;
+        modal.classList.add("show");
+        confirmButton.focus();
+    }
+
+    function closeDialog() {
+        modal.classList.remove("show");
+        selectedUrl = "";
+        examLink.focus();
+    }
+
+    function confirmOpen() {
+        if (!selectedUrl) {
+            return;
+        }
+
+        /*
+         * Tidak menggunakan:
+         * - kiosk mode
+         * - fullscreen paksa
+         * - blokir Home
+         * - blokir Back
+         * - blokir Recent Apps
+         * - deteksi aplikasi lain
+         * - pemblokiran Google/Chrome
+         */
+
+        const newWindow = window.open(
+            selectedUrl,
+            "_blank",
+            "noopener,noreferrer"
+        );
+
+        /*
+         * Beberapa browser mobile dapat memblokir window.open
+         * jika dianggap bukan berasal dari interaksi pengguna.
+         * Karena fungsi ini dipanggil dari tombol, biasanya aman.
+         */
+        if (!newWindow) {
+            window.location.href = selectedUrl;
+            return;
+        }
+
+        closeDialog();
+    }
+
+    function clearInput() {
+        examLink.value = "";
+        examLink.focus();
+    }
+
+    enterButton.addEventListener("click", openExamDialog);
+
+    cancelButton.addEventListener("click", clearInput);
+
+    closeModalButton.addEventListener("click", closeDialog);
+
+    confirmButton.addEventListener("click", confirmOpen);
+
+    examLink.addEventListener("keydown", function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            openExamDialog();
+        }
+
+        if (event.key === "Escape") {
+            closeDialog();
+        }
+    });
+
+    modal.addEventListener("click", function(event) {
+        if (event.target === modal) {
+            closeDialog();
+        }
+    });
+</script>
+
+</body>
+</html>
