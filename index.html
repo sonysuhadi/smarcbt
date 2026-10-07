@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>Dart Compiler - MCS</title>
 
   <style>
@@ -11,784 +10,757 @@
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-    }
-
-    :root {
-      --primary: #6750a4;
-      --primary-dark: #51388a;
-      --primary-light: #eee7ff;
-
-      --background: #f7f7fa;
-      --surface: #ffffff;
-      --surface-2: #f1f2f6;
-
-      --border: #dedee5;
-
-      --text: #202124;
-      --muted: #6b7280;
-
-      --success: #188038;
-      --error: #d93025;
-
-      --editor: #fafafa;
-      --code: #202124;
+      font-family: Arial, Helvetica, sans-serif;
     }
 
     body {
-      font-family:
-        Inter,
-        "Segoe UI",
-        Arial,
-        sans-serif;
-
-      background: var(--background);
-      color: var(--text);
-
+      background: #f6f6f8;
+      color: #202124;
       min-height: 100vh;
     }
 
-    /* =========================
-       HEADER
-    ========================= */
+    /* ================= HEADER ================= */
 
     header {
-      height: 68px;
-
-      background: var(--surface);
-
-      border-bottom:
-        1px solid var(--border);
-
+      height: 64px;
+      background: #ffffff;
+      border-bottom: 1px solid #dedee5;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-
       padding: 0 28px;
-
-      position: sticky;
-      top: 0;
-
-      z-index: 100;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
       gap: 12px;
-
-      font-size: 19px;
-      font-weight: 700;
     }
 
     .logo {
       width: 38px;
       height: 38px;
-
       border-radius: 10px;
-
-      background: var(--primary);
-
+      background: #6750a4;
       color: white;
-
       display: flex;
       align-items: center;
       justify-content: center;
-
-      font-weight: 800;
+      font-size: 19px;
+      font-weight: bold;
     }
 
-    .language {
-      background: var(--primary-light);
-
-      color: var(--primary);
-
-      padding: 7px 12px;
-
-      border-radius: 20px;
-
-      font-size: 12px;
-      font-weight: 600;
+    .brand {
+      font-size: 18px;
+      font-weight: 700;
     }
 
-    /* =========================
-       LAYOUT
-    ========================= */
+    .subtitle {
+      color: #777;
+      font-size: 13px;
+      margin-top: 2px;
+    }
+
+    /* ================= CONTAINER ================= */
 
     .container {
-      max-width: 1450px;
-
+      max-width: 1500px;
       margin: auto;
-
-      padding: 25px;
+      padding: 28px;
     }
 
     .title {
-      margin-bottom: 20px;
+      margin-bottom: 22px;
     }
 
     .title h1 {
-      font-size: 27px;
-
-      margin-bottom: 5px;
+      font-size: 30px;
+      margin-bottom: 6px;
     }
 
     .title p {
-      color: var(--muted);
-
+      color: #777;
       font-size: 14px;
     }
 
-    .compiler {
+    /* ================= MAIN GRID ================= */
+
+    .workspace {
       display: grid;
-
-      grid-template-columns:
-        minmax(0, 1.5fr)
-        minmax(270px, .6fr);
-
-      gap: 18px;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 20px;
+      align-items: stretch;
     }
 
-    /* =========================
-       CARD
-    ========================= */
+    .panel {
+      min-width: 0;
+    }
+
+    /* ================= CARD ================= */
 
     .card {
-      background: var(--surface);
-
-      border:
-        1px solid var(--border);
-
-      border-radius: 12px;
-
+      background: white;
+      border: 1px solid #dedee5;
+      border-radius: 14px;
       overflow: hidden;
-
-      box-shadow:
-        0 2px 6px rgba(0, 0, 0, .03);
+      height: 100%;
     }
 
     .card-header {
-      min-height: 54px;
-
-      padding: 10px 14px;
-
+      min-height: 58px;
+      padding: 10px 16px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-
-      border-bottom:
-        1px solid var(--border);
-
-      background: white;
+      border-bottom: 1px solid #dedee5;
+      gap: 10px;
     }
 
-    .card-title {
-      font-size: 14px;
-      font-weight: 700;
+    .card-header h2 {
+      font-size: 16px;
+      white-space: nowrap;
     }
 
-    /* =========================
-       BUTTON
-    ========================= */
+    /* ================= BUTTON ================= */
 
-    .buttons {
+    .actions {
       display: flex;
-
       gap: 7px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
     }
 
     button {
-      border:
-        1px solid var(--border);
-
-      background: white;
-
-      color: var(--text);
-
-      border-radius: 7px;
-
-      padding:
-        7px 12px;
-
+      border: none;
+      border-radius: 8px;
+      padding: 9px 13px;
       cursor: pointer;
-
-      font-size: 13px;
-
-      transition: .15s;
+      font-size: 12px;
+      font-weight: 600;
+      transition: 0.2s;
     }
 
-    button:hover {
-      background: var(--surface-2);
-    }
-
-    .run {
-      background: var(--primary);
-
+    .btn-run {
+      background: #6750a4;
       color: white;
-
-      border-color:
-        var(--primary);
-
-      font-weight: 700;
     }
 
-    .run:hover {
-      background:
-        var(--primary-dark);
+    .btn-run:hover {
+      background: #57428d;
     }
 
-    /* =========================
-       EDITOR
-    ========================= */
-
-    .editor-container {
-      position: relative;
+    .btn-secondary {
+      background: #f0eef5;
+      color: #4f3d80;
     }
+
+    .btn-secondary:hover {
+      background: #e4e0ed;
+    }
+
+    /* ================= EDITOR ================= */
 
     textarea {
       display: block;
-
       width: 100%;
-
-      height: 500px;
-
+      height: 600px;
       resize: vertical;
-
       border: none;
-
       outline: none;
-
       padding: 20px;
-
-      background:
-        var(--editor);
-
-      color:
-        var(--code);
-
-      font-family:
-        "Cascadia Code",
-        Consolas,
-        Monaco,
-        monospace;
-
+      background: #fafafa;
+      color: #202124;
+      font-family: Consolas, Monaco, monospace;
       font-size: 14px;
-
       line-height: 1.7;
-
       tab-size: 2;
     }
 
     textarea:focus {
-      background: #fff;
+      background: #ffffff;
     }
 
     .status {
-      height: 36px;
-
-      padding:
-        0 14px;
-
-      border-top:
-        1px solid var(--border);
-
-      display: flex;
-
-      align-items: center;
-
-      gap: 7px;
-
-      color: var(--muted);
-
+      padding: 10px 16px;
+      border-top: 1px solid #dedee5;
+      color: #777;
       font-size: 12px;
+      background: #ffffff;
     }
 
-    .status-dot {
-      width: 7px;
-      height: 7px;
+    /* ================= CONSOLE ================= */
 
-      background:
-        var(--success);
-
-      border-radius: 50%;
-    }
-
-    /* =========================
-       OUTPUT
-    ========================= */
-
-    .output {
-      min-height: 190px;
-
-      max-height: 300px;
-
-      overflow: auto;
-
-      padding: 17px;
-
-      background:
-        #1e1e1e;
-
-      color:
-        #f5f5f5;
-
-      font-family:
-        Consolas,
-        Monaco,
-        monospace;
-
+    .console {
+      height: 600px;
+      background: #1e1e1e;
+      color: #e8e8e8;
+      padding: 20px;
+      font-family: Consolas, Monaco, monospace;
       font-size: 14px;
-
       line-height: 1.7;
-
       white-space: pre-wrap;
+      overflow: auto;
     }
 
-    .output-empty {
-      color: #888;
+    .console.empty {
+      color: #777;
     }
 
-    .output-success {
-      color: #d4f8d4;
+    .console.error {
+      color: #ff6b6b;
     }
 
-    .output-error {
-      color: #ffb4ab;
+    .console-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
-    /* =========================
-       EXAMPLES
-    ========================= */
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #6750a4;
+    }
+
+    /* ================= EXAMPLES ================= */
+
+    .examples-section {
+      margin-top: 20px;
+    }
+
+    .examples-card {
+      background: white;
+      border: 1px solid #dedee5;
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .examples-header {
+      padding: 16px 18px;
+      border-bottom: 1px solid #dedee5;
+    }
+
+    .examples-header h2 {
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+
+    .examples-header p {
+      color: #777;
+      font-size: 13px;
+    }
 
     .examples {
-      padding: 8px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      padding: 14px;
     }
 
     .example {
-      padding: 12px;
-
-      border-radius: 8px;
-
+      padding: 14px;
+      border: 1px solid #e1e1e6;
+      border-radius: 10px;
       cursor: pointer;
-
-      margin-bottom: 3px;
+      transition: 0.2s;
+      background: #fff;
     }
 
     .example:hover {
-      background:
-        var(--surface-2);
+      border-color: #6750a4;
+      background: #faf8ff;
     }
 
     .example strong {
       display: block;
-
-      font-size: 13px;
-
-      margin-bottom: 4px;
+      font-size: 14px;
+      margin-bottom: 5px;
+      color: #333;
     }
 
     .example span {
-      color: var(--muted);
-
+      color: #777;
       font-size: 12px;
+      line-height: 1.5;
     }
 
-    /* =========================
-       INFO
-    ========================= */
+    /* ================= INFO ================= */
 
     .info {
-      padding: 15px;
+      margin-top: 20px;
+      background: white;
+      border: 1px solid #dedee5;
+      border-radius: 14px;
+      padding: 18px;
+    }
 
-      color: var(--muted);
+    .info h2 {
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
 
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    .info-item {
+      background: #f7f6fa;
+      padding: 11px 13px;
+      border-radius: 8px;
       font-size: 13px;
-
-      line-height: 1.6;
+      color: #555;
     }
 
-    .info b {
-      color: var(--text);
-    }
+    /* ================= RESPONSIVE ================= */
 
-    /* =========================
-       RESPONSIVE
-    ========================= */
+    @media (max-width: 1000px) {
 
-    @media (max-width: 950px) {
-
-      .compiler {
-        grid-template-columns: 1fr;
+      .examples {
+        grid-template-columns: repeat(2, 1fr);
       }
 
+      .info-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
     }
 
-    @media (max-width: 600px) {
+    @media (max-width: 760px) {
 
       header {
-        padding:
-          0 15px;
-      }
-
-      .language {
-        display: none;
+        padding: 0 16px;
       }
 
       .container {
-        padding: 15px;
+        padding: 18px 14px;
       }
 
       .title h1 {
-        font-size: 23px;
+        font-size: 25px;
       }
 
-      textarea {
-        height: 420px;
+      /*
+        Laptop:
+        Editor kiri
+        Output kanan
+
+        HP:
+        Editor atas
+        Output bawah
+      */
+
+      .workspace {
+        grid-template-columns: 1fr;
       }
+
+      textarea,
+      .console {
+        height: 430px;
+      }
+
+      .examples {
+        grid-template-columns: 1fr;
+      }
+
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
 
       .card-header {
-        flex-wrap: wrap;
+        align-items: flex-start;
+        flex-direction: column;
       }
 
+      .actions {
+        width: 100%;
+        justify-content: flex-start;
+      }
+
+      button {
+        padding: 8px 11px;
+      }
+
+      textarea,
+      .console {
+        height: 380px;
+      }
     }
   </style>
 </head>
 
-
 <body>
 
-  <!-- HEADER -->
+<header>
 
-  <header>
+  <div class="logo">
+    D
+  </div>
 
+  <div>
     <div class="brand">
-
-      <div class="logo">
-        D
-      </div>
-
       Dart Compiler
-
     </div>
 
-    <div class="language">
+    <div class="subtitle">
       Dart • MCS
     </div>
+  </div>
 
-  </header>
-
-
-  <!-- CONTENT -->
-
-  <main class="container">
-
-    <div class="title">
-
-      <h1>
-        Dart Compiler
-      </h1>
-
-      <p>
-        Tulis kode Dart, jalankan program, dan lihat hasilnya pada console.
-      </p>
-
-    </div>
+</header>
 
 
-    <div class="compiler">
+<div class="container">
+
+  <div class="title">
+
+    <h1>
+      Dart Compiler
+    </h1>
+
+    <p>
+      Jalankan kode Dart sederhana secara langsung di browser.
+    </p>
+
+  </div>
 
 
-      <!-- EDITOR -->
+  <!-- =====================================================
+       EDITOR KIRI + OUTPUT KANAN
+  ====================================================== -->
 
-      <section>
-
-        <div class="card">
-
-          <div class="card-header">
-
-            <div class="card-title">
-              Editor
-            </div>
-
-            <div class="buttons">
-
-              <button onclick="formatCode()">
-                Format
-              </button>
-
-              <button onclick="clearCode()">
-                Clear
-              </button>
-
-              <button
-                class="run"
-                onclick="runCode()"
-              >
-                ▶ Run
-              </button>
-
-            </div>
-
-          </div>
+  <div class="workspace">
 
 
-          <div class="editor-container">
+    <!-- ================= EDITOR ================= -->
 
-            <textarea
-              id="editor"
-              spellcheck="false"
-            >void main() {
-  String nama = "Sony";
-  int umur = 20;
-  double ipk = 3.85;
-  bool mahasiswa = true;
+    <section class="panel">
 
-  print("Nama: $nama");
-  print("Umur: $umur");
-  print("IPK: $ipk");
-  print("Mahasiswa: $mahasiswa");
-}</textarea>
+      <div class="card">
 
-          </div>
+        <div class="card-header">
 
+          <h2>
+            Code Editor
+          </h2>
 
-          <div class="status">
+          <div class="actions">
 
-            <span class="status-dot"></span>
+            <button
+              class="btn-secondary"
+              onclick="formatCode()">
+              Format
+            </button>
 
-            <span id="status">
-              Ready
-            </span>
-
-          </div>
-
-        </div>
-
-
-        <!-- OUTPUT -->
-
-        <div
-          class="card"
-          style="margin-top:18px;"
-        >
-
-          <div class="card-header">
-
-            <div class="card-title">
-              Console
-            </div>
-
-            <button onclick="clearOutput()">
+            <button
+              class="btn-secondary"
+              onclick="clearCode()">
               Clear
+            </button>
+
+            <button
+              class="btn-run"
+              onclick="compile()">
+              ▶ Run
             </button>
 
           </div>
 
-          <div
-            id="output"
-            class="output output-empty"
-          >
-            Output akan muncul di sini...
-          </div>
-
-        </div>
-
-      </section>
-
-
-      <!-- SIDEBAR -->
-
-      <aside>
-
-        <div class="card">
-
-          <div class="card-header">
-
-            <div class="card-title">
-              Contoh Program
-            </div>
-
-          </div>
-
-
-          <div class="examples">
-
-
-            <div
-              class="example"
-              onclick="example('datatype')"
-            >
-
-              <strong>
-                Tipe Data
-              </strong>
-
-              <span>
-                String, int, double, bool
-              </span>
-
-            </div>
-
-
-            <div
-              class="example"
-              onclick="example('list')"
-            >
-
-              <strong>
-                List
-              </strong>
-
-              <span>
-                Menyimpan banyak data
-              </span>
-
-            </div>
-
-
-            <div
-              class="example"
-              onclick="example('map')"
-            >
-
-              <strong>
-                Map
-              </strong>
-
-              <span>
-                Data key dan value
-              </span>
-
-            </div>
-
-
-            <div
-              class="example"
-              onclick="example('if')"
-            >
-
-              <strong>
-                If / Else
-              </strong>
-
-              <span>
-                Percabangan kondisi
-              </span>
-
-            </div>
-
-
-            <div
-              class="example"
-              onclick="example('elseif')"
-            >
-
-              <strong>
-                Else If
-              </strong>
-
-              <span>
-                Beberapa kondisi
-              </span>
-
-            </div>
-
-
-            <div
-              class="example"
-              onclick="example('switch')"
-            >
-
-              <strong>
-                Switch Case
-              </strong>
-
-              <span>
-                Pemilihan berdasarkan nilai
-              </span>
-
-            </div>
-
-
-            <div
-              class="example"
-              onclick="example('operation')"
-            >
-
-              <strong>
-                Operasi
-              </strong>
-
-              <span>
-                Operasi matematika
-              </span>
-
-            </div>
-
-          </div>
-
         </div>
 
 
-        <!-- INFO -->
+        <textarea id="code">void main() {
+  List<String> bahasa = [
+    "Dart",
+    "Python",
+    "Java",
+    "C++"
+  ];
+
+  print(bahasa);
+}</textarea>
+
 
         <div
-          class="card"
-          style="margin-top:18px;"
-        >
+          class="status"
+          id="status">
 
-          <div class="card-header">
-
-            <div class="card-title">
-              Didukung
-            </div>
-
-          </div>
-
-          <div class="info">
-
-            <b>Tipe Data</b><br>
-
-            String, int, double, num,
-            bool, dynamic, List, Map.
-
-            <br><br>
-
-            <b>Control Flow</b><br>
-
-            if, if-else, else-if,
-            switch-case.
-
-            <br><br>
-
-            <b>Output</b><br>
-
-            print()
-
-            <br><br>
-
-            <b>Operator</b><br>
-
-            + &nbsp; - &nbsp; * &nbsp; /
-            &nbsp; % &nbsp; &gt; &nbsp; &lt;
-            &nbsp; == &nbsp; &amp;&amp;
-            &nbsp; ||
-
-          </div>
+          Ready
 
         </div>
 
-      </aside>
+      </div>
+
+    </section>
+
+
+    <!-- ================= OUTPUT ================= -->
+
+    <section class="panel">
+
+      <div class="card">
+
+        <div class="card-header">
+
+          <div class="console-title">
+
+            <div class="dot"></div>
+
+            <h2>
+              Console Output
+            </h2>
+
+          </div>
+
+          <button
+            class="btn-secondary"
+            onclick="clearConsole()">
+
+            Clear
+
+          </button>
+
+        </div>
+
+
+        <div
+          id="console"
+          class="console empty">
+
+          Output akan tampil di sini...
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </div>
+
+
+  <!-- =====================================================
+       CONTOH PROGRAM
+  ====================================================== -->
+
+  <section class="examples-section">
+
+    <div class="examples-card">
+
+      <div class="examples-header">
+
+        <h2>
+          Contoh Program
+        </h2>
+
+        <p>
+          Pilih contoh untuk memasukkannya ke Code Editor.
+        </p>
+
+      </div>
+
+
+      <div class="examples">
+
+
+        <div
+          class="example"
+          onclick="loadExample('datatype')">
+
+          <strong>
+            Tipe Data
+          </strong>
+
+          <span>
+            String, int, double, num, bool, dynamic
+          </span>
+
+        </div>
+
+
+        <div
+          class="example"
+          onclick="loadExample('list')">
+
+          <strong>
+            List
+          </strong>
+
+          <span>
+            Data berupa kumpulan nilai
+          </span>
+
+        </div>
+
+
+        <div
+          class="example"
+          onclick="loadExample('map')">
+
+          <strong>
+            Map
+          </strong>
+
+          <span>
+            Data key dan value
+          </span>
+
+        </div>
+
+
+        <div
+          class="example"
+          onclick="loadExample('if')">
+
+          <strong>
+            If / Else
+          </strong>
+
+          <span>
+            Percabangan kondisi
+          </span>
+
+        </div>
+
+
+        <div
+          class="example"
+          onclick="loadExample('elseif')">
+
+          <strong>
+            Else If
+          </strong>
+
+          <span>
+            Beberapa kondisi
+          </span>
+
+        </div>
+
+
+        <div
+          class="example"
+          onclick="loadExample('switch')">
+
+          <strong>
+            Switch Case
+          </strong>
+
+          <span>
+            Percabangan berdasarkan pilihan
+          </span>
+
+        </div>
+
+
+        <div
+          class="example"
+          onclick="loadExample('operation')">
+
+          <strong>
+            Operasi
+          </strong>
+
+          <span>
+            Operasi aritmatika
+          </span>
+
+        </div>
+
+
+      </div>
 
     </div>
 
-  </main>
+  </section>
+
+
+  <!-- =====================================================
+       SUPPORTED
+  ====================================================== -->
+
+  <section class="info">
+
+    <h2>
+      Fitur yang Didukung
+    </h2>
+
+
+    <div class="info-grid">
+
+      <div class="info-item">
+        String
+      </div>
+
+      <div class="info-item">
+        int
+      </div>
+
+      <div class="info-item">
+        double
+      </div>
+
+      <div class="info-item">
+        num
+      </div>
+
+      <div class="info-item">
+        bool
+      </div>
+
+      <div class="info-item">
+        dynamic
+      </div>
+
+      <div class="info-item">
+        List
+      </div>
+
+      <div class="info-item">
+        Map
+      </div>
+
+      <div class="info-item">
+        if / else
+      </div>
+
+      <div class="info-item">
+        else if
+      </div>
+
+      <div class="info-item">
+        switch case
+      </div>
+
+      <div class="info-item">
+        print()
+      </div>
+
+      <div class="info-item">
+        Operator aritmatika
+      </div>
+
+      <div class="info-item">
+        Operator perbandingan
+      </div>
+
+      <div class="info-item">
+        Variable
+      </div>
+
+      <div class="info-item">
+        String interpolation
+      </div>
+
+    </div>
+
+  </section>
+
+</div>
 
 
 <script>
 
-/* =====================================================
-   CONTOH PROGRAM
-===================================================== */
+/* =========================================================
+   EXAMPLES
+========================================================= */
 
 const examples = {
 
@@ -816,7 +788,6 @@ const examples = {
     "C++"
   ];
 
-  print("Bahasa pemrograman:");
   print(bahasa);
 }`,
 
@@ -858,19 +829,15 @@ const examples = {
   int pilihan = 3;
 
   switch (pilihan) {
-
     case 1:
       print("Home");
       break;
-
     case 2:
       print("Dashboard");
       break;
-
     case 3:
       print("Settings");
       break;
-
     default:
       print("Menu tidak tersedia");
   }
@@ -894,266 +861,932 @@ const examples = {
 };
 
 
-/* =====================================================
-   LOAD EXAMPLE
-===================================================== */
+/* =========================================================
+   WHITESPACE
+========================================================= */
 
-function example(name) {
+function skipWhitespace(text, index) {
 
-  document.getElementById("editor").value =
-    examples[name];
+  while (
+    index < text.length &&
+    /\s/.test(text[index])
+  ) {
+    index++;
+  }
 
-  document.getElementById("status").textContent =
-    "Example loaded";
+  return index;
+}
+
+
+/* =========================================================
+   BRACE
+========================================================= */
+
+function findBrace(text, start) {
+
+  return text.indexOf(
+    "{",
+    start
+  );
 
 }
 
 
-/* =====================================================
-   CLEAR
-===================================================== */
+function findClosingBrace(
+  text,
+  openIndex
+) {
 
-function clearCode() {
+  let depth = 0;
+  let quote = null;
 
-  document.getElementById("editor").value = "";
+  for (
+    let i = openIndex;
+    i < text.length;
+    i++
+  ) {
 
-  document.getElementById("status").textContent =
-    "Editor kosong";
-
-}
-
-
-function clearOutput() {
-
-  const output =
-    document.getElementById("output");
-
-  output.textContent =
-    "Output akan muncul di sini...";
-
-  output.className =
-    "output output-empty";
-
-}
+    const char = text[i];
 
 
-/* =====================================================
-   FORMAT
-===================================================== */
+    if (
+      quote &&
+      char === quote &&
+      text[i - 1] !== "\\"
+    ) {
 
-function formatCode() {
-
-  let code =
-    document.getElementById("editor").value;
-
-  let indent = 0;
-
-  code =
-    code
-      .replace(/\{/g, "{\n")
-      .replace(/\}/g, "\n}\n")
-      .split("\n");
-
-  let result = [];
-
-  for (let line of code) {
-
-    line = line.trim();
-
-    if (!line) {
+      quote = null;
       continue;
     }
 
-    if (line.startsWith("}")) {
 
-      indent--;
+    if (
+      !quote &&
+      (
+        char === '"' ||
+        char === "'"
+      )
+    ) {
 
-      if (indent < 0) {
-        indent = 0;
+      quote = char;
+      continue;
+    }
+
+
+    if (quote) {
+      continue;
+    }
+
+
+    if (char === "{") {
+      depth++;
+    }
+
+
+    if (char === "}") {
+
+      depth--;
+
+      if (depth === 0) {
+        return i;
       }
 
     }
 
-    result.push(
-      "  ".repeat(indent) +
-      line
-    );
-
-    if (line.endsWith("{")) {
-      indent++;
-    }
-
   }
 
-  document.getElementById("editor").value =
-    result.join("\n");
-
-  document.getElementById("status").textContent =
-    "Code formatted";
-
+  return -1;
 }
 
 
-/* =====================================================
-   RUN
-===================================================== */
+/* =========================================================
+   PAREN
+========================================================= */
 
-function runCode() {
+function findClosingParen(
+  text,
+  openIndex
+) {
 
-  const code =
-    document.getElementById("editor").value;
+  let depth = 0;
+  let quote = null;
 
-  const output =
-    document.getElementById("output");
-
-  output.className =
-    "output";
-
-  output.textContent =
-    "";
-
-  document.getElementById("status").textContent =
-    "Running...";
-
-
-  try {
-
-    const result =
-      compile(code);
-
-
-    if (result.length === 0) {
-
-      result.push(
-        "Program selesai."
-      );
-
-    }
-
-
-    output.textContent =
-      result.join("\n");
-
-    output.classList.add(
-      "output-success"
-    );
-
-
-    document.getElementById("status").textContent =
-      "Finished";
-
-  }
-
-  catch (error) {
-
-    output.textContent =
-      "Error: " +
-      error.message;
-
-    output.classList.add(
-      "output-error"
-    );
-
-
-    document.getElementById("status").textContent =
-      "Error";
-
-  }
-
-}
-
-
-/* =====================================================
-   COMPILE
-===================================================== */
-
-function compile(code) {
-
-  if (
-    !/void\s+main\s*\(\s*\)/.test(code)
+  for (
+    let i = openIndex;
+    i < text.length;
+    i++
   ) {
 
-    throw new Error(
-      "Program harus memiliki void main()."
-    );
+    const char = text[i];
+
+
+    if (
+      quote &&
+      char === quote &&
+      text[i - 1] !== "\\"
+    ) {
+
+      quote = null;
+      continue;
+    }
+
+
+    if (
+      !quote &&
+      (
+        char === '"' ||
+        char === "'"
+      )
+    ) {
+
+      quote = char;
+      continue;
+    }
+
+
+    if (quote) {
+      continue;
+    }
+
+
+    if (char === "(") {
+      depth++;
+    }
+
+
+    if (char === ")") {
+
+      depth--;
+
+      if (depth === 0) {
+        return i;
+      }
+
+    }
 
   }
 
-
-  const variables = {};
-  const output = [];
-
-
-  /*
-   * Ambil body main.
-   */
-
-  const mainKeyword =
-    code.search(
-      /void\s+main\s*\(\s*\)/
-    );
-
-
-  const mainOpen =
-    code.indexOf(
-      "{",
-      mainKeyword
-    );
-
-
-  if (mainOpen === -1) {
-
-    throw new Error(
-      "Blok main() tidak ditemukan."
-    );
-
-  }
-
-
-  const mainClose =
-    findBrace(
-      code,
-      mainOpen
-    );
-
-
-  const main =
-    code.substring(
-      mainOpen + 1,
-      mainClose
-    );
-
-
-  execute(
-    main,
-    variables,
-    output
-  );
-
-
-  return output;
-
+  return -1;
 }
 
 
-/* =====================================================
+/* =========================================================
    SPLIT TOP LEVEL
-===================================================== */
+========================================================= */
 
 function splitTopLevel(
   text,
-  separator
+  separator = ","
 ) {
 
   const result = [];
 
   let current = "";
 
-  let round = 0;
-  let square = 0;
-  let curly = 0;
+  let depthParen = 0;
+  let depthBrace = 0;
+  let depthBracket = 0;
 
   let quote = null;
+
+
+  for (
+    let i = 0;
+    i < text.length;
+    i++
+  ) {
+
+    const char = text[i];
+
+
+    if (
+      quote &&
+      char === quote &&
+      text[i - 1] !== "\\"
+    ) {
+
+      quote = null;
+
+      current += char;
+
+      continue;
+    }
+
+
+    if (
+      !quote &&
+      (
+        char === '"' ||
+        char === "'"
+      )
+    ) {
+
+      quote = char;
+
+      current += char;
+
+      continue;
+    }
+
+
+    if (quote) {
+
+      current += char;
+
+      continue;
+    }
+
+
+    if (char === "(") depthParen++;
+
+    if (char === ")") depthParen--;
+
+    if (char === "{") depthBrace++;
+
+    if (char === "}") depthBrace--;
+
+    if (char === "[") depthBracket++;
+
+    if (char === "]") depthBracket--;
+
+
+    if (
+      char === separator &&
+      depthParen === 0 &&
+      depthBrace === 0 &&
+      depthBracket === 0
+    ) {
+
+      result.push(
+        current.trim()
+      );
+
+      current = "";
+
+    } else {
+
+      current += char;
+
+    }
+
+  }
+
+
+  if (current.trim()) {
+
+    result.push(
+      current.trim()
+    );
+
+  }
+
+
+  return result;
+}
+
+
+/* =========================================================
+   OUTPUT FORMAT
+========================================================= */
+
+function formatOutput(value) {
+
+
+  /* LIST */
+
+  if (Array.isArray(value)) {
+
+    return "[" +
+      value
+        .map(item =>
+          formatOutput(item)
+        )
+        .join(", ") +
+      "]";
+
+  }
+
+
+  /* MAP */
+
+  if (
+    value !== null &&
+    typeof value === "object"
+  ) {
+
+    return "{" +
+      Object.entries(value)
+        .map(
+          ([key, val]) =>
+            key +
+            ": " +
+            formatOutput(val)
+        )
+        .join(", ") +
+      "}";
+
+  }
+
+
+  /* BOOLEAN */
+
+  if (
+    typeof value === "boolean"
+  ) {
+
+    return value
+      ? "true"
+      : "false";
+
+  }
+
+
+  /* NULL */
+
+  if (value === null) {
+    return "null";
+  }
+
+
+  /* NUMBER */
+
+  if (
+    typeof value === "number"
+  ) {
+
+    if (
+      Number.isInteger(value)
+    ) {
+
+      return String(value);
+
+    }
+
+    return String(value);
+
+  }
+
+
+  /* STRING */
+
+  return String(value);
+}
+
+
+/* =========================================================
+   PARSE VALUE
+========================================================= */
+
+function parseValue(
+  expression,
+  vars
+) {
+
+  let expr =
+    expression.trim();
+
+
+  /* STRING */
+
+  if (
+    (
+      expr.startsWith('"') &&
+      expr.endsWith('"')
+    ) ||
+    (
+      expr.startsWith("'") &&
+      expr.endsWith("'")
+    )
+  ) {
+
+    let value =
+      expr.slice(
+        1,
+        -1
+      );
+
+
+    value =
+      value.replace(
+        /\\(["'])/g,
+        "$1"
+      );
+
+
+    return interpolate(
+      value,
+      vars
+    );
+
+  }
+
+
+  /* BOOLEAN */
+
+  if (expr === "true") {
+    return true;
+  }
+
+  if (expr === "false") {
+    return false;
+  }
+
+
+  /* NULL */
+
+  if (expr === "null") {
+    return null;
+  }
+
+
+  /* LIST */
+
+  if (
+    expr.startsWith("[") &&
+    expr.endsWith("]")
+  ) {
+
+    const content =
+      expr.slice(
+        1,
+        -1
+      ).trim();
+
+
+    if (!content) {
+      return [];
+    }
+
+
+    return splitTopLevel(
+      content,
+      ","
+    ).map(
+      item =>
+        parseValue(
+          item,
+          vars
+        )
+    );
+
+  }
+
+
+  /* MAP */
+
+  if (
+    expr.startsWith("{") &&
+    expr.endsWith("}")
+  ) {
+
+    const content =
+      expr.slice(
+        1,
+        -1
+      ).trim();
+
+
+    const result = {};
+
+
+    if (!content) {
+      return result;
+    }
+
+
+    const items =
+      splitTopLevel(
+        content,
+        ","
+      );
+
+
+    for (
+      const item of items
+    ) {
+
+      const colon =
+        findTopLevelColon(
+          item
+        );
+
+
+      if (colon === -1) {
+        continue;
+      }
+
+
+      let key =
+        item
+          .slice(
+            0,
+            colon
+          )
+          .trim();
+
+
+      let value =
+        item
+          .slice(
+            colon + 1
+          )
+          .trim();
+
+
+      key =
+        parseValue(
+          key,
+          vars
+        );
+
+
+      result[key] =
+        parseValue(
+          value,
+          vars
+        );
+
+    }
+
+
+    return result;
+  }
+
+
+  /* NUMBER */
+
+  if (
+    /^-?\d+(\.\d+)?$/.test(expr)
+  ) {
+
+    return Number(expr);
+
+  }
+
+
+  /* VARIABLE */
+
+  if (
+    Object.prototype.hasOwnProperty.call(
+      vars,
+      expr
+    )
+  ) {
+
+    return vars[expr];
+
+  }
+
+
+  /* ARITHMETIC */
+
+  if (
+    /[+\-*/%]/.test(expr)
+  ) {
+
+    try {
+
+      let math =
+        expr.replace(
+          /\b[A-Za-z_]\w*\b/g,
+          name => {
+
+            if (
+              Object.prototype.hasOwnProperty.call(
+                vars,
+                name
+              )
+            ) {
+
+              return String(
+                vars[name]
+              );
+
+            }
+
+            return name;
+
+          }
+        );
+
+
+      if (
+        /^[0-9+\-*/%().\s]+$/.test(
+          math
+        )
+      ) {
+
+        return Function(
+          `"use strict"; return (${math})`
+        )();
+
+      }
+
+    } catch (error) {
+
+      // lanjut
+
+    }
+
+  }
+
+
+  return expr;
+}
+
+
+/* =========================================================
+   MAP COLON
+========================================================= */
+
+function findTopLevelColon(text) {
+
+  let depthParen = 0;
+  let depthBrace = 0;
+  let depthBracket = 0;
+
+  let quote = null;
+
+
+  for (
+    let i = 0;
+    i < text.length;
+    i++
+  ) {
+
+    const char = text[i];
+
+
+    if (
+      quote &&
+      char === quote &&
+      text[i - 1] !== "\\"
+    ) {
+
+      quote = null;
+
+      continue;
+    }
+
+
+    if (
+      !quote &&
+      (
+        char === '"' ||
+        char === "'"
+      )
+    ) {
+
+      quote = char;
+
+      continue;
+    }
+
+
+    if (quote) {
+      continue;
+    }
+
+
+    if (char === "(") depthParen++;
+
+    if (char === ")") depthParen--;
+
+    if (char === "{") depthBrace++;
+
+    if (char === "}") depthBrace--;
+
+    if (char === "[") depthBracket++;
+
+    if (char === "]") depthBracket--;
+
+
+    if (
+      char === ":" &&
+      depthParen === 0 &&
+      depthBrace === 0 &&
+      depthBracket === 0
+    ) {
+
+      return i;
+
+    }
+
+  }
+
+
+  return -1;
+}
+
+
+/* =========================================================
+   STRING INTERPOLATION
+========================================================= */
+
+function interpolate(
+  text,
+  vars
+) {
+
+  return text.replace(
+    /\$([A-Za-z_]\w*)|\$\{([^}]+)\}/g,
+    function (
+      match,
+      simple,
+      complex
+    ) {
+
+      const name =
+        simple || complex;
+
+
+      if (
+        Object.prototype.hasOwnProperty.call(
+          vars,
+          name
+        )
+      ) {
+
+        return formatOutput(
+          vars[name]
+        );
+
+      }
+
+
+      return match;
+
+    }
+  );
+}
+
+
+/* =========================================================
+   CONDITION
+========================================================= */
+
+function evaluateCondition(
+  expression,
+  vars
+) {
+
+  let expr =
+    expression.trim();
+
+
+  /* AND */
+
+  const andParts =
+    splitLogical(
+      expr,
+      "&&"
+    );
+
+
+  if (andParts.length > 1) {
+
+    return andParts.every(
+      part =>
+        evaluateCondition(
+          part,
+          vars
+        )
+    );
+
+  }
+
+
+  /* OR */
+
+  const orParts =
+    splitLogical(
+      expr,
+      "||"
+    );
+
+
+  if (orParts.length > 1) {
+
+    return orParts.some(
+      part =>
+        evaluateCondition(
+          part,
+          vars
+        )
+    );
+
+  }
+
+
+  /* NOT */
+
+  if (
+    expr.startsWith("!")
+  ) {
+
+    return !evaluateCondition(
+      expr.slice(1),
+      vars
+    );
+
+  }
+
+
+  const operators = [
+    ">=",
+    "<=",
+    "==",
+    "!=",
+    ">",
+    "<"
+  ];
+
+
+  for (
+    const operator of operators
+  ) {
+
+    const index =
+      findOperator(
+        expr,
+        operator
+      );
+
+
+    if (index !== -1) {
+
+      const left =
+        parseValue(
+          expr.slice(
+            0,
+            index
+          ),
+          vars
+        );
+
+
+      const right =
+        parseValue(
+          expr.slice(
+            index +
+            operator.length
+          ),
+          vars
+        );
+
+
+      switch (operator) {
+
+        case "==":
+          return left === right;
+
+        case "!=":
+          return left !== right;
+
+        case ">":
+          return left > right;
+
+        case "<":
+          return left < right;
+
+        case ">=":
+          return left >= right;
+
+        case "<=":
+          return left <= right;
+
+      }
+
+    }
+
+  }
+
+
+  return Boolean(
+    parseValue(
+      expr,
+      vars
+    )
+  );
+}
+
+
+/* =========================================================
+   LOGICAL SPLIT
+========================================================= */
+
+function splitLogical(
+  text,
+  operator
+) {
+
+  const result = [];
+
+  let current = "";
+
+  let quote = null;
+
+  let depth = 0;
 
 
   for (
@@ -1167,72 +1800,63 @@ function splitTopLevel(
 
 
     if (
-      char === '"' ||
-      char === "'"
+      quote &&
+      char === quote &&
+      text[i - 1] !== "\\"
     ) {
 
-      if (quote === null) {
+      quote = null;
 
-        quote = char;
+      current += char;
 
-      }
-
-      else if (
-        quote === char &&
-        text[i - 1] !== "\\"
-      ) {
-
-        quote = null;
-
-      }
-
-    }
-
-
-    if (!quote) {
-
-      if (char === "(") {
-        round++;
-      }
-
-      if (char === ")") {
-        round--;
-      }
-
-      if (char === "[") {
-        square++;
-      }
-
-      if (char === "]") {
-        square--;
-      }
-
-      if (char === "{") {
-        curly++;
-      }
-
-      if (char === "}") {
-        curly--;
-      }
-
+      continue;
     }
 
 
     if (
-      char === separator &&
       !quote &&
-      round === 0 &&
-      square === 0 &&
-      curly === 0
+      (
+        char === '"' ||
+        char === "'"
+      )
     ) {
 
-      result.push(current);
+      quote = char;
+
+      current += char;
+
+      continue;
+    }
+
+
+    if (char === "(") {
+      depth++;
+    }
+
+    if (char === ")") {
+      depth--;
+    }
+
+
+    if (
+      !quote &&
+      depth === 0 &&
+      text.startsWith(
+        operator,
+        i
+      )
+    ) {
+
+      result.push(
+        current.trim()
+      );
 
       current = "";
 
-    }
+      i +=
+        operator.length - 1;
 
-    else {
+    } else {
 
       current += char;
 
@@ -1244,386 +1868,65 @@ function splitTopLevel(
   if (current.trim()) {
 
     result.push(
-      current
+      current.trim()
     );
 
   }
 
 
   return result;
-
 }
 
 
-/* =====================================================
-   PARSE VALUE
-===================================================== */
+/* =========================================================
+   FIND OPERATOR
+========================================================= */
 
-function parseValue(
-  value,
-  variables
+function findOperator(
+  text,
+  operator
 ) {
 
-  value =
-    value.trim();
+  let quote = null;
+
+  let depth = 0;
 
 
-  /*
-   * STRING
-   */
-
-  if (
-    /^".*"$/.test(value) ||
-    /^'.*'$/.test(value)
+  for (
+    let i = 0;
+    i <=
+    text.length -
+    operator.length;
+    i++
   ) {
 
-    let text =
-      value.substring(
-        1,
-        value.length - 1
-      );
+    const char =
+      text[i];
 
 
-    text =
-      text.replace(
-        /\$([a-zA-Z_]\w*)/g,
-        function(
-          match,
-          variable
-        ) {
+    if (
+      quote &&
+      char === quote &&
+      text[i - 1] !== "\\"
+    ) {
 
-          if (
-            Object.prototype.hasOwnProperty.call(
-              variables,
-              variable
-            )
-          ) {
+      quote = null;
 
-            return formatValue(
-              variables[variable]
-            );
-
-          }
-
-          return match;
-
-        }
-      );
-
-
-    return text;
-
-  }
-
-
-  /*
-   * BOOLEAN
-   */
-
-  if (value === "true") {
-    return true;
-  }
-
-  if (value === "false") {
-    return false;
-  }
-
-
-  /*
-   * NULL
-   */
-
-  if (value === "null") {
-    return null;
-  }
-
-
-  /*
-   * VARIABLE
-   */
-
-  if (
-    Object.prototype.hasOwnProperty.call(
-      variables,
-      value
-    )
-  ) {
-
-    return variables[value];
-
-  }
-
-
-  /*
-   * ARRAY INDEX
-   */
-
-  const indexMatch =
-    value.match(
-      /^(\w+)\[(\d+)\]$/
-    );
-
-
-  if (
-    indexMatch &&
-    Array.isArray(
-      variables[indexMatch[1]]
-    )
-  ) {
-
-    return variables[
-      indexMatch[1]
-    ][
-      Number(indexMatch[2])
-    ];
-
-  }
-
-
-  /*
-   * ARITHMETIC
-   */
-
-  const expression =
-    value.replace(
-      /\b([a-zA-Z_]\w*)\b/g,
-      function(name) {
-
-        if (
-          Object.prototype.hasOwnProperty.call(
-            variables,
-            name
-          )
-        ) {
-
-          const variable =
-            variables[name];
-
-
-          if (
-            typeof variable === "number"
-          ) {
-
-            return String(
-              variable
-            );
-
-          }
-
-
-          return JSON.stringify(
-            variable
-          );
-
-        }
-
-
-        return name;
-
-      }
-    );
-
-
-  if (
-    /^[0-9+\-*/%.()\s]+$/.test(
-      expression
-    )
-  ) {
-
-    try {
-
-      return Function(
-        `"use strict"; return (${expression});`
-      )();
-
+      continue;
     }
 
-    catch (error) {
-      // lanjut
-    }
 
-  }
-
-
-  return value;
-
-}
-
-
-/* =====================================================
-   FORMAT VALUE
-===================================================== */
-
-function formatValue(
-  value
-) {
-
-  if (
-    Array.isArray(value)
-  ) {
-
-    return (
-      "[" +
-      value
-        .map(formatValue)
-        .join(", ") +
-      "]"
-    );
-
-  }
-
-
-  if (
-    typeof value === "object" &&
-    value !== null
-  ) {
-
-    return JSON.stringify(
-      value
-    );
-
-  }
-
-
-  return String(
-    value
-  );
-
-}
-
-
-/* =====================================================
-   CONDITION
-===================================================== */
-
-function condition(
-  expression,
-  variables
-) {
-
-  expression =
-    expression.replace(
-      /\b([a-zA-Z_]\w*)\b/g,
-      function(name) {
-
-        if (
-          Object.prototype.hasOwnProperty.call(
-            variables,
-            name
-          )
-        ) {
-
-          const value =
-            variables[name];
-
-
-          if (
-            typeof value === "number"
-          ) {
-
-            return String(
-              value
-            );
-
-          }
-
-
-          return JSON.stringify(
-            value
-          );
-
-        }
-
-
-        return name;
-
-      }
-    );
-
-
-  expression =
-    expression
-      .replace(
-        /\band\b/g,
-        "&&"
+    if (
+      !quote &&
+      (
+        char === '"' ||
+        char === "'"
       )
-      .replace(
-        /\bor\b/g,
-        "||"
-      );
-
-
-  try {
-
-    return Boolean(
-      Function(
-        `"use strict"; return (${expression});`
-      )()
-    );
-
-  }
-
-  catch (error) {
-
-    throw new Error(
-      "Kondisi tidak valid."
-    );
-
-  }
-
-}
-
-
-/* =====================================================
-   FIND BRACE
-===================================================== */
-
-function findBrace(
-  text,
-  start
-) {
-
-  let depth = 0;
-
-  let quote = null;
-
-
-  for (
-    let i = start;
-    i < text.length;
-    i++
-  ) {
-
-    const char =
-      text[i];
-
-
-    if (
-      (
-        char === '"' ||
-        char === "'"
-      ) &&
-      text[i - 1] !== "\\"
     ) {
 
-      if (
-        quote === null
-      ) {
-
-        quote = char;
-
-      }
-
-      else if (
-        quote === char
-      ) {
-
-        quote = null;
-
-      }
+      quote = char;
 
       continue;
-
     }
 
 
@@ -1632,259 +1935,121 @@ function findBrace(
     }
 
 
-    if (
-      char === "{"
-    ) {
-
+    if (char === "(") {
       depth++;
-
     }
 
-
-    if (
-      char === "}"
-    ) {
-
+    if (char === ")") {
       depth--;
+    }
 
 
-      if (
-        depth === 0
-      ) {
+    if (
+      depth === 0 &&
+      text.startsWith(
+        operator,
+        i
+      )
+    ) {
 
-        return i;
-
-      }
+      return i;
 
     }
 
   }
 
 
-  throw new Error(
-    "Kurung { } tidak seimbang."
-  );
-
+  return -1;
 }
 
 
-/* =====================================================
-   FIND PARENTHESIS
-===================================================== */
-
-function findClosingParen(
-  text,
-  start
-) {
-
-  let depth = 0;
-
-  let quote = null;
-
-
-  for (
-    let i = start;
-    i < text.length;
-    i++
-  ) {
-
-    const char =
-      text[i];
-
-
-    if (
-      (
-        char === '"' ||
-        char === "'"
-      ) &&
-      text[i - 1] !== "\\"
-    ) {
-
-      if (
-        quote === null
-      ) {
-
-        quote = char;
-
-      }
-
-      else if (
-        quote === char
-      ) {
-
-        quote = null;
-
-      }
-
-      continue;
-
-    }
-
-
-    if (quote) {
-      continue;
-    }
-
-
-    if (
-      char === "("
-    ) {
-
-      depth++;
-
-    }
-
-
-    if (
-      char === ")"
-    ) {
-
-      depth--;
-
-
-      if (
-        depth === 0
-      ) {
-
-        return i;
-
-      }
-
-    }
-
-  }
-
-
-  throw new Error(
-    "Kurung ( ) tidak seimbang."
-  );
-
-}
-
-
-/* =====================================================
-   SKIP WHITESPACE
-===================================================== */
-
-function skipWhitespace(
-  code,
-  position
-) {
-
-  while (
-    position < code.length &&
-    /\s/.test(
-      code[position]
-    )
-  ) {
-
-    position++;
-
-  }
-
-
-  return position;
-
-}
-
-
-/* =====================================================
+/* =========================================================
    EXECUTE
-===================================================== */
+========================================================= */
 
 function execute(
   code,
-  variables,
+  vars,
   output
 ) {
 
-  let position = 0;
+  let i = 0;
 
 
   while (
-    position < code.length
+    i < code.length
   ) {
 
-    position =
+    i =
       skipWhitespace(
         code,
-        position
+        i
       );
 
 
     if (
-      position >= code.length
+      i >= code.length
     ) {
-
       break;
-
     }
 
 
-    /*
-     * SEMICOLON
-     */
+    /* SEMICOLON */
 
     if (
-      code[position] === ";"
+      code[i] === ";"
     ) {
 
-      position++;
+      i++;
 
       continue;
-
     }
 
 
-    /*
-     * COMMENT
-     */
+    /* COMMENTS */
 
     if (
       code.startsWith(
         "//",
-        position
+        i
       )
     ) {
 
-      const newline =
+      const end =
         code.indexOf(
           "\n",
-          position
+          i
         );
 
 
-      if (
-        newline === -1
-      ) {
+      i =
+        end === -1
+          ? code.length
+          : end + 1;
 
-        break;
-
-      }
-
-
-      position =
-        newline + 1;
 
       continue;
-
     }
 
 
-    /*
-     * PRINT
-     */
+    /* PRINT */
 
     if (
-      /^print\s*\(/.test(
-        code.slice(position)
+      code.startsWith(
+        "print",
+        i
+      ) &&
+      /\s*\(/.test(
+        code.slice(
+          i + 5
+        )
       )
     ) {
 
       const open =
         code.indexOf(
           "(",
-          position
+          i
         );
 
 
@@ -1895,26 +2060,19 @@ function execute(
         );
 
 
-      let after =
-        skipWhitespace(
-          code,
-          close + 1
-        );
-
-
       if (
-        code[after] !== ";"
+        close === -1
       ) {
 
         throw new Error(
-          "print() harus diakhiri dengan ;"
+          "Kurung print() tidak lengkap."
         );
 
       }
 
 
       const expression =
-        code.substring(
+        code.slice(
           open + 1,
           close
         );
@@ -1923,146 +2081,149 @@ function execute(
       const value =
         parseValue(
           expression,
-          variables
+          vars
         );
 
 
       output.push(
-        formatValue(
+        formatOutput(
           value
         )
       );
 
 
-      position =
-        after + 1;
+      i =
+        close + 1;
+
+
+      if (
+        code[i] === ";"
+      ) {
+
+        i++;
+
+      }
+
 
       continue;
-
     }
 
 
-    /*
-     * IF
-     */
+    /* IF */
 
     if (
-      /^if\s*\(/.test(
-        code.slice(position)
+      code.startsWith(
+        "if",
+        i
+      ) &&
+      /\s*\(/.test(
+        code.slice(
+          i + 2
+        )
       )
     ) {
 
-      const open =
+      const openParen =
         code.indexOf(
           "(",
-          position
+          i
         );
 
 
       const closeParen =
         findClosingParen(
           code,
-          open
+          openParen
         );
 
 
-      const expression =
-        code.substring(
-          open + 1,
+      if (
+        closeParen === -1
+      ) {
+
+        throw new Error(
+          "Kondisi if tidak lengkap."
+        );
+
+      }
+
+
+      const conditionText =
+        code.slice(
+          openParen + 1,
           closeParen
         );
 
 
-      let bodyStart =
-        skipWhitespace(
+      const openBrace =
+        findBrace(
           code,
-          closeParen + 1
+          closeParen
+        );
+
+
+      const closeBrace =
+        findClosingBrace(
+          code,
+          openBrace
         );
 
 
       if (
-        code[bodyStart] !== "{"
+        openBrace === -1 ||
+        closeBrace === -1
       ) {
 
         throw new Error(
-          "Blok if harus menggunakan { }."
+          "Blok if tidak lengkap."
         );
 
       }
 
 
-      const bodyEnd =
-        findBrace(
+      const ifBody =
+        code.slice(
+          openBrace + 1,
+          closeBrace
+        );
+
+
+      let cursor =
+        closeBrace + 1;
+
+
+      cursor =
+        skipWhitespace(
           code,
-          bodyStart
+          cursor
         );
 
 
-      const body =
-        code.substring(
-          bodyStart + 1,
-          bodyEnd
-        );
+      const branches = [];
 
 
-      let executed = false;
+      branches.push({
+        type: "if",
+        condition:
+          conditionText,
+        body:
+          ifBody
+      });
 
 
-      /*
-       * IF
-       */
+      /* ELSE IF */
 
-      if (
-        condition(
-          expression,
-          variables
+      while (
+        code.startsWith(
+          "else if",
+          cursor
         )
       ) {
-
-        execute(
-          body,
-          variables,
-          output
-        );
-
-
-        executed = true;
-
-      }
-
-
-      position =
-        bodyEnd + 1;
-
-
-      /*
-       * ELSE IF
-       */
-
-      while (true) {
-
-        position =
-          skipWhitespace(
-            code,
-            position
-          );
-
-
-        if (
-          !/^else\s+if\s*\(/.test(
-            code.slice(position)
-          )
-        ) {
-
-          break;
-
-        }
-
 
         const elseIfOpen =
           code.indexOf(
             "(",
-            position
+            cursor
           );
 
 
@@ -2073,343 +2234,115 @@ function execute(
           );
 
 
-        const elseIfExpression =
-          code.substring(
+        const elseIfCondition =
+          code.slice(
             elseIfOpen + 1,
             elseIfClose
           );
 
 
-        let elseIfBodyStart =
-          skipWhitespace(
-            code,
-            elseIfClose + 1
-          );
-
-
-        if (
-          code[elseIfBodyStart] !== "{"
-        ) {
-
-          throw new Error(
-            "Blok else if harus menggunakan { }."
-          );
-
-        }
-
-
-        const elseIfBodyEnd =
+        const elseIfBrace =
           findBrace(
             code,
-            elseIfBodyStart
+            elseIfClose
+          );
+
+
+        const elseIfEnd =
+          findClosingBrace(
+            code,
+            elseIfBrace
           );
 
 
         const elseIfBody =
-          code.substring(
-            elseIfBodyStart + 1,
-            elseIfBodyEnd
+          code.slice(
+            elseIfBrace + 1,
+            elseIfEnd
           );
 
 
-        if (
-          !executed &&
-          condition(
-            elseIfExpression,
-            variables
-          )
-        ) {
+        branches.push({
+          type: "else-if",
+          condition:
+            elseIfCondition,
+          body:
+            elseIfBody
+        });
 
-          execute(
-            elseIfBody,
-            variables,
-            output
+
+        cursor =
+          skipWhitespace(
+            code,
+            elseIfEnd + 1
           );
-
-
-          executed = true;
-
-        }
-
-
-        position =
-          elseIfBodyEnd + 1;
 
       }
 
 
-      /*
-       * ELSE
-       */
-
-      position =
-        skipWhitespace(
-          code,
-          position
-        );
-
+      /* ELSE */
 
       if (
-        /^else\b/.test(
-          code.slice(position)
+        code.startsWith(
+          "else",
+          cursor
         )
       ) {
 
-        let elseStart =
-          position + 4;
-
-
-        elseStart =
-          skipWhitespace(
+        const elseBrace =
+          findBrace(
             code,
-            elseStart
+            cursor + 4
           );
-
-
-        if (
-          code[elseStart] !== "{"
-        ) {
-
-          throw new Error(
-            "Blok else harus menggunakan { }."
-          );
-
-        }
 
 
         const elseEnd =
-          findBrace(
+          findClosingBrace(
             code,
-            elseStart
+            elseBrace
           );
 
 
         const elseBody =
-          code.substring(
-            elseStart + 1,
+          code.slice(
+            elseBrace + 1,
             elseEnd
           );
 
 
-        if (!executed) {
-
-          execute(
-            elseBody,
-            variables,
-            output
-          );
-
-        }
+        branches.push({
+          type: "else",
+          body:
+            elseBody
+        });
 
 
-        position =
+        cursor =
           elseEnd + 1;
 
       }
 
 
-      continue;
-
-    }
-
-
-    /*
-     * SWITCH
-     */
-
-    if (
-      /^switch\s*\(/.test(
-        code.slice(position)
-      )
-    ) {
-
-      const open =
-        code.indexOf(
-          "(",
-          position
-        );
-
-
-      const closeParen =
-        findClosingParen(
-          code,
-          open
-        );
-
-
-      const expression =
-        code.substring(
-          open + 1,
-          closeParen
-        ).trim();
-
-
-      const switchValue =
-        parseValue(
-          expression,
-          variables
-        );
-
-
-      let switchStart =
-        skipWhitespace(
-          code,
-          closeParen + 1
-        );
-
-
-      if (
-        code[switchStart] !== "{"
-      ) {
-
-        throw new Error(
-          "Blok switch harus menggunakan { }."
-        );
-
-      }
-
-
-      const switchEnd =
-        findBrace(
-          code,
-          switchStart
-        );
-
-
-      const switchBody =
-        code.substring(
-          switchStart + 1,
-          switchEnd
-        );
-
-
-      /*
-       * PARSE CASE
-       *
-       * Case sekarang dibatasi oleh:
-       *
-       * case berikutnya
-       * ATAU
-       * default
-       * ATAU
-       * akhir switch
-       */
-
-      const caseRegex =
-        /case\s+([^:]+)\s*:/g;
-
-
-      const cases =
-        [
-          ...switchBody.matchAll(
-            caseRegex
-          )
-        ];
-
-
-      let matched = false;
-
+      /* ONLY ONE BRANCH */
 
       for (
-        let i = 0;
-        i < cases.length;
-        i++
+        const branch
+        of branches
       ) {
 
-        const current =
-          cases[i];
-
-
-        const caseValue =
-          parseValue(
-            current[1],
-            variables
-          );
-
-
-        const bodyStart =
-          current.index +
-          current[0].length;
-
-
-        /*
-         * Cari batas case berikutnya.
-         */
-
-        let bodyEnd =
-          switchBody.length;
-
-
-        const nextCase =
-          cases[i + 1];
-
-
-        if (nextCase) {
-
-          bodyEnd =
-            nextCase.index;
-
-        }
-
-
-        /*
-         * Jika ada default sebelum case berikutnya,
-         * default menjadi batas case.
-         */
-
-        const defaultIndex =
-          switchBody.search(
-            /default\s*:/
-          );
-
-
         if (
-          defaultIndex !== -1 &&
-          defaultIndex > bodyStart &&
-          defaultIndex < bodyEnd
-        ) {
-
-          bodyEnd =
-            defaultIndex;
-
-        }
-
-
-        const caseBody =
-          switchBody.substring(
-            bodyStart,
-            bodyEnd
-          );
-
-
-        /*
-         * Hanya case yang cocok
-         * yang boleh dijalankan.
-         */
-
-        if (
-          !matched &&
-          String(caseValue) ===
-          String(switchValue)
+          branch.type === "else" ||
+          evaluateCondition(
+            branch.condition,
+            vars
+          )
         ) {
 
           execute(
-            caseBody.replace(
-              /\bbreak\s*;/g,
-              ""
-            ),
-            variables,
+            branch.body,
+            vars,
             output
           );
-
-
-          matched = true;
-
-          /*
-           * PENTING:
-           * Setelah menemukan case yang cocok,
-           * jangan jalankan case lain.
-           */
 
           break;
 
@@ -2418,107 +2351,794 @@ function execute(
       }
 
 
-      /*
-       * DEFAULT
-       *
-       * Default hanya dijalankan jika
-       * TIDAK ADA case yang cocok.
-       */
+      i =
+        cursor;
 
-      if (!matched) {
+      continue;
+    }
 
-        const defaultMatch =
-          switchBody.match(
-            /default\s*:([\s\S]*)$/
+
+    /* SWITCH */
+
+    if (
+      code.startsWith(
+        "switch",
+        i
+      )
+    ) {
+
+      const openParen =
+        code.indexOf(
+          "(",
+          i
+        );
+
+
+      const closeParen =
+        findClosingParen(
+          code,
+          openParen
+        );
+
+
+      if (
+        closeParen === -1
+      ) {
+
+        throw new Error(
+          "Switch tidak lengkap."
+        );
+
+      }
+
+
+      const switchExpression =
+        code.slice(
+          openParen + 1,
+          closeParen
+        );
+
+
+      const switchValue =
+        parseValue(
+          switchExpression,
+          vars
+        );
+
+
+      const openBrace =
+        findBrace(
+          code,
+          closeParen
+        );
+
+
+      const closeBrace =
+        findClosingBrace(
+          code,
+          openBrace
+        );
+
+
+      if (
+        openBrace === -1 ||
+        closeBrace === -1
+      ) {
+
+        throw new Error(
+          "Blok switch tidak lengkap."
+        );
+
+      }
+
+
+      const switchBody =
+        code.slice(
+          openBrace + 1,
+          closeBrace
+        );
+
+
+      const labels = [];
+
+
+      const labelRegex =
+        /\bcase\s+([^:]+)\s*:|\bdefault\s*:/g;
+
+
+      let match;
+
+
+      while (
+        (
+          match =
+            labelRegex.exec(
+              switchBody
+            )
+        ) !== null
+      ) {
+
+        labels.push({
+
+          type:
+            match[0]
+              .trim()
+              .startsWith(
+                "default"
+              )
+              ? "default"
+              : "case",
+
+          value:
+            match[1]
+              ? match[1].trim()
+              : null,
+
+          start:
+            match.index,
+
+          bodyStart:
+            labelRegex.lastIndex
+
+        });
+
+      }
+
+
+      let executed =
+        false;
+
+
+      for (
+        let x = 0;
+        x < labels.length;
+        x++
+      ) {
+
+        const label =
+          labels[x];
+
+
+        const nextLabel =
+          labels[x + 1];
+
+
+        const bodyEnd =
+          nextLabel
+            ? nextLabel.start
+            : switchBody.length;
+
+
+        let body =
+          switchBody.slice(
+            label.bodyStart,
+            bodyEnd
+          );
+
+
+        const breakIndex =
+          body.search(
+            /\bbreak\s*;/
           );
 
 
         if (
-          defaultMatch
+          breakIndex !== -1
         ) {
 
+          body =
+            body.slice(
+              0,
+              breakIndex
+            );
+
+        }
+
+
+        let matched =
+          false;
+
+
+        if (
+          label.type === "case"
+        ) {
+
+          const caseValue =
+            parseValue(
+              label.value,
+              vars
+            );
+
+
+          matched =
+            caseValue ===
+            switchValue;
+
+        } else {
+
+          matched =
+            !executed;
+
+        }
+
+
+        if (matched) {
+
           execute(
-            defaultMatch[1].replace(
-              /\bbreak\s*;/g,
-              ""
-            ),
-            variables,
+            body,
+            vars,
             output
           );
+
+
+          executed =
+            true;
+
+
+          if (
+            label.type === "case"
+          ) {
+
+            break;
+
+          }
 
         }
 
       }
 
 
-      /*
-       * Lewati seluruh switch.
-       */
-
-      position =
-        switchEnd + 1;
+      i =
+        closeBrace + 1;
 
 
       continue;
-
     }
 
 
-    /*
-     * VARIABLE DECLARATION / ASSIGNMENT
-     */
+    /* VARIABLE DECLARATION */
+
+    const declaration =
+      code
+        .slice(i)
+        .match(
+          /^(?:final\s+|const\s+)?(?:String|int|double|num|bool|dynamic|List(?:<[^>]+>)?|Map(?:<[^>]+>)?)\s+([A-Za-z_]\w*)\s*=\s*([\s\S]*?);/
+        );
+
+
+    if (declaration) {
+
+      const name =
+        declaration[1];
+
+
+      const expression =
+        declaration[2];
+
+
+      vars[name] =
+        parseValue(
+          expression,
+          vars
+        );
+
+
+      i +=
+        declaration[0].length;
+
+
+      continue;
+    }
+
+
+    /* FINAL / CONST */
+
+    const simpleDeclaration =
+      code
+        .slice(i)
+        .match(
+          /^(?:final|const)\s+([A-Za-z_]\w*)\s*=\s*([\s\S]*?);/
+        );
+
+
+    if (
+      simpleDeclaration
+    ) {
+
+      const name =
+        simpleDeclaration[1];
+
+
+      const expression =
+        simpleDeclaration[2];
+
+
+      vars[name] =
+        parseValue(
+          expression,
+          vars
+        );
+
+
+      i +=
+        simpleDeclaration[0].length;
+
+
+      continue;
+    }
+
+
+    /* ASSIGNMENT */
 
     const assignment =
       code
-        .slice(position)
+        .slice(i)
         .match(
-          /^(?:(String|int|double|num|bool|dynamic)\s+)?(\w+)\s*=\s*([^;]+);/
+          /^([A-Za-z_]\w*)\s*=\s*([\s\S]*?);/
         );
 
 
     if (assignment) {
 
-      const variableName =
+      const name =
+        assignment[1];
+
+
+      const expression =
         assignment[2];
 
 
-      const valueExpression =
-        assignment[3];
-
-
-      variables[variableName] =
+      vars[name] =
         parseValue(
-          valueExpression,
-          variables
+          expression,
+          vars
         );
 
 
-      position +=
+      i +=
         assignment[0].length;
 
 
       continue;
+    }
+
+
+    /* UNKNOWN STATEMENT */
+
+    const semicolon =
+      code.indexOf(
+        ";",
+        i
+      );
+
+
+    if (
+      semicolon === -1
+    ) {
+
+      break;
 
     }
 
 
-    /*
-     * UNKNOWN CHARACTER
-     */
-
-    position++;
+    i =
+      semicolon + 1;
 
   }
 
 }
 
 
-/* =====================================================
-   KEYBOARD SHORTCUT
-===================================================== */
+/* =========================================================
+   COMPILE
+========================================================= */
+
+function compile() {
+
+  const code =
+    document.getElementById(
+      "code"
+    ).value;
+
+
+  const consoleElement =
+    document.getElementById(
+      "console"
+    );
+
+
+  const status =
+    document.getElementById(
+      "status"
+    );
+
+
+  consoleElement.className =
+    "console";
+
+
+  consoleElement.textContent =
+    "";
+
+
+  try {
+
+    const mainIndex =
+      code.indexOf(
+        "void main"
+      );
+
+
+    if (
+      mainIndex === -1
+    ) {
+
+      throw new Error(
+        "Fungsi void main() tidak ditemukan."
+      );
+
+    }
+
+
+    const openBrace =
+      code.indexOf(
+        "{",
+        mainIndex
+      );
+
+
+    if (
+      openBrace === -1
+    ) {
+
+      throw new Error(
+        "Blok main() tidak ditemukan."
+      );
+
+    }
+
+
+    const closeBrace =
+      findClosingBrace(
+        code,
+        openBrace
+      );
+
+
+    if (
+      closeBrace === -1
+    ) {
+
+      throw new Error(
+        "Kurung kurawal main() tidak lengkap."
+      );
+
+    }
+
+
+    const mainBody =
+      code.slice(
+        openBrace + 1,
+        closeBrace
+      );
+
+
+    const vars = {};
+
+    const output = [];
+
+
+    execute(
+      mainBody,
+      vars,
+      output
+    );
+
+
+    if (
+      output.length === 0
+    ) {
+
+      consoleElement.textContent =
+        "Program selesai tanpa output.";
+
+      consoleElement.classList.add(
+        "empty"
+      );
+
+    } else {
+
+      consoleElement.textContent =
+        output.join("\n");
+
+    }
+
+
+    status.textContent =
+      "✓ Program berhasil dijalankan";
+
+  } catch (error) {
+
+    consoleElement.className =
+      "console error";
+
+
+    consoleElement.textContent =
+      "Error: " +
+      error.message;
+
+
+    status.textContent =
+      "✗ Terjadi error";
+
+  }
+
+}
+
+
+/* =========================================================
+   CLEAR CODE
+========================================================= */
+
+function clearCode() {
+
+  document.getElementById(
+    "code"
+  ).value = "";
+
+
+  document.getElementById(
+    "status"
+  ).textContent =
+    "Editor dikosongkan.";
+
+}
+
+
+/* =========================================================
+   CLEAR CONSOLE
+========================================================= */
+
+function clearConsole() {
+
+  const consoleElement =
+    document.getElementById(
+      "console"
+    );
+
+
+  consoleElement.className =
+    "console empty";
+
+
+  consoleElement.textContent =
+    "Output akan tampil di sini...";
+
+
+  document.getElementById(
+    "status"
+  ).textContent =
+    "Ready";
+
+}
+
+
+/* =========================================================
+   FORMAT CODE
+========================================================= */
+
+function formatCode() {
+
+  const textarea =
+    document.getElementById(
+      "code"
+    );
+
+
+  let code =
+    textarea.value.trim();
+
+
+  let result = "";
+
+  let indent = 0;
+
+  let line = "";
+
+  let quote = null;
+
+
+  for (
+    let i = 0;
+    i < code.length;
+    i++
+  ) {
+
+    const char =
+      code[i];
+
+
+    if (
+      quote &&
+      char === quote &&
+      code[i - 1] !== "\\"
+    ) {
+
+      quote = null;
+
+      line += char;
+
+      continue;
+    }
+
+
+    if (
+      !quote &&
+      (
+        char === '"' ||
+        char === "'"
+      )
+    ) {
+
+      quote = char;
+
+      line += char;
+
+      continue;
+    }
+
+
+    if (quote) {
+
+      line += char;
+
+      continue;
+    }
+
+
+    if (
+      char === "{"
+    ) {
+
+      line =
+        line.trim() +
+        " {";
+
+
+      result +=
+        "  ".repeat(indent) +
+        line.trim() +
+        "\n";
+
+
+      line = "";
+
+
+      indent++;
+
+    }
+
+
+    else if (
+      char === "}"
+    ) {
+
+      if (
+        line.trim()
+      ) {
+
+        result +=
+          "  ".repeat(indent) +
+          line.trim() +
+          "\n";
+
+
+        line = "";
+
+      }
+
+
+      indent--;
+
+
+      result +=
+        "  ".repeat(indent) +
+        "}";
+
+
+      if (
+        code[i + 1] !== ";" &&
+        code[i + 1] !== "," &&
+        code[i + 1] !== ")"
+      ) {
+
+        result += "\n";
+
+      }
+
+    }
+
+
+    else if (
+      char === ";"
+    ) {
+
+      line += ";";
+
+
+      result +=
+        "  ".repeat(indent) +
+        line.trim() +
+        "\n";
+
+
+      line = "";
+
+    }
+
+
+    else {
+
+      line += char;
+
+    }
+
+  }
+
+
+  if (
+    line.trim()
+  ) {
+
+    result +=
+      "  ".repeat(indent) +
+      line.trim();
+
+  }
+
+
+  textarea.value =
+    result.trim();
+
+}
+
+
+/* =========================================================
+   LOAD EXAMPLE
+========================================================= */
+
+function loadExample(
+  name
+) {
+
+  if (
+    examples[name]
+  ) {
+
+    document.getElementById(
+      "code"
+    ).value =
+      examples[name];
+
+
+    document.getElementById(
+      "status"
+    ).textContent =
+      "Contoh berhasil dimuat.";
+
+  }
+
+}
+
+
+/* =========================================================
+   CTRL + ENTER
+========================================================= */
 
 document
-  .getElementById("editor")
+  .getElementById(
+    "code"
+  )
   .addEventListener(
     "keydown",
     function(event) {
@@ -2530,12 +3150,19 @@ document
 
         event.preventDefault();
 
-        runCode();
+        compile();
 
       }
 
     }
   );
+
+
+/* =========================================================
+   RUN DEFAULT CODE
+========================================================= */
+
+compile();
 
 </script>
 
