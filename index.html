@@ -43,21 +43,13 @@
 
       background: var(--background);
       color: var(--text);
-
       min-height: 100vh;
     }
 
-    /* =========================
-       HEADER
-    ========================= */
-
     header {
       height: 68px;
-
       background: var(--surface);
-
-      border-bottom:
-        1px solid var(--border);
+      border-bottom: 1px solid var(--border);
 
       display: flex;
       align-items: center;
@@ -67,7 +59,6 @@
 
       position: sticky;
       top: 0;
-
       z-index: 100;
     }
 
@@ -85,9 +76,7 @@
       height: 38px;
 
       border-radius: 10px;
-
       background: var(--primary);
-
       color: white;
 
       display: flex;
@@ -99,26 +88,18 @@
 
     .language {
       background: var(--primary-light);
-
       color: var(--primary);
 
       padding: 7px 12px;
-
       border-radius: 20px;
 
       font-size: 12px;
       font-weight: 600;
     }
 
-    /* =========================
-       LAYOUT
-    ========================= */
-
     .container {
       max-width: 1450px;
-
       margin: auto;
-
       padding: 25px;
     }
 
@@ -128,13 +109,11 @@
 
     .title h1 {
       font-size: 27px;
-
       margin-bottom: 5px;
     }
 
     .title p {
       color: var(--muted);
-
       font-size: 14px;
     }
 
@@ -148,16 +127,10 @@
       gap: 18px;
     }
 
-    /* =========================
-       CARD
-    ========================= */
-
     .card {
       background: var(--surface);
 
-      border:
-        1px solid var(--border);
-
+      border: 1px solid var(--border);
       border-radius: 12px;
 
       overflow: hidden;
@@ -175,8 +148,7 @@
       align-items: center;
       justify-content: space-between;
 
-      border-bottom:
-        1px solid var(--border);
+      border-bottom: 1px solid var(--border);
 
       background: white;
     }
@@ -186,28 +158,19 @@
       font-weight: 700;
     }
 
-    /* =========================
-       BUTTON
-    ========================= */
-
     .buttons {
       display: flex;
-
       gap: 7px;
     }
 
     button {
-      border:
-        1px solid var(--border);
-
+      border: 1px solid var(--border);
       background: white;
-
       color: var(--text);
 
       border-radius: 7px;
 
-      padding:
-        7px 12px;
+      padding: 7px 12px;
 
       cursor: pointer;
 
@@ -222,23 +185,15 @@
 
     .run {
       background: var(--primary);
-
       color: white;
-
-      border-color:
-        var(--primary);
+      border-color: var(--primary);
 
       font-weight: 700;
     }
 
     .run:hover {
-      background:
-        var(--primary-dark);
+      background: var(--primary-dark);
     }
-
-    /* =========================
-       EDITOR
-    ========================= */
 
     .editor-container {
       position: relative;
@@ -248,22 +203,17 @@
       display: block;
 
       width: 100%;
-
       height: 500px;
 
       resize: vertical;
 
       border: none;
-
       outline: none;
 
       padding: 20px;
 
-      background:
-        var(--editor);
-
-      color:
-        var(--code);
+      background: var(--editor);
+      color: var(--code);
 
       font-family:
         "Cascadia Code",
@@ -272,7 +222,6 @@
         monospace;
 
       font-size: 14px;
-
       line-height: 1.7;
 
       tab-size: 2;
@@ -285,20 +234,15 @@
     .status {
       height: 36px;
 
-      padding:
-        0 14px;
+      padding: 0 14px;
 
-      border-top:
-        1px solid var(--border);
+      border-top: 1px solid var(--border);
 
       display: flex;
-
       align-items: center;
-
       gap: 7px;
 
       color: var(--muted);
-
       font-size: 12px;
     }
 
@@ -306,30 +250,20 @@
       width: 7px;
       height: 7px;
 
-      background:
-        var(--success);
-
+      background: var(--success);
       border-radius: 50%;
     }
 
-    /* =========================
-       OUTPUT
-    ========================= */
-
     .output {
       min-height: 190px;
-
       max-height: 300px;
 
       overflow: auto;
 
       padding: 17px;
 
-      background:
-        #1e1e1e;
-
-      color:
-        #f5f5f5;
+      background: #1e1e1e;
+      color: #f5f5f5;
 
       font-family:
         Consolas,
@@ -337,7 +271,6 @@
         monospace;
 
       font-size: 14px;
-
       line-height: 1.7;
 
       white-space: pre-wrap;
@@ -355,10 +288,6 @@
       color: #ffb4ab;
     }
 
-    /* =========================
-       EXAMPLES
-    ========================= */
-
     .examples {
       padding: 8px;
     }
@@ -374,50 +303,20 @@
     }
 
     .example:hover {
-      background:
-        var(--surface-2);
+      background: var(--surface-2);
     }
 
     .example strong {
       display: block;
 
       font-size: 13px;
-
       margin-bottom: 4px;
     }
 
     .example span {
       color: var(--muted);
-
       font-size: 12px;
     }
-
-    /* =========================
-       SELECT
-    ========================= */
-
-    select {
-      width: 100%;
-
-      padding: 9px 10px;
-
-      border:
-        1px solid var(--border);
-
-      border-radius: 7px;
-
-      background: white;
-
-      color: var(--text);
-
-      outline: none;
-
-      margin-bottom: 10px;
-    }
-
-    /* =========================
-       INFO
-    ========================= */
 
     .info {
       padding: 15px;
@@ -425,7 +324,6 @@
       color: var(--muted);
 
       font-size: 13px;
-
       line-height: 1.6;
     }
 
@@ -433,23 +331,15 @@
       color: var(--text);
     }
 
-    /* =========================
-       RESPONSIVE
-    ========================= */
-
     @media (max-width: 950px) {
-
       .compiler {
         grid-template-columns: 1fr;
       }
-
     }
 
     @media (max-width: 600px) {
-
       header {
-        padding:
-          0 15px;
+        padding: 0 15px;
       }
 
       .language {
@@ -471,97 +361,78 @@
       .card-header {
         flex-wrap: wrap;
       }
-
     }
   </style>
 </head>
 
-
 <body>
 
-  <!-- HEADER -->
+<header>
 
-  <header>
+  <div class="brand">
+    <div class="logo">D</div>
+    Dart Compiler
+  </div>
 
-    <div class="brand">
+  <div class="language">
+    Dart • MCS
+  </div>
 
-      <div class="logo">
-        D
-      </div>
-
-      Dart Compiler
-
-    </div>
-
-    <div class="language">
-      Dart • MCS
-    </div>
-
-  </header>
+</header>
 
 
-  <!-- CONTENT -->
+<main class="container">
 
-  <main class="container">
+  <div class="title">
 
-    <div class="title">
+    <h1>Dart Compiler</h1>
 
-      <h1>
-        Dart Compiler
-      </h1>
+    <p>
+      Tulis kode Dart, jalankan program, dan lihat hasilnya pada console.
+    </p>
 
-      <p>
-        Tulis kode Dart, jalankan program, dan lihat hasilnya pada console.
-      </p>
-
-    </div>
+  </div>
 
 
-    <div class="compiler">
+  <div class="compiler">
 
+    <!-- EDITOR -->
 
-      <!-- ======================
-           EDITOR
-      ======================= -->
+    <section>
 
-      <section>
+      <div class="card">
 
-        <div class="card">
+        <div class="card-header">
 
-          <div class="card-header">
+          <div class="card-title">
+            Editor
+          </div>
 
-            <div class="card-title">
-              Editor
-            </div>
+          <div class="buttons">
 
-            <div class="buttons">
+            <button onclick="formatCode()">
+              Format
+            </button>
 
-              <button onclick="formatCode()">
-                Format
-              </button>
+            <button onclick="clearCode()">
+              Clear
+            </button>
 
-              <button onclick="clearCode()">
-                Clear
-              </button>
-
-              <button
-                class="run"
-                onclick="runCode()"
-              >
-                ▶ Run
-              </button>
-
-            </div>
+            <button class="run" onclick="runCode()">
+              ▶ Run
+            </button>
 
           </div>
 
+        </div>
 
-          <div class="editor-container">
 
-            <textarea
-              id="editor"
-              spellcheck="false"
-            >void main() {
+        <div class="editor-container">
+
+          <textarea
+            id="editor"
+            spellcheck="false"
+          >void main() {
   String nama = "Sony";
   int umur = 20;
   double ipk = 3.85;
@@ -573,255 +444,201 @@
   print("Mahasiswa: $mahasiswa");
 }</textarea>
 
+        </div>
+
+
+        <div class="status">
+
+          <span class="status-dot"></span>
+
+          <span id="status">
+            Ready
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <!-- OUTPUT -->
+
+      <div
+        class="card"
+        style="margin-top:18px;"
+      >
+
+        <div class="card-header">
+
+          <div class="card-title">
+            Console
           </div>
 
+          <button onclick="clearOutput()">
+            Clear
+          </button>
 
-          <div class="status">
+        </div>
 
-            <span class="status-dot"></span>
+        <div
+          id="output"
+          class="output output-empty"
+        >
+          Output akan muncul di sini...
+        </div>
 
-            <span id="status">
-              Ready
-            </span>
+      </div>
 
+    </section>
+
+
+    <!-- SIDEBAR -->
+
+    <aside>
+
+      <div class="card">
+
+        <div class="card-header">
+
+          <div class="card-title">
+            Contoh Program
           </div>
 
         </div>
 
 
-        <!-- OUTPUT -->
-
-        <div
-          class="card"
-          style="margin-top:18px;"
-        >
-
-          <div class="card-header">
-
-            <div class="card-title">
-              Console
-            </div>
-
-            <button onclick="clearOutput()">
-              Clear
-            </button>
-
-          </div>
+        <div class="examples">
 
           <div
-            id="output"
-            class="output output-empty"
+            class="example"
+            onclick="example('datatype')"
           >
-            Output akan muncul di sini...
+            <strong>Tipe Data</strong>
+            <span>String, int, double, bool</span>
+          </div>
+
+
+          <div
+            class="example"
+            onclick="example('list')"
+          >
+            <strong>List</strong>
+            <span>Menyimpan banyak data</span>
+          </div>
+
+
+          <div
+            class="example"
+            onclick="example('map')"
+          >
+            <strong>Map</strong>
+            <span>Data key dan value</span>
+          </div>
+
+
+          <div
+            class="example"
+            onclick="example('if')"
+          >
+            <strong>If / Else</strong>
+            <span>Percabangan kondisi</span>
+          </div>
+
+
+          <div
+            class="example"
+            onclick="example('elseif')"
+          >
+            <strong>Else If</strong>
+            <span>Beberapa kondisi</span>
+          </div>
+
+
+          <div
+            class="example"
+            onclick="example('switch')"
+          >
+            <strong>Switch Case</strong>
+            <span>Pemilihan berdasarkan nilai</span>
+          </div>
+
+
+          <div
+            class="example"
+            onclick="example('operation')"
+          >
+            <strong>Operasi</strong>
+            <span>Operasi matematika</span>
           </div>
 
         </div>
 
-      </section>
+      </div>
 
 
-      <!-- ======================
-           SIDEBAR
-      ======================= -->
+      <!-- INFO -->
 
-      <aside>
+      <div
+        class="card"
+        style="margin-top:18px;"
+      >
 
-        <div class="card">
+        <div class="card-header">
 
-          <div class="card-header">
-
-            <div class="card-title">
-              Contoh Program
-            </div>
-
-          </div>
-
-
-          <div class="examples">
-
-
-            <div
-              class="example"
-              onclick="example('datatype')"
-            >
-
-              <strong>
-                Tipe Data
-              </strong>
-
-              <span>
-                String, int, double, bool
-              </span>
-
-            </div>
-
-
-            <div
-              class="example"
-              onclick="example('list')"
-            >
-
-              <strong>
-                List
-              </strong>
-
-              <span>
-                Menyimpan banyak data
-              </span>
-
-            </div>
-
-
-            <div
-              class="example"
-              onclick="example('map')"
-            >
-
-              <strong>
-                Map
-              </strong>
-
-              <span>
-                Data key dan value
-              </span>
-
-            </div>
-
-
-            <div
-              class="example"
-              onclick="example('if')"
-            >
-
-              <strong>
-                If / Else
-              </strong>
-
-              <span>
-                Percabangan kondisi
-              </span>
-
-            </div>
-
-
-            <div
-              class="example"
-              onclick="example('elseif')"
-            >
-
-              <strong>
-                Else If
-              </strong>
-
-              <span>
-                Beberapa kondisi
-              </span>
-
-            </div>
-
-
-            <div
-              class="example"
-              onclick="example('switch')"
-            >
-
-              <strong>
-                Switch Case
-              </strong>
-
-              <span>
-                Pemilihan berdasarkan nilai
-              </span>
-
-            </div>
-
-
-            <div
-              class="example"
-              onclick="example('operation')"
-            >
-
-              <strong>
-                Operasi
-              </strong>
-
-              <span>
-                Operasi matematika
-              </span>
-
-            </div>
-
+          <div class="card-title">
+            Didukung
           </div>
 
         </div>
 
+        <div class="info">
 
-        <!-- QUICK INFO -->
+          <b>Tipe Data</b><br>
 
-        <div
-          class="card"
-          style="margin-top:18px;"
-        >
+          String, int, double, num,
+          bool, dynamic, List, Map.
 
-          <div class="card-header">
+          <br><br>
 
-            <div class="card-title">
-              Didukung
-            </div>
+          <b>Control Flow</b><br>
 
-          </div>
+          if, if-else, else-if,
+          switch-case.
 
-          <div class="info">
+          <br><br>
 
-            <b>Tipe Data</b><br>
+          <b>Output</b><br>
 
-            String, int, double, num,
-            bool, dynamic, List, Map.
+          print()
 
-            <br><br>
+          <br><br>
 
-            <b>Control Flow</b><br>
+          <b>Operator</b><br>
 
-            if, if-else, else-if,
-            switch-case.
-
-            <br><br>
-
-            <b>Output</b><br>
-
-            print()
-
-            <br><br>
-
-            <b>Operator</b><br>
-
-            + &nbsp; - &nbsp; * &nbsp; /
-            &nbsp; % &nbsp; &gt; &nbsp; &lt;
-            &nbsp; == &nbsp; &amp;&amp;
-            &nbsp; ||
-
-          </div>
+          + &nbsp; - &nbsp; * &nbsp; /
+          &nbsp; % &nbsp; &gt; &nbsp; &lt;
+          &nbsp; == &nbsp; &amp;&amp;
+          &nbsp; ||
 
         </div>
 
-      </aside>
+      </div>
 
-    </div>
+    </aside>
 
-  </main>
+  </div>
+
+</main>
 
 
-  <script>
+<script>
 
-    /*
-    =====================================================
-    CONTOH PROGRAM
-    =====================================================
-    */
+/* =====================================================
+   CONTOH PROGRAM
+===================================================== */
 
-    const examples = {
+const examples = {
 
-      datatype: `void main() {
+  datatype: `void main() {
   String nama = "Sony";
   int umur = 20;
   double ipk = 3.85;
@@ -837,7 +654,7 @@
   print("Data: $data");
 }`,
 
-      list: `void main() {
+  list: `void main() {
   List<String> bahasa = [
     "Dart",
     "Python",
@@ -849,7 +666,7 @@
   print(bahasa);
 }`,
 
-      map: `void main() {
+  map: `void main() {
   Map<String, dynamic> mahasiswa = {
     "nama": "Sony",
     "umur": 20,
@@ -859,7 +676,7 @@
   print(mahasiswa);
 }`,
 
-      if: `void main() {
+  if: `void main() {
   int nilai = 85;
 
   if (nilai >= 70) {
@@ -869,7 +686,7 @@
   }
 }`,
 
-      elseif: `void main() {
+  elseif: `void main() {
   int nilai = 85;
 
   if (nilai >= 80) {
@@ -883,7 +700,7 @@
   }
 }`,
 
-      switch: `void main() {
+  switch: `void main() {
   int pilihan = 2;
 
   switch (pilihan) {
@@ -905,7 +722,7 @@
   }
 }`,
 
-      operation: `void main() {
+  operation: `void main() {
   int a = 10;
   int b = 5;
 
@@ -920,1330 +737,62 @@
   print("Bagi: $bagi");
 }`
 
-    };
+};
 
 
-    /*
-    =====================================================
-    LOAD EXAMPLE
-    =====================================================
-    */
+/* =====================================================
+   LOAD EXAMPLE
+===================================================== */
 
-    function example(name) {
+function example(name) {
 
-      document.getElementById(
-        "editor"
-      ).value = examples[name];
+  document.getElementById("editor").value =
+    examples[name];
 
-      document.getElementById(
-        "status"
-      ).textContent =
-        "Example loaded";
+  document.getElementById("status").textContent =
+    "Example loaded";
 
-    }
+}
 
 
-    /*
-    =====================================================
-    CLEAR
-    =====================================================
-    */
+/* =====================================================
+   CLEAR
+===================================================== */
 
-    function clearCode() {
+function clearCode() {
 
-      document.getElementById(
-        "editor"
-      ).value = "";
+  document.getElementById("editor").value = "";
 
-      document.getElementById(
-        "status"
-      ).textContent =
-        "Editor kosong";
+  document.getElementById("status").textContent =
+    "Editor kosong";
 
-    }
+}
 
 
-    function clearOutput() {
+function clearOutput() {
 
-      const output =
-        document.getElementById(
-          "output"
-        );
+  const output =
+    document.getElementById("output");
 
-      output.textContent =
-        "Output akan muncul di sini...";
+  output.textContent =
+    "Output akan muncul di sini...";
 
-      output.className =
-        "output output-empty";
+  output.className =
+    "output output-empty";
 
-    }
+}
 
 
-    /*
-    =====================================================
-    FORMAT
-    =====================================================
-    */
+/* =====================================================
+   FORMAT
+===================================================== */
 
-    function formatCode() {
+function formatCode() {
 
-      let code =
-        document.getElementById(
-          "editor"
-        ).value;
+  let code =
+    document.getElementById("editor").value;
 
-      let indent = 0;
+  let indent = 0;
 
-      code =
-        code
-          .replace(/\{/g, "{\n")
-          .replace(/\}/g, "\n}\n")
-          .split("\n");
-
-      let result = [];
-
-      for (let line of code) {
-
-        line = line.trim();
-
-        if (!line) continue;
-
-        if (
-          line.startsWith("}")
-        ) {
-          indent--;
-
-          if (indent < 0) {
-            indent = 0;
-          }
-        }
-
-        result.push(
-          "  ".repeat(indent)
-          + line
-        );
-
-        if (
-          line.endsWith("{")
-        ) {
-          indent++;
-        }
-
-      }
-
-      document.getElementById(
-        "editor"
-      ).value =
-        result.join("\n");
-
-      document.getElementById(
-        "status"
-      ).textContent =
-        "Code formatted";
-
-    }
-
-
-    /*
-    =====================================================
-    RUN
-    =====================================================
-    */
-
-    function runCode() {
-
-      const code =
-        document.getElementById(
-          "editor"
-        ).value;
-
-      const output =
-        document.getElementById(
-          "output"
-        );
-
-      output.className =
-        "output";
-
-      output.textContent =
-        "";
-
-      document.getElementById(
-        "status"
-      ).textContent =
-        "Running...";
-
-
-      try {
-
-        const result =
-          compile(code);
-
-
-        if (
-          result.length === 0
-        ) {
-
-          result.push(
-            "Program selesai."
-          );
-
-        }
-
-
-        output.textContent =
-          result.join("\n");
-
-        output.classList.add(
-          "output-success"
-        );
-
-
-        document.getElementById(
-          "status"
-        ).textContent =
-          "Finished";
-
-      }
-
-      catch (error) {
-
-        output.textContent =
-          "Error: " +
-          error.message;
-
-        output.classList.add(
-          "output-error"
-        );
-
-
-        document.getElementById(
-          "status"
-        ).textContent =
-          "Error";
-
-      }
-
-    }
-
-
-    /*
-    =====================================================
-    SIMPLE DART COMPILER
-    =====================================================
-    */
-
-    function compile(code) {
-
-      if (
-        !code.includes(
-          "void main"
-        )
-      ) {
-
-        throw new Error(
-          "Program harus memiliki void main()."
-        );
-
-      }
-
-
-      const variables = {};
-
-      const output = [];
-
-
-      /*
-      VARIABLE DECLARATION
-      */
-
-      const declarations =
-        [
-          ...code.matchAll(
-            /(?:String|int|double|num|bool|dynamic)\s+(\w+)\s*=\s*([^;]+);/g
-          )
-        ];
-
-
-      for (
-        const match of declarations
-      ) {
-
-        variables[
-          match[1]
-        ] =
-          parseValue(
-            match[2],
-            variables
-          );
-
-      }
-
-
-      /*
-      LIST
-      */
-
-      const listMatches =
-        [
-          ...code.matchAll(
-            /List(?:<[^>]+>)?\s+(\w+)\s*=\s*\[([\s\S]*?)\];/g
-          )
-        ];
-
-
-      for (
-        const match of listMatches
-      ) {
-
-        const values =
-          match[2]
-            .split(",")
-            .map(
-              x => x.trim()
-            )
-            .filter(
-              x => x
-            )
-            .map(
-              x =>
-                parseValue(
-                  x,
-                  variables
-                )
-            );
-
-        variables[
-          match[1]
-        ] = values;
-
-      }
-
-
-      /*
-      MAP
-      */
-
-      const mapMatches =
-        [
-          ...code.matchAll(
-            /Map(?:<[^>]+>)?\s+(\w+)\s*=\s*\{([\s\S]*?)\};/g
-          )
-        ];
-
-
-      for (
-        const match of mapMatches
-      ) {
-
-        const map = {};
-
-        const pairs =
-          match[2]
-            .split(",");
-
-
-        for (
-          const pair of pairs
-        ) {
-
-          const index =
-            pair.indexOf(":");
-
-          if (
-            index === -1
-          ) continue;
-
-          let key =
-            pair
-              .substring(
-                0,
-                index
-              )
-              .trim();
-
-          let value =
-            pair
-              .substring(
-                index + 1
-              )
-              .trim();
-
-
-          key =
-            key.replace(
-              /^["']|["']$/g,
-              ""
-            );
-
-
-          map[key] =
-            parseValue(
-              value,
-              variables
-            );
-
-        }
-
-
-        variables[
-          match[1]
-        ] = map;
-
-      }
-
-
-      /*
-      MAIN BLOCK
-      */
-
-      const start =
-        code.indexOf("{") + 1;
-
-      const end =
-        code.lastIndexOf("}");
-
-
-      if (
-        start <= 0 ||
-        end <= start
-      ) {
-
-        throw new Error(
-          "Struktur main() tidak valid."
-        );
-
-      }
-
-
-      const main =
-        code.substring(
-          start,
-          end
-        );
-
-
-      execute(
-        main,
-        variables,
-        output
-      );
-
-
-      return output;
-
-    }
-
-
-    /*
-    =====================================================
-    PARSE VALUE
-    =====================================================
-    */
-
-    function parseValue(
-      value,
-      variables
-    ) {
-
-      value =
-        value.trim();
-
-
-      /*
-      STRING INTERPOLATION
-      */
-
-      if (
-        /^".*"$/.test(value) ||
-        /^'.*'$/.test(value)
-      ) {
-
-        let text =
-          value.substring(
-            1,
-            value.length - 1
-          );
-
-
-        text =
-          text.replace(
-            /\$([a-zA-Z_]\w*)/g,
-            function (
-              match,
-              variable
-            ) {
-
-              if (
-                variables.hasOwnProperty(
-                  variable
-                )
-              ) {
-
-                return formatValue(
-                  variables[
-                    variable
-                  ]
-                );
-
-              }
-
-              return match;
-
-            }
-          );
-
-
-        return text;
-
-      }
-
-
-      if (
-        value === "true"
-      ) return true;
-
-
-      if (
-        value === "false"
-      ) return false;
-
-
-      if (
-        variables.hasOwnProperty(
-          value
-        )
-      ) {
-
-        return variables[
-          value
-        ];
-
-      }
-
-
-      /*
-      ARRAY INDEX
-      */
-
-      const indexMatch =
-        value.match(
-          /^(\w+)\[(\d+)\]$/
-        );
-
-
-      if (
-        indexMatch &&
-        variables[
-          indexMatch[1]
-        ]
-      ) {
-
-        return variables[
-          indexMatch[1]
-        ][
-          Number(
-            indexMatch[2]
-          )
-        ];
-
-      }
-
-
-      /*
-      ARITHMETIC
-      */
-
-      const expression =
-        value.replace(
-          /\b([a-zA-Z_]\w*)\b/g,
-          function (
-            name
-          ) {
-
-            if (
-              variables.hasOwnProperty(
-                name
-              )
-            ) {
-
-              return JSON.stringify(
-                variables[name]
-              );
-
-            }
-
-            return name;
-
-          }
-        );
-
-
-      if (
-        /^[0-9+\-*/%.()\s]+$/.test(
-          expression
-        )
-      ) {
-
-        try {
-
-          return Function(
-            "return " +
-            expression
-          )();
-
-        }
-
-        catch {}
-
-      }
-
-
-      return value;
-
-    }
-
-
-    /*
-    =====================================================
-    FORMAT VALUE
-    =====================================================
-    */
-
-    function formatValue(
-      value
-    ) {
-
-      if (
-        Array.isArray(value)
-      ) {
-
-        return (
-          "[" +
-          value
-            .map(
-              formatValue
-            )
-            .join(", ") +
-          "]"
-        );
-
-      }
-
-
-      if (
-        typeof value === "object" &&
-        value !== null
-      ) {
-
-        return JSON.stringify(
-          value
-        );
-
-      }
-
-
-      return String(
-        value
-      );
-
-    }
-
-
-    /*
-    =====================================================
-    CONDITION
-    =====================================================
-    */
-
-    function condition(
-      expression,
-      variables
-    ) {
-
-      expression =
-        expression.replace(
-          /\b([a-zA-Z_]\w*)\b/g,
-          function (
-            name
-          ) {
-
-            if (
-              variables.hasOwnProperty(
-                name
-              )
-            ) {
-
-              return JSON.stringify(
-                variables[name]
-              );
-
-            }
-
-            return name;
-
-          }
-        );
-
-
-      expression =
-        expression
-          .replace(
-            /\band\b/g,
-            "&&"
-          )
-          .replace(
-            /\bor\b/g,
-            "||"
-          );
-
-
-      try {
-
-        return Boolean(
-          Function(
-            "return (" +
-            expression +
-            ")"
-          )()
-        );
-
-      }
-
-      catch {
-
-        throw new Error(
-          "Kondisi tidak valid."
-        );
-
-      }
-
-    }
-
-
-    /*
-    =====================================================
-    FIND BRACE
-    =====================================================
-    */
-
-    function findBrace(
-      text,
-      start
-    ) {
-
-      let depth = 0;
-
-
-      for (
-        let i = start;
-        i < text.length;
-        i++
-      ) {
-
-        if (
-          text[i] === "{"
-        ) {
-          depth++;
-        }
-
-
-        if (
-          text[i] === "}"
-        ) {
-
-          depth--;
-
-          if (
-            depth === 0
-          ) {
-
-            return i;
-
-          }
-
-        }
-
-      }
-
-
-      throw new Error(
-        "Kurung { } tidak seimbang."
-      );
-
-    }
-
-
-    /*
-    =====================================================
-    EXECUTE
-    =====================================================
-    */
-
-    function execute(
-      code,
-      variables,
-      output
-    ) {
-
-      let position = 0;
-
-
-      while (
-        position < code.length
-      ) {
-
-
-        /*
-        SKIP
-        */
-
-        while (
-          /\s|;/.test(
-            code[position] || ""
-          )
-        ) {
-
-          position++;
-
-        }
-
-
-        if (
-          position >= code.length
-        ) break;
-
-
-        /*
-        PRINT
-        */
-
-        const print =
-          code
-            .slice(position)
-            .match(
-              /^print\s*\(([\s\S]*?)\)\s*;/
-            );
-
-
-        if (print) {
-
-          const value =
-            parseValue(
-              print[1],
-              variables
-            );
-
-
-          output.push(
-            formatValue(
-              value
-            )
-          );
-
-
-          position +=
-            print[0].length;
-
-          continue;
-
-        }
-
-
-        /*
-        IF
-        */
-
-        if (
-          code.startsWith(
-            "if",
-            position
-          )
-        ) {
-
-          const open =
-            code.indexOf(
-              "(",
-              position
-            );
-
-
-          let depth = 1;
-
-          let cursor =
-            open + 1;
-
-
-          while (
-            cursor < code.length &&
-            depth > 0
-          ) {
-
-            if (
-              code[cursor] === "("
-            ) depth++;
-
-
-            if (
-              code[cursor] === ")"
-            ) depth--;
-
-
-            cursor++;
-
-          }
-
-
-          const expression =
-            code.substring(
-              open + 1,
-              cursor - 1
-            );
-
-
-          const brace =
-            code.indexOf(
-              "{",
-              cursor
-            );
-
-
-          const close =
-            findBrace(
-              code,
-              brace
-            );
-
-
-          const body =
-            code.substring(
-              brace + 1,
-              close
-            );
-
-
-          let executed = false;
-
-
-          if (
-            condition(
-              expression,
-              variables
-            )
-          ) {
-
-            execute(
-              body,
-              variables,
-              output
-            );
-
-            executed = true;
-
-          }
-
-
-          position =
-            close + 1;
-
-
-          /*
-          ELSE IF
-          */
-
-          while (true) {
-
-            while (
-              /\s/.test(
-                code[position] || ""
-              )
-            ) {
-              position++;
-            }
-
-
-            if (
-              code.startsWith(
-                "else if",
-                position
-              )
-            ) {
-
-              const p =
-                code.indexOf(
-                  "(",
-                  position
-                );
-
-
-              let d = 1;
-
-              let c =
-                p + 1;
-
-
-              while (
-                c < code.length &&
-                d > 0
-              ) {
-
-                if (
-                  code[c] === "("
-                ) d++;
-
-
-                if (
-                  code[c] === ")"
-                ) d--;
-
-
-                c++;
-
-              }
-
-
-              const exp =
-                code.substring(
-                  p + 1,
-                  c - 1
-                );
-
-
-              const b =
-                code.indexOf(
-                  "{",
-                  c
-                );
-
-
-              const e =
-                findBrace(
-                  code,
-                  b
-                );
-
-
-              const elseBody =
-                code.substring(
-                  b + 1,
-                  e
-                );
-
-
-              if (
-                !executed &&
-                condition(
-                  exp,
-                  variables
-                )
-              ) {
-
-                execute(
-                  elseBody,
-                  variables,
-                  output
-                );
-
-                executed = true;
-
-              }
-
-
-              position =
-                e + 1;
-
-            }
-
-            else {
-
-              break;
-
-            }
-
-          }
-
-
-          /*
-          ELSE
-          */
-
-          while (
-            /\s/.test(
-              code[position] || ""
-            )
-          ) {
-            position++;
-          }
-
-
-          if (
-            !executed &&
-            code.startsWith(
-              "else",
-              position
-            )
-          ) {
-
-            const b =
-              code.indexOf(
-                "{",
-                position
-              );
-
-
-            const e =
-              findBrace(
-                code,
-                b
-              );
-
-
-            const elseBody =
-              code.substring(
-                b + 1,
-                e
-              );
-
-
-            execute(
-              elseBody,
-              variables,
-              output
-            );
-
-
-            position =
-              e + 1;
-
-          }
-
-
-          continue;
-
-        }
-
-
-        /*
-        SWITCH
-        */
-
-        if (
-          code.startsWith(
-            "switch",
-            position
-          )
-        ) {
-
-          const p =
-            code.indexOf(
-              "(",
-              position
-            );
-
-
-          const closeP =
-            code.indexOf(
-              ")",
-              p
-            );
-
-
-          const variable =
-            code.substring(
-              p + 1,
-              closeP
-            ).trim();
-
-
-          const switchValue =
-            parseValue(
-              variable,
-              variables
-            );
-
-
-          const brace =
-            code.indexOf(
-              "{",
-              closeP
-            );
-
-
-          const close =
-            findBrace(
-              code,
-              brace
-            );
-
-
-          const body =
-            code.substring(
-              brace + 1,
-              close
-            );
-
-
-          const cases =
-            body.split(
-              /(?=case\s+|default\s*:)/g
-            );
-
-
-          let matched = false;
-
-
-          for (
-            const item of cases
-          ) {
-
-            const match =
-              item.match(
-                /^case\s+([^:]+):([\s\S]*)/
-              );
-
-
-            if (match) {
-
-              const caseValue =
-                parseValue(
-                  match[1],
-                  variables
-                );
-
-
-              if (
-                !matched &&
-                String(
-                  caseValue
-                ) ===
-                String(
-                  switchValue
-                )
-              ) {
-
-                execute(
-                  match[2]
-                    .replace(
-                      /break\s*;/g,
-                      ""
-                    ),
-                  variables,
-                  output
-                );
-
-
-                matched = true;
-
-              }
-
-            }
-
-
-            else if (
-              item.trim()
-                .startsWith(
-                  "default:"
-                ) &&
-              !matched
-            ) {
-
-              execute(
-                item
-                  .replace(
-                    "default:",
-                    ""
-                  )
-                  .replace(
-                    /break\s*;/g,
-                    ""
-                  ),
-                variables,
-                output
-              );
-
-
-              matched = true;
-
-            }
-
-          }
-
-
-          position =
-            close + 1;
-
-
-          continue;
-
-        }
-
-
-        /*
-        VARIABLE ASSIGNMENT
-        */
-
-        const assignment =
-          code
-            .slice(position)
-            .match(
-              /^(?:int|double|num|String|bool|dynamic)?\s*(\w+)\s*=\s*([^;]+);/
-            );
-
-
-        if (assignment) {
-
-          variables[
-            assignment[1]
-          ] =
-            parseValue(
-              assignment[2],
-              variables
-            );
-
-
-          position +=
-            assignment[0].length;
-
-
-          continue;
-
-        }
-
-
-        position++;
-
-      }
-
-    }
-
-
-    /*
-    =====================================================
-    KEYBOARD SHORTCUT
-    =====================================================
-    */
-
-    document
-      .getElementById("editor")
-      .addEventListener(
-        "keydown",
-        function(event) {
-
-          if (
-            event.ctrlKey &&
-            event.key === "Enter"
-          ) {
-
-            event.preventDefault();
-
-            runCode();
-
-          }
-
-        }
-      );
-
-  </script>
-
-</body>
-</html>
+  code = code
+    .replace(/\{/g, "{\
