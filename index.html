@@ -1,3170 +1,953 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dart Compiler - MCS</title>
+  <title>CampusFlow - Settings</title>
 
   <style>
     * {
       box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #718096;
+      --border: #e5eaf2;
+      --primary: #6558e8;
+      --input: #f8f9fc;
+    }
+
+    body.dark {
+      --bg: #111827;
+      --card: #1f2937;
+      --text: #f3f4f6;
+      --muted: #a3afc2;
+      --border: #374151;
+      --input: #111827;
     }
 
     body {
-      background: #f6f6f8;
-      color: #202124;
-      min-height: 100vh;
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, Arial, sans-serif;
+      transition: background .2s, color .2s;
     }
 
-    /* ================= HEADER ================= */
-
-    header {
-      height: 64px;
-      background: #ffffff;
-      border-bottom: 1px solid #dedee5;
-      display: flex;
-      align-items: center;
-      padding: 0 28px;
-      gap: 12px;
+    .container {
+      width: min(100% - 32px, 1000px);
+      margin: 35px auto;
     }
 
-    .logo {
-      width: 38px;
-      height: 38px;
+    .header {
+      margin-bottom: 28px;
+    }
+
+    .header h1 {
+      margin: 0 0 8px;
+      font-size: 30px;
+    }
+
+    .header p,
+    .muted {
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .settings-layout {
+      display: grid;
+      grid-template-columns: 220px minmax(0, 1fr);
+      gap: 22px;
+      align-items: start;
+    }
+
+    .sidebar,
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 22px;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 20px;
+    }
+
+    .nav-item {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      margin: 5px 0;
+      border: 0;
       border-radius: 10px;
-      background: #6750a4;
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 19px;
-      font-weight: bold;
+      background: transparent;
+      color: var(--text);
+      text-align: left;
+      cursor: pointer;
+      font-size: 14px;
     }
 
-    .brand {
-      font-size: 18px;
+    .nav-item.active,
+    .nav-item:hover {
+      background: #efedff;
+      color: var(--primary);
+    }
+
+    body.dark .nav-item.active,
+    body.dark .nav-item:hover {
+      background: #37315f;
+      color: #c4bfff;
+    }
+
+    .section {
+      display: none;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    .card {
+      margin-bottom: 18px;
+    }
+
+    .card h2 {
+      font-size: 19px;
+      margin: 0 0 6px;
+    }
+
+    .card-description {
+      margin: 0 0 22px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 17px;
+    }
+
+    .field {
+      margin-bottom: 17px;
+    }
+
+    .field.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      background: var(--input);
+      color: var(--text);
+      outline: none;
+      font-size: 14px;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: var(--primary);
+    }
+
+    .avatar-row {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    .avatar {
+      width: 65px;
+      height: 65px;
+      display: grid;
+      place-items: center;
+      border-radius: 18px;
+      background: #e9e7ff;
+      color: var(--primary);
+      font-size: 25px;
       font-weight: 700;
     }
 
-    .subtitle {
-      color: #777;
-      font-size: 13px;
-      margin-top: 2px;
+    .avatar-row strong {
+      display: block;
+      margin-bottom: 5px;
     }
 
-    /* ================= CONTAINER ================= */
-
-    .container {
-      max-width: 1500px;
-      margin: auto;
-      padding: 28px;
+    .avatar-row small {
+      color: var(--muted);
     }
 
-    .title {
-      margin-bottom: 22px;
-    }
-
-    .title h1 {
-      font-size: 30px;
-      margin-bottom: 6px;
-    }
-
-    .title p {
-      color: #777;
-      font-size: 14px;
-    }
-
-    /* ================= MAIN GRID ================= */
-
-    .workspace {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-      gap: 20px;
-      align-items: stretch;
-    }
-
-    .panel {
-      min-width: 0;
-    }
-
-    /* ================= CARD ================= */
-
-    .card {
-      background: white;
-      border: 1px solid #dedee5;
-      border-radius: 14px;
-      overflow: hidden;
-      height: 100%;
-    }
-
-    .card-header {
-      min-height: 58px;
-      padding: 10px 16px;
+    .setting-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-bottom: 1px solid #dedee5;
-      gap: 10px;
+      gap: 15px;
+      padding: 17px 0;
+      border-bottom: 1px solid var(--border);
     }
 
-    .card-header h2 {
-      font-size: 16px;
-      white-space: nowrap;
+    .setting-row:last-child {
+      border-bottom: 0;
     }
 
-    /* ================= BUTTON ================= */
-
-    .actions {
-      display: flex;
-      gap: 7px;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-    }
-
-    button {
-      border: none;
-      border-radius: 8px;
-      padding: 9px 13px;
-      cursor: pointer;
-      font-size: 12px;
-      font-weight: 600;
-      transition: 0.2s;
-    }
-
-    .btn-run {
-      background: #6750a4;
-      color: white;
-    }
-
-    .btn-run:hover {
-      background: #57428d;
-    }
-
-    .btn-secondary {
-      background: #f0eef5;
-      color: #4f3d80;
-    }
-
-    .btn-secondary:hover {
-      background: #e4e0ed;
-    }
-
-    /* ================= EDITOR ================= */
-
-    textarea {
-      display: block;
-      width: 100%;
-      height: 600px;
-      resize: vertical;
-      border: none;
-      outline: none;
-      padding: 20px;
-      background: #fafafa;
-      color: #202124;
-      font-family: Consolas, Monaco, monospace;
-      font-size: 14px;
-      line-height: 1.7;
-      tab-size: 2;
-    }
-
-    textarea:focus {
-      background: #ffffff;
-    }
-
-    .status {
-      padding: 10px 16px;
-      border-top: 1px solid #dedee5;
-      color: #777;
-      font-size: 12px;
-      background: #ffffff;
-    }
-
-    /* ================= CONSOLE ================= */
-
-    .console {
-      height: 600px;
-      background: #1e1e1e;
-      color: #e8e8e8;
-      padding: 20px;
-      font-family: Consolas, Monaco, monospace;
-      font-size: 14px;
-      line-height: 1.7;
-      white-space: pre-wrap;
-      overflow: auto;
-    }
-
-    .console.empty {
-      color: #777;
-    }
-
-    .console.error {
-      color: #ff6b6b;
-    }
-
-    .console-title {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #6750a4;
-    }
-
-    /* ================= EXAMPLES ================= */
-
-    .examples-section {
-      margin-top: 20px;
-    }
-
-    .examples-card {
-      background: white;
-      border: 1px solid #dedee5;
-      border-radius: 14px;
-      overflow: hidden;
-    }
-
-    .examples-header {
-      padding: 16px 18px;
-      border-bottom: 1px solid #dedee5;
-    }
-
-    .examples-header h2 {
-      font-size: 16px;
-      margin-bottom: 4px;
-    }
-
-    .examples-header p {
-      color: #777;
-      font-size: 13px;
-    }
-
-    .examples {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
-      padding: 14px;
-    }
-
-    .example {
-      padding: 14px;
-      border: 1px solid #e1e1e6;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: 0.2s;
-      background: #fff;
-    }
-
-    .example:hover {
-      border-color: #6750a4;
-      background: #faf8ff;
-    }
-
-    .example strong {
+    .setting-row strong {
       display: block;
       font-size: 14px;
       margin-bottom: 5px;
-      color: #333;
     }
 
-    .example span {
-      color: #777;
+    .setting-row p {
+      margin: 0;
+      color: var(--muted);
       font-size: 12px;
       line-height: 1.5;
     }
 
-    /* ================= INFO ================= */
+    .switch {
+      width: 45px;
+      height: 25px;
+      position: relative;
+      flex-shrink: 0;
+    }
 
-    .info {
-      margin-top: 20px;
+    .switch input {
+      width: 0;
+      height: 0;
+      opacity: 0;
+    }
+
+    .slider {
+      position: absolute;
+      inset: 0;
+      border-radius: 30px;
+      background: #cbd5e1;
+      cursor: pointer;
+      transition: .2s;
+    }
+
+    .slider::before {
+      content: "";
+      position: absolute;
+      width: 19px;
+      height: 19px;
+      left: 3px;
+      top: 3px;
+      border-radius: 50%;
       background: white;
-      border: 1px solid #dedee5;
-      border-radius: 14px;
-      padding: 18px;
+      transition: .2s;
     }
 
-    .info h2 {
-      font-size: 16px;
-      margin-bottom: 10px;
+    .switch input:checked + .slider {
+      background: var(--primary);
     }
 
-    .info-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
+    .switch input:checked + .slider::before {
+      transform: translateX(20px);
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
       gap: 10px;
+      margin-top: 20px;
     }
 
-    .info-item {
-      background: #f7f6fa;
-      padding: 11px 13px;
-      border-radius: 8px;
+    .btn {
+      padding: 11px 16px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      background: var(--card);
+      color: var(--text);
+      cursor: pointer;
       font-size: 13px;
-      color: #555;
+      font-weight: 600;
     }
 
-    /* ================= RESPONSIVE ================= */
-
-    @media (max-width: 1000px) {
-
-      .examples {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .info-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
+    .btn.primary {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: white;
     }
 
-    @media (max-width: 760px) {
+    .btn.danger {
+      color: #dc2626;
+      border-color: #fecaca;
+    }
 
-      header {
-        padding: 0 16px;
+    .btn:hover {
+      opacity: .85;
+    }
+
+    .notice {
+      display: none;
+      margin-top: 15px;
+      padding: 12px;
+      border-radius: 9px;
+      background: #dcfce7;
+      color: #166534;
+      font-size: 13px;
+    }
+
+    .danger-zone {
+      border-color: #fecaca;
+    }
+
+    .data-stat {
+      padding: 15px;
+      background: var(--input);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-top: 12px;
+    }
+
+    .data-stat strong {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    @media (max-width: 700px) {
+      .settings-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: static;
+        display: flex;
+        gap: 5px;
+        overflow-x: auto;
+        padding: 10px;
+      }
+
+      .nav-item {
+        white-space: nowrap;
+        width: auto;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+
+      .field.full {
+        grid-column: auto;
       }
 
       .container {
-        padding: 18px 14px;
+        margin-top: 22px;
       }
 
-      .title h1 {
+      .header h1 {
         font-size: 25px;
-      }
-
-      /*
-        Laptop:
-        Editor kiri
-        Output kanan
-
-        HP:
-        Editor atas
-        Output bawah
-      */
-
-      .workspace {
-        grid-template-columns: 1fr;
-      }
-
-      textarea,
-      .console {
-        height: 430px;
-      }
-
-      .examples {
-        grid-template-columns: 1fr;
-      }
-
-      .info-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 480px) {
-
-      .card-header {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      .actions {
-        width: 100%;
-        justify-content: flex-start;
-      }
-
-      button {
-        padding: 8px 11px;
-      }
-
-      textarea,
-      .console {
-        height: 380px;
       }
     }
   </style>
 </head>
 
 <body>
+  <main class="container">
+    <header class="header">
+      <h1>Pengaturan</h1>
+      <p>Kelola profil mahasiswa, preferensi aplikasi, dan data CampusFlow.</p>
+    </header>
 
-<header>
+    <div class="settings-layout">
+      <aside class="sidebar">
+        <button class="nav-item active" data-target="profile">
+          👤 Profil Mahasiswa
+        </button>
+        <button class="nav-item" data-target="preferences">
+          ⚙️ Preferensi
+        </button>
+        <button class="nav-item" data-target="notifications">
+          🔔 Notifikasi
+        </button>
+        <button class="nav-item" data-target="data">
+          💾 Pengelolaan Data
+        </button>
+      </aside>
 
-  <div class="logo">
-    D
-  </div>
+      <div>
+        <!-- PROFIL -->
+        <section class="section active" id="profile">
+          <div class="card">
+            <h2>Profil Mahasiswa</h2>
+            <p class="card-description">
+              Informasi identitas yang digunakan pada dashboard CampusFlow.
+            </p>
 
-  <div>
-    <div class="brand">
-      Dart Compiler
-    </div>
+            <div class="avatar-row">
+              <div class="avatar" id="avatar">S</div>
+              <div>
+                <strong id="displayName">Mahasiswa</strong>
+                <small id="displayProgram">Lengkapi informasi akademik kamu</small>
+              </div>
+            </div>
 
-    <div class="subtitle">
-      Dart • MCS
-    </div>
-  </div>
+            <form id="profileForm">
+              <div class="form-grid">
+                <div class="field full">
+                  <label for="fullName">Nama lengkap</label>
+                  <input id="fullName" name="fullName"
+                    placeholder="Contoh: Sony Kurniawan Suhadi" required>
+                </div>
 
-</header>
+                <div class="field">
+                  <label for="email">Email mahasiswa</label>
+                  <input id="email" name="email" type="email"
+                    placeholder="nama@email.com">
+                </div>
 
+                <div class="field">
+                  <label for="studentId">NPM / NIM</label>
+                  <input id="studentId" name="studentId"
+                    placeholder="Masukkan NPM atau NIM">
+                </div>
 
-<div class="container">
+                <div class="field">
+                  <label for="campus">Nama perguruan tinggi</label>
+                  <input id="campus" name="campus"
+                    placeholder="Nama universitas">
+                </div>
 
-  <div class="title">
+                <div class="field">
+                  <label for="faculty">Fakultas / Direktorat</label>
+                  <input id="faculty" name="faculty"
+                    placeholder="Nama fakultas atau direktorat">
+                </div>
 
-    <h1>
-      Dart Compiler
-    </h1>
+                <div class="field">
+                  <label for="program">Program studi</label>
+                  <input id="program" name="program"
+                    placeholder="Contoh: Teknik Komputer">
+                </div>
 
-    <p>
-      Jalankan kode Dart sederhana secara langsung di browser.
-    </p>
+                <div class="field">
+                  <label for="degree">Jenjang pendidikan</label>
+                  <select id="degree" name="degree">
+                    <option value="">Pilih jenjang</option>
+                    <option>D1</option>
+                    <option>D2</option>
+                    <option>D3</option>
+                    <option>D4</option>
+                    <option>S1</option>
+                    <option>S2</option>
+                    <option>S3</option>
+                  </select>
+                </div>
 
-  </div>
+                <div class="field">
+                  <label for="semester">Semester</label>
+                  <select id="semester" name="semester">
+                    <option value="">Pilih semester</option>
+                    <option>Semester 1</option>
+                    <option>Semester 2</option>
+                    <option>Semester 3</option>
+                    <option>Semester 4</option>
+                    <option>Semester 5</option>
+                    <option>Semester 6</option>
+                    <option>Semester 7</option>
+                    <option>Semester 8</option>
+                    <option>Semester 9 atau lebih</option>
+                  </select>
+                </div>
 
+                <div class="field">
+                  <label for="className">Kelas</label>
+                  <input id="className" name="className"
+                    placeholder="Contoh: 3DC02">
+                </div>
+              </div>
 
-  <!-- =====================================================
-       EDITOR KIRI + OUTPUT KANAN
-  ====================================================== -->
+              <div class="button-row">
+                <button class="btn primary" type="submit">
+                  Simpan Profil
+                </button>
+                <button class="btn" type="reset">Reset Form</button>
+              </div>
+            </form>
 
-  <div class="workspace">
+            <div class="notice" id="profileNotice">
+              Profil berhasil disimpan.
+            </div>
+          </div>
+        </section>
 
+        <!-- PREFERENSI -->
+        <section class="section" id="preferences">
+          <div class="card">
+            <h2>Preferensi Aplikasi</h2>
+            <p class="card-description">
+              Atur tampilan dan kebiasaan penggunaan CampusFlow.
+            </p>
 
-    <!-- ================= EDITOR ================= -->
+            <div class="setting-row">
+              <div>
+                <strong>Mode gelap</strong>
+                <p>Mengubah tampilan aplikasi menjadi tema gelap.</p>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="darkMode">
+                <span class="slider"></span>
+              </label>
+            </div>
 
-    <section class="panel">
+            <div class="setting-row">
+              <div>
+                <strong>Awal minggu</strong>
+                <p>Tentukan hari pertama pada tampilan kalender.</p>
+              </div>
+              <select id="weekStart" style="width:140px">
+                <option value="monday">Senin</option>
+                <option value="sunday">Minggu</option>
+              </select>
+            </div>
 
-      <div class="card">
+            <div class="setting-row">
+              <div>
+                <strong>Konfirmasi sebelum menghapus</strong>
+                <p>Tampilkan konfirmasi saat akan menghapus data.</p>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="confirmDelete" checked>
+                <span class="slider"></span>
+              </label>
+            </div>
 
-        <div class="card-header">
+            <div class="button-row">
+              <button class="btn primary" id="savePreferences">
+                Simpan Preferensi
+              </button>
+            </div>
 
-          <h2>
-            Code Editor
-          </h2>
+            <div class="notice" id="preferencesNotice">
+              Preferensi berhasil disimpan.
+            </div>
+          </div>
+        </section>
 
-          <div class="actions">
+        <!-- NOTIFIKASI -->
+        <section class="section" id="notifications">
+          <div class="card">
+            <h2>Pengaturan Notifikasi</h2>
+            <p class="card-description">
+              Pilih pengingat yang ingin diaktifkan.
+            </p>
 
-            <button
-              class="btn-secondary"
-              onclick="formatCode()">
-              Format
-            </button>
+            <div class="setting-row">
+              <div>
+                <strong>Pengingat tugas</strong>
+                <p>Mengingatkan kamu mengenai tugas dan tenggat waktu.</p>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="taskReminder" checked>
+                <span class="slider"></span>
+              </label>
+            </div>
 
-            <button
-              class="btn-secondary"
-              onclick="clearCode()">
-              Clear
-            </button>
+            <div class="setting-row">
+              <div>
+                <strong>Pengingat jadwal kuliah</strong>
+                <p>Pengingat untuk jadwal kelas yang akan berlangsung.</p>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="classReminder" checked>
+                <span class="slider"></span>
+              </label>
+            </div>
 
-            <button
-              class="btn-run"
-              onclick="compile()">
-              ▶ Run
-            </button>
+            <div class="setting-row">
+              <div>
+                <strong>Pengingat catatan</strong>
+                <p>Pengingat untuk meninjau catatan belajar.</p>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="noteReminder">
+                <span class="slider"></span>
+              </label>
+            </div>
 
+            <div class="field" style="margin-top:22px">
+              <label for="reminderTime">Waktu pengingat default</label>
+              <select id="reminderTime">
+                <option value="5">5 menit sebelumnya</option>
+                <option value="15">15 menit sebelumnya</option>
+                <option value="30">30 menit sebelumnya</option>
+                <option value="60">1 jam sebelumnya</option>
+                <option value="1440">1 hari sebelumnya</option>
+              </select>
+            </div>
+
+            <p class="muted" style="font-size:12px">
+              Pengaturan ini menyimpan preferensi pengingat. Notifikasi
+              otomatis memerlukan dukungan sistem notifikasi tambahan.
+            </p>
+
+            <div class="button-row">
+              <button class="btn primary" id="saveNotifications">
+                Simpan Notifikasi
+              </button>
+            </div>
+
+            <div class="notice" id="notificationsNotice">
+              Pengaturan notifikasi berhasil disimpan.
+            </div>
+          </div>
+        </section>
+
+        <!-- PENGELOLAAN DATA -->
+        <section class="section" id="data">
+          <div class="card">
+            <h2>Pengelolaan Data</h2>
+            <p class="card-description">
+              Cadangkan atau hapus data lokal CampusFlow.
+            </p>
+
+            <div class="data-stat">
+              <strong>📦 Penyimpanan lokal</strong>
+              <span class="muted" id="storageInfo">
+                Menghitung data tersimpan...
+              </span>
+            </div>
+
+            <div class="button-row">
+              <button class="btn primary" id="exportData">
+                Ekspor Cadangan JSON
+              </button>
+              <button class="btn" id="refreshStorage">
+                Perbarui Informasi
+              </button>
+            </div>
           </div>
 
-        </div>
+          <div class="card danger-zone">
+            <h2>Zona Berbahaya</h2>
+            <p class="card-description">
+              Penghapusan data bersifat permanen untuk data lokal yang dipilih.
+              Ekspor cadangan terlebih dahulu jika diperlukan.
+            </p>
 
-
-        <textarea id="code">void main() {
-  List<String> bahasa = [
-    "Dart",
-    "Python",
-    "Java",
-    "C++"
-  ];
-
-  print(bahasa);
-}</textarea>
-
-
-        <div
-          class="status"
-          id="status">
-
-          Ready
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- ================= OUTPUT ================= -->
-
-    <section class="panel">
-
-      <div class="card">
-
-        <div class="card-header">
-
-          <div class="console-title">
-
-            <div class="dot"></div>
-
-            <h2>
-              Console Output
-            </h2>
-
+            <div class="button-row">
+              <button class="btn danger" id="clearSettings">
+                Hapus Preferensi
+              </button>
+              <button class="btn danger" id="clearAllData">
+                Hapus Semua Data Lokal
+              </button>
+            </div>
           </div>
 
-          <button
-            class="btn-secondary"
-            onclick="clearConsole()">
-
-            Clear
-
-          </button>
-
-        </div>
-
-
-        <div
-          id="console"
-          class="console empty">
-
-          Output akan tampil di sini...
-
-        </div>
-
+          <div class="notice" id="dataNotice"></div>
+        </section>
       </div>
-
-    </section>
-
-  </div>
-
-
-  <!-- =====================================================
-       CONTOH PROGRAM
-  ====================================================== -->
-
-  <section class="examples-section">
-
-    <div class="examples-card">
-
-      <div class="examples-header">
-
-        <h2>
-          Contoh Program
-        </h2>
-
-        <p>
-          Pilih contoh untuk memasukkannya ke Code Editor.
-        </p>
-
-      </div>
-
-
-      <div class="examples">
-
-
-        <div
-          class="example"
-          onclick="loadExample('datatype')">
-
-          <strong>
-            Tipe Data
-          </strong>
-
-          <span>
-            String, int, double, num, bool, dynamic
-          </span>
-
-        </div>
-
-
-        <div
-          class="example"
-          onclick="loadExample('list')">
-
-          <strong>
-            List
-          </strong>
-
-          <span>
-            Data berupa kumpulan nilai
-          </span>
-
-        </div>
-
-
-        <div
-          class="example"
-          onclick="loadExample('map')">
-
-          <strong>
-            Map
-          </strong>
-
-          <span>
-            Data key dan value
-          </span>
-
-        </div>
-
-
-        <div
-          class="example"
-          onclick="loadExample('if')">
-
-          <strong>
-            If / Else
-          </strong>
-
-          <span>
-            Percabangan kondisi
-          </span>
-
-        </div>
-
-
-        <div
-          class="example"
-          onclick="loadExample('elseif')">
-
-          <strong>
-            Else If
-          </strong>
-
-          <span>
-            Beberapa kondisi
-          </span>
-
-        </div>
-
-
-        <div
-          class="example"
-          onclick="loadExample('switch')">
-
-          <strong>
-            Switch Case
-          </strong>
-
-          <span>
-            Percabangan berdasarkan pilihan
-          </span>
-
-        </div>
-
-
-        <div
-          class="example"
-          onclick="loadExample('operation')">
-
-          <strong>
-            Operasi
-          </strong>
-
-          <span>
-            Operasi aritmatika
-          </span>
-
-        </div>
-
-
-      </div>
-
     </div>
-
-  </section>
-
-
-  <!-- =====================================================
-       SUPPORTED
-  ====================================================== -->
-
-  <section class="info">
-
-    <h2>
-      Fitur yang Didukung
-    </h2>
-
-
-    <div class="info-grid">
-
-      <div class="info-item">
-        String
-      </div>
-
-      <div class="info-item">
-        int
-      </div>
-
-      <div class="info-item">
-        double
-      </div>
-
-      <div class="info-item">
-        num
-      </div>
-
-      <div class="info-item">
-        bool
-      </div>
-
-      <div class="info-item">
-        dynamic
-      </div>
-
-      <div class="info-item">
-        List
-      </div>
-
-      <div class="info-item">
-        Map
-      </div>
-
-      <div class="info-item">
-        if / else
-      </div>
-
-      <div class="info-item">
-        else if
-      </div>
-
-      <div class="info-item">
-        switch case
-      </div>
-
-      <div class="info-item">
-        print()
-      </div>
-
-      <div class="info-item">
-        Operator aritmatika
-      </div>
-
-      <div class="info-item">
-        Operator perbandingan
-      </div>
-
-      <div class="info-item">
-        Variable
-      </div>
-
-      <div class="info-item">
-        String interpolation
-      </div>
-
-    </div>
-
-  </section>
-
-</div>
-
-
-<script>
-
-/* =========================================================
-   EXAMPLES
-========================================================= */
-
-const examples = {
-
-  datatype: `void main() {
-  String nama = "Sony";
-  int umur = 20;
-  double ipk = 3.85;
-  num nilai = 87.5;
-  bool mahasiswa = true;
-  dynamic data = "Dart";
-
-  print("Nama: $nama");
-  print("Umur: $umur");
-  print("IPK: $ipk");
-  print("Nilai: $nilai");
-  print("Mahasiswa: $mahasiswa");
-  print("Data: $data");
-}`,
-
-  list: `void main() {
-  List<String> bahasa = [
-    "Dart",
-    "Python",
-    "Java",
-    "C++"
-  ];
-
-  print(bahasa);
-}`,
-
-  map: `void main() {
-  Map<String, dynamic> mahasiswa = {
-    "nama": "Sony",
-    "umur": 20,
-    "ipk": 3.85
-  };
-
-  print(mahasiswa);
-}`,
-
-  if: `void main() {
-  int nilai = 85;
-
-  if (nilai >= 70) {
-    print("Lulus");
-  } else {
-    print("Tidak lulus");
-  }
-}`,
-
-  elseif: `void main() {
-  int nilai = 85;
-
-  if (nilai >= 80) {
-    print("Nilai A");
-  } else if (nilai >= 70) {
-    print("Nilai B");
-  } else if (nilai >= 60) {
-    print("Nilai C");
-  } else {
-    print("Nilai D");
-  }
-}`,
-
-  switch: `void main() {
-  int pilihan = 3;
-
-  switch (pilihan) {
-    case 1:
-      print("Home");
-      break;
-    case 2:
-      print("Dashboard");
-      break;
-    case 3:
-      print("Settings");
-      break;
-    default:
-      print("Menu tidak tersedia");
-  }
-}`,
-
-  operation: `void main() {
-  int a = 10;
-  int b = 5;
-
-  int tambah = a + b;
-  int kurang = a - b;
-  int kali = a * b;
-  double bagi = a / b;
-
-  print("Tambah: $tambah");
-  print("Kurang: $kurang");
-  print("Kali: $kali");
-  print("Bagi: $bagi");
-}`
-
-};
-
-
-/* =========================================================
-   WHITESPACE
-========================================================= */
-
-function skipWhitespace(text, index) {
-
-  while (
-    index < text.length &&
-    /\s/.test(text[index])
-  ) {
-    index++;
-  }
-
-  return index;
-}
-
-
-/* =========================================================
-   BRACE
-========================================================= */
-
-function findBrace(text, start) {
-
-  return text.indexOf(
-    "{",
-    start
-  );
-
-}
-
-
-function findClosingBrace(
-  text,
-  openIndex
-) {
-
-  let depth = 0;
-  let quote = null;
-
-  for (
-    let i = openIndex;
-    i < text.length;
-    i++
-  ) {
-
-    const char = text[i];
-
-
-    if (
-      quote &&
-      char === quote &&
-      text[i - 1] !== "\\"
-    ) {
-
-      quote = null;
-      continue;
-    }
-
-
-    if (
-      !quote &&
-      (
-        char === '"' ||
-        char === "'"
-      )
-    ) {
-
-      quote = char;
-      continue;
-    }
-
-
-    if (quote) {
-      continue;
-    }
-
-
-    if (char === "{") {
-      depth++;
-    }
-
-
-    if (char === "}") {
-
-      depth--;
-
-      if (depth === 0) {
-        return i;
+  </main>
+
+  <script>
+    const PROFILE_KEY = "campusflow_profile";
+    const PREF_KEY = "campusflow_preferences";
+    const NOTIF_KEY = "campusflow_notifications";
+
+    const defaultProfile = {
+      fullName: "",
+      email: "",
+      studentId: "",
+      campus: "",
+      faculty: "",
+      program: "",
+      degree: "",
+      semester: "",
+      className: ""
+    };
+
+    const defaultPreferences = {
+      darkMode: false,
+      weekStart: "monday",
+      confirmDelete: true
+    };
+
+    const defaultNotifications = {
+      taskReminder: true,
+      classReminder: true,
+      noteReminder: false,
+      reminderTime: "15"
+    };
+
+    function readJSON(key, fallback) {
+      try {
+        const value = localStorage.getItem(key);
+        return value ? { ...fallback, ...JSON.parse(value) } : { ...fallback };
+      } catch {
+        return { ...fallback };
       }
-
     }
 
-  }
-
-  return -1;
-}
-
-
-/* =========================================================
-   PAREN
-========================================================= */
-
-function findClosingParen(
-  text,
-  openIndex
-) {
-
-  let depth = 0;
-  let quote = null;
-
-  for (
-    let i = openIndex;
-    i < text.length;
-    i++
-  ) {
-
-    const char = text[i];
-
-
-    if (
-      quote &&
-      char === quote &&
-      text[i - 1] !== "\\"
-    ) {
-
-      quote = null;
-      continue;
+    function saveJSON(key, value) {
+      localStorage.setItem(key, JSON.stringify(value));
     }
 
+    function showNotice(id, message) {
+      const element = document.getElementById(id);
+      element.textContent = message;
+      element.style.display = "block";
 
-    if (
-      !quote &&
-      (
-        char === '"' ||
-        char === "'"
-      )
-    ) {
-
-      quote = char;
-      continue;
+      setTimeout(() => {
+        element.style.display = "none";
+      }, 3500);
     }
 
-
-    if (quote) {
-      continue;
-    }
-
-
-    if (char === "(") {
-      depth++;
-    }
-
-
-    if (char === ")") {
-
-      depth--;
-
-      if (depth === 0) {
-        return i;
-      }
-
-    }
-
-  }
-
-  return -1;
-}
-
-
-/* =========================================================
-   SPLIT TOP LEVEL
-========================================================= */
-
-function splitTopLevel(
-  text,
-  separator = ","
-) {
-
-  const result = [];
-
-  let current = "";
-
-  let depthParen = 0;
-  let depthBrace = 0;
-  let depthBracket = 0;
-
-  let quote = null;
-
-
-  for (
-    let i = 0;
-    i < text.length;
-    i++
-  ) {
-
-    const char = text[i];
-
-
-    if (
-      quote &&
-      char === quote &&
-      text[i - 1] !== "\\"
-    ) {
-
-      quote = null;
-
-      current += char;
-
-      continue;
-    }
-
-
-    if (
-      !quote &&
-      (
-        char === '"' ||
-        char === "'"
-      )
-    ) {
-
-      quote = char;
-
-      current += char;
-
-      continue;
-    }
-
-
-    if (quote) {
-
-      current += char;
-
-      continue;
-    }
-
-
-    if (char === "(") depthParen++;
-
-    if (char === ")") depthParen--;
-
-    if (char === "{") depthBrace++;
-
-    if (char === "}") depthBrace--;
-
-    if (char === "[") depthBracket++;
-
-    if (char === "]") depthBracket--;
-
-
-    if (
-      char === separator &&
-      depthParen === 0 &&
-      depthBrace === 0 &&
-      depthBracket === 0
-    ) {
-
-      result.push(
-        current.trim()
-      );
-
-      current = "";
-
-    } else {
-
-      current += char;
-
-    }
-
-  }
-
-
-  if (current.trim()) {
-
-    result.push(
-      current.trim()
-    );
-
-  }
-
-
-  return result;
-}
-
-
-/* =========================================================
-   OUTPUT FORMAT
-========================================================= */
-
-function formatOutput(value) {
-
-
-  /* LIST */
-
-  if (Array.isArray(value)) {
-
-    return "[" +
-      value
-        .map(item =>
-          formatOutput(item)
-        )
-        .join(", ") +
-      "]";
-
-  }
-
-
-  /* MAP */
-
-  if (
-    value !== null &&
-    typeof value === "object"
-  ) {
-
-    return "{" +
-      Object.entries(value)
-        .map(
-          ([key, val]) =>
-            key +
-            ": " +
-            formatOutput(val)
-        )
-        .join(", ") +
-      "}";
-
-  }
-
-
-  /* BOOLEAN */
-
-  if (
-    typeof value === "boolean"
-  ) {
-
-    return value
-      ? "true"
-      : "false";
-
-  }
-
-
-  /* NULL */
-
-  if (value === null) {
-    return "null";
-  }
-
-
-  /* NUMBER */
-
-  if (
-    typeof value === "number"
-  ) {
-
-    if (
-      Number.isInteger(value)
-    ) {
-
-      return String(value);
-
-    }
-
-    return String(value);
-
-  }
-
-
-  /* STRING */
-
-  return String(value);
-}
-
-
-/* =========================================================
-   PARSE VALUE
-========================================================= */
-
-function parseValue(
-  expression,
-  vars
-) {
-
-  let expr =
-    expression.trim();
-
-
-  /* STRING */
-
-  if (
-    (
-      expr.startsWith('"') &&
-      expr.endsWith('"')
-    ) ||
-    (
-      expr.startsWith("'") &&
-      expr.endsWith("'")
-    )
-  ) {
-
-    let value =
-      expr.slice(
-        1,
-        -1
-      );
-
-
-    value =
-      value.replace(
-        /\\(["'])/g,
-        "$1"
-      );
-
-
-    return interpolate(
-      value,
-      vars
-    );
-
-  }
-
-
-  /* BOOLEAN */
-
-  if (expr === "true") {
-    return true;
-  }
-
-  if (expr === "false") {
-    return false;
-  }
-
-
-  /* NULL */
-
-  if (expr === "null") {
-    return null;
-  }
-
-
-  /* LIST */
-
-  if (
-    expr.startsWith("[") &&
-    expr.endsWith("]")
-  ) {
-
-    const content =
-      expr.slice(
-        1,
-        -1
-      ).trim();
-
-
-    if (!content) {
-      return [];
-    }
-
-
-    return splitTopLevel(
-      content,
-      ","
-    ).map(
-      item =>
-        parseValue(
-          item,
-          vars
-        )
-    );
-
-  }
-
-
-  /* MAP */
-
-  if (
-    expr.startsWith("{") &&
-    expr.endsWith("}")
-  ) {
-
-    const content =
-      expr.slice(
-        1,
-        -1
-      ).trim();
-
-
-    const result = {};
-
-
-    if (!content) {
-      return result;
-    }
-
-
-    const items =
-      splitTopLevel(
-        content,
-        ","
-      );
-
-
-    for (
-      const item of items
-    ) {
-
-      const colon =
-        findTopLevelColon(
-          item
-        );
-
-
-      if (colon === -1) {
-        continue;
-      }
-
-
-      let key =
-        item
-          .slice(
-            0,
-            colon
-          )
-          .trim();
-
-
-      let value =
-        item
-          .slice(
-            colon + 1
-          )
-          .trim();
-
-
-      key =
-        parseValue(
-          key,
-          vars
-        );
-
-
-      result[key] =
-        parseValue(
-          value,
-          vars
-        );
-
-    }
-
-
-    return result;
-  }
-
-
-  /* NUMBER */
-
-  if (
-    /^-?\d+(\.\d+)?$/.test(expr)
-  ) {
-
-    return Number(expr);
-
-  }
-
-
-  /* VARIABLE */
-
-  if (
-    Object.prototype.hasOwnProperty.call(
-      vars,
-      expr
-    )
-  ) {
-
-    return vars[expr];
-
-  }
-
-
-  /* ARITHMETIC */
-
-  if (
-    /[+\-*/%]/.test(expr)
-  ) {
-
-    try {
-
-      let math =
-        expr.replace(
-          /\b[A-Za-z_]\w*\b/g,
-          name => {
-
-            if (
-              Object.prototype.hasOwnProperty.call(
-                vars,
-                name
-              )
-            ) {
-
-              return String(
-                vars[name]
-              );
-
-            }
-
-            return name;
-
-          }
-        );
-
-
-      if (
-        /^[0-9+\-*/%().\s]+$/.test(
-          math
-        )
-      ) {
-
-        return Function(
-          `"use strict"; return (${math})`
-        )();
-
-      }
-
-    } catch (error) {
-
-      // lanjut
-
-    }
-
-  }
-
-
-  return expr;
-}
-
-
-/* =========================================================
-   MAP COLON
-========================================================= */
-
-function findTopLevelColon(text) {
-
-  let depthParen = 0;
-  let depthBrace = 0;
-  let depthBracket = 0;
-
-  let quote = null;
-
-
-  for (
-    let i = 0;
-    i < text.length;
-    i++
-  ) {
-
-    const char = text[i];
-
-
-    if (
-      quote &&
-      char === quote &&
-      text[i - 1] !== "\\"
-    ) {
-
-      quote = null;
-
-      continue;
-    }
-
-
-    if (
-      !quote &&
-      (
-        char === '"' ||
-        char === "'"
-      )
-    ) {
-
-      quote = char;
-
-      continue;
-    }
-
-
-    if (quote) {
-      continue;
-    }
-
-
-    if (char === "(") depthParen++;
-
-    if (char === ")") depthParen--;
-
-    if (char === "{") depthBrace++;
-
-    if (char === "}") depthBrace--;
-
-    if (char === "[") depthBracket++;
-
-    if (char === "]") depthBracket--;
-
-
-    if (
-      char === ":" &&
-      depthParen === 0 &&
-      depthBrace === 0 &&
-      depthBracket === 0
-    ) {
-
-      return i;
-
-    }
-
-  }
-
-
-  return -1;
-}
-
-
-/* =========================================================
-   STRING INTERPOLATION
-========================================================= */
-
-function interpolate(
-  text,
-  vars
-) {
-
-  return text.replace(
-    /\$([A-Za-z_]\w*)|\$\{([^}]+)\}/g,
-    function (
-      match,
-      simple,
-      complex
-    ) {
-
-      const name =
-        simple || complex;
-
-
-      if (
-        Object.prototype.hasOwnProperty.call(
-          vars,
-          name
-        )
-      ) {
-
-        return formatOutput(
-          vars[name]
-        );
-
-      }
-
-
-      return match;
-
-    }
-  );
-}
-
-
-/* =========================================================
-   CONDITION
-========================================================= */
-
-function evaluateCondition(
-  expression,
-  vars
-) {
-
-  let expr =
-    expression.trim();
-
-
-  /* AND */
-
-  const andParts =
-    splitLogical(
-      expr,
-      "&&"
-    );
-
-
-  if (andParts.length > 1) {
-
-    return andParts.every(
-      part =>
-        evaluateCondition(
-          part,
-          vars
-        )
-    );
-
-  }
-
-
-  /* OR */
-
-  const orParts =
-    splitLogical(
-      expr,
-      "||"
-    );
-
-
-  if (orParts.length > 1) {
-
-    return orParts.some(
-      part =>
-        evaluateCondition(
-          part,
-          vars
-        )
-    );
-
-  }
-
-
-  /* NOT */
-
-  if (
-    expr.startsWith("!")
-  ) {
-
-    return !evaluateCondition(
-      expr.slice(1),
-      vars
-    );
-
-  }
-
-
-  const operators = [
-    ">=",
-    "<=",
-    "==",
-    "!=",
-    ">",
-    "<"
-  ];
-
-
-  for (
-    const operator of operators
-  ) {
-
-    const index =
-      findOperator(
-        expr,
-        operator
-      );
-
-
-    if (index !== -1) {
-
-      const left =
-        parseValue(
-          expr.slice(
-            0,
-            index
-          ),
-          vars
-        );
-
-
-      const right =
-        parseValue(
-          expr.slice(
-            index +
-            operator.length
-          ),
-          vars
-        );
-
-
-      switch (operator) {
-
-        case "==":
-          return left === right;
-
-        case "!=":
-          return left !== right;
-
-        case ">":
-          return left > right;
-
-        case "<":
-          return left < right;
-
-        case ">=":
-          return left >= right;
-
-        case "<=":
-          return left <= right;
-
-      }
-
-    }
-
-  }
-
-
-  return Boolean(
-    parseValue(
-      expr,
-      vars
-    )
-  );
-}
-
-
-/* =========================================================
-   LOGICAL SPLIT
-========================================================= */
-
-function splitLogical(
-  text,
-  operator
-) {
-
-  const result = [];
-
-  let current = "";
-
-  let quote = null;
-
-  let depth = 0;
-
-
-  for (
-    let i = 0;
-    i < text.length;
-    i++
-  ) {
-
-    const char =
-      text[i];
-
-
-    if (
-      quote &&
-      char === quote &&
-      text[i - 1] !== "\\"
-    ) {
-
-      quote = null;
-
-      current += char;
-
-      continue;
-    }
-
-
-    if (
-      !quote &&
-      (
-        char === '"' ||
-        char === "'"
-      )
-    ) {
-
-      quote = char;
-
-      current += char;
-
-      continue;
-    }
-
-
-    if (char === "(") {
-      depth++;
-    }
-
-    if (char === ")") {
-      depth--;
-    }
-
-
-    if (
-      !quote &&
-      depth === 0 &&
-      text.startsWith(
-        operator,
-        i
-      )
-    ) {
-
-      result.push(
-        current.trim()
-      );
-
-      current = "";
-
-      i +=
-        operator.length - 1;
-
-    } else {
-
-      current += char;
-
-    }
-
-  }
-
-
-  if (current.trim()) {
-
-    result.push(
-      current.trim()
-    );
-
-  }
-
-
-  return result;
-}
-
-
-/* =========================================================
-   FIND OPERATOR
-========================================================= */
-
-function findOperator(
-  text,
-  operator
-) {
-
-  let quote = null;
-
-  let depth = 0;
-
-
-  for (
-    let i = 0;
-    i <=
-    text.length -
-    operator.length;
-    i++
-  ) {
-
-    const char =
-      text[i];
-
-
-    if (
-      quote &&
-      char === quote &&
-      text[i - 1] !== "\\"
-    ) {
-
-      quote = null;
-
-      continue;
-    }
-
-
-    if (
-      !quote &&
-      (
-        char === '"' ||
-        char === "'"
-      )
-    ) {
-
-      quote = char;
-
-      continue;
-    }
-
-
-    if (quote) {
-      continue;
-    }
-
-
-    if (char === "(") {
-      depth++;
-    }
-
-    if (char === ")") {
-      depth--;
-    }
-
-
-    if (
-      depth === 0 &&
-      text.startsWith(
-        operator,
-        i
-      )
-    ) {
-
-      return i;
-
-    }
-
-  }
-
-
-  return -1;
-}
-
-
-/* =========================================================
-   EXECUTE
-========================================================= */
-
-function execute(
-  code,
-  vars,
-  output
-) {
-
-  let i = 0;
-
-
-  while (
-    i < code.length
-  ) {
-
-    i =
-      skipWhitespace(
-        code,
-        i
-      );
-
-
-    if (
-      i >= code.length
-    ) {
-      break;
-    }
-
-
-    /* SEMICOLON */
-
-    if (
-      code[i] === ";"
-    ) {
-
-      i++;
-
-      continue;
-    }
-
-
-    /* COMMENTS */
-
-    if (
-      code.startsWith(
-        "//",
-        i
-      )
-    ) {
-
-      const end =
-        code.indexOf(
-          "\n",
-          i
-        );
-
-
-      i =
-        end === -1
-          ? code.length
-          : end + 1;
-
-
-      continue;
-    }
-
-
-    /* PRINT */
-
-    if (
-      code.startsWith(
-        "print",
-        i
-      ) &&
-      /\s*\(/.test(
-        code.slice(
-          i + 5
-        )
-      )
-    ) {
-
-      const open =
-        code.indexOf(
-          "(",
-          i
-        );
-
-
-      const close =
-        findClosingParen(
-          code,
-          open
-        );
-
-
-      if (
-        close === -1
-      ) {
-
-        throw new Error(
-          "Kurung print() tidak lengkap."
-        );
-
-      }
-
-
-      const expression =
-        code.slice(
-          open + 1,
-          close
-        );
-
-
-      const value =
-        parseValue(
-          expression,
-          vars
-        );
-
-
-      output.push(
-        formatOutput(
-          value
-        )
-      );
-
-
-      i =
-        close + 1;
-
-
-      if (
-        code[i] === ";"
-      ) {
-
-        i++;
-
-      }
-
-
-      continue;
-    }
-
-
-    /* IF */
-
-    if (
-      code.startsWith(
-        "if",
-        i
-      ) &&
-      /\s*\(/.test(
-        code.slice(
-          i + 2
-        )
-      )
-    ) {
-
-      const openParen =
-        code.indexOf(
-          "(",
-          i
-        );
-
-
-      const closeParen =
-        findClosingParen(
-          code,
-          openParen
-        );
-
-
-      if (
-        closeParen === -1
-      ) {
-
-        throw new Error(
-          "Kondisi if tidak lengkap."
-        );
-
-      }
-
-
-      const conditionText =
-        code.slice(
-          openParen + 1,
-          closeParen
-        );
-
-
-      const openBrace =
-        findBrace(
-          code,
-          closeParen
-        );
-
-
-      const closeBrace =
-        findClosingBrace(
-          code,
-          openBrace
-        );
-
-
-      if (
-        openBrace === -1 ||
-        closeBrace === -1
-      ) {
-
-        throw new Error(
-          "Blok if tidak lengkap."
-        );
-
-      }
-
-
-      const ifBody =
-        code.slice(
-          openBrace + 1,
-          closeBrace
-        );
-
-
-      let cursor =
-        closeBrace + 1;
-
-
-      cursor =
-        skipWhitespace(
-          code,
-          cursor
-        );
-
-
-      const branches = [];
-
-
-      branches.push({
-        type: "if",
-        condition:
-          conditionText,
-        body:
-          ifBody
+    // Navigasi antarpengaturan
+    document.querySelectorAll(".nav-item").forEach(button => {
+      button.addEventListener("click", () => {
+        document.querySelectorAll(".nav-item").forEach(item => {
+          item.classList.remove("active");
+        });
+
+        document.querySelectorAll(".section").forEach(section => {
+          section.classList.remove("active");
+        });
+
+        button.classList.add("active");
+        document.getElementById(button.dataset.target)
+          .classList.add("active");
+      });
+    });
+
+    // Profil mahasiswa
+    const profileForm = document.getElementById("profileForm");
+
+    function loadProfile() {
+      const profile = readJSON(PROFILE_KEY, defaultProfile);
+
+      Object.keys(defaultProfile).forEach(key => {
+        profileForm.elements[key].value = profile[key] || "";
       });
 
-
-      /* ELSE IF */
-
-      while (
-        code.startsWith(
-          "else if",
-          cursor
-        )
-      ) {
-
-        const elseIfOpen =
-          code.indexOf(
-            "(",
-            cursor
-          );
-
-
-        const elseIfClose =
-          findClosingParen(
-            code,
-            elseIfOpen
-          );
-
-
-        const elseIfCondition =
-          code.slice(
-            elseIfOpen + 1,
-            elseIfClose
-          );
-
-
-        const elseIfBrace =
-          findBrace(
-            code,
-            elseIfClose
-          );
-
-
-        const elseIfEnd =
-          findClosingBrace(
-            code,
-            elseIfBrace
-          );
-
-
-        const elseIfBody =
-          code.slice(
-            elseIfBrace + 1,
-            elseIfEnd
-          );
-
-
-        branches.push({
-          type: "else-if",
-          condition:
-            elseIfCondition,
-          body:
-            elseIfBody
-        });
-
-
-        cursor =
-          skipWhitespace(
-            code,
-            elseIfEnd + 1
-          );
-
-      }
-
-
-      /* ELSE */
-
-      if (
-        code.startsWith(
-          "else",
-          cursor
-        )
-      ) {
-
-        const elseBrace =
-          findBrace(
-            code,
-            cursor + 4
-          );
-
-
-        const elseEnd =
-          findClosingBrace(
-            code,
-            elseBrace
-          );
-
-
-        const elseBody =
-          code.slice(
-            elseBrace + 1,
-            elseEnd
-          );
-
-
-        branches.push({
-          type: "else",
-          body:
-            elseBody
-        });
-
-
-        cursor =
-          elseEnd + 1;
-
-      }
-
-
-      /* ONLY ONE BRANCH */
-
-      for (
-        const branch
-        of branches
-      ) {
-
-        if (
-          branch.type === "else" ||
-          evaluateCondition(
-            branch.condition,
-            vars
-          )
-        ) {
-
-          execute(
-            branch.body,
-            vars,
-            output
-          );
-
-          break;
-
-        }
-
-      }
-
-
-      i =
-        cursor;
-
-      continue;
+      updateProfilePreview(profile);
     }
 
+    function updateProfilePreview(profile) {
+      const name = profile.fullName || "Mahasiswa";
 
-    /* SWITCH */
+      document.getElementById("displayName").textContent = name;
+      document.getElementById("avatar").textContent =
+        name.trim().charAt(0).toUpperCase() || "S";
 
-    if (
-      code.startsWith(
-        "switch",
-        i
-      )
-    ) {
+      document.getElementById("displayProgram").textContent =
+        [profile.program, profile.className]
+          .filter(Boolean)
+          .join(" • ") || "Lengkapi informasi akademik kamu";
+    }
 
-      const openParen =
-        code.indexOf(
-          "(",
-          i
-        );
+    profileForm.addEventListener("submit", event => {
+      event.preventDefault();
 
+      const profile = {};
+      Object.keys(defaultProfile).forEach(key => {
+        profile[key] = profileForm.elements[key].value.trim();
+      });
 
-      const closeParen =
-        findClosingParen(
-          code,
-          openParen
-        );
+      saveJSON(PROFILE_KEY, profile);
+      updateProfilePreview(profile);
+      showNotice("profileNotice", "Profil berhasil disimpan.");
+    });
 
+    // Preferensi
+    const darkMode = document.getElementById("darkMode");
 
-      if (
-        closeParen === -1
-      ) {
+    function applyTheme(enabled) {
+      document.body.classList.toggle("dark", enabled);
+    }
 
-        throw new Error(
-          "Switch tidak lengkap."
-        );
+    function loadPreferences() {
+      const prefs = readJSON(PREF_KEY, defaultPreferences);
 
-      }
+      darkMode.checked = Boolean(prefs.darkMode);
+      document.getElementById("weekStart").value = prefs.weekStart;
+      document.getElementById("confirmDelete").checked =
+        Boolean(prefs.confirmDelete);
 
+      applyTheme(darkMode.checked);
+    }
 
-      const switchExpression =
-        code.slice(
-          openParen + 1,
-          closeParen
-        );
+    darkMode.addEventListener("change", () => {
+      applyTheme(darkMode.checked);
+    });
 
+    document.getElementById("savePreferences")
+      .addEventListener("click", () => {
+        const prefs = {
+          darkMode: darkMode.checked,
+          weekStart: document.getElementById("weekStart").value,
+          confirmDelete:
+            document.getElementById("confirmDelete").checked
+        };
 
-      const switchValue =
-        parseValue(
-          switchExpression,
-          vars
-        );
+        saveJSON(PREF_KEY, prefs);
+        applyTheme(prefs.darkMode);
+        showNotice("preferencesNotice", "Preferensi berhasil disimpan.");
+      });
 
+    // Notifikasi
+    function loadNotifications() {
+      const settings = readJSON(NOTIF_KEY, defaultNotifications);
 
-      const openBrace =
-        findBrace(
-          code,
-          closeParen
-        );
+      Object.keys(defaultNotifications).forEach(key => {
+        const element = document.getElementById(key);
+        if (!element) return;
 
-
-      const closeBrace =
-        findClosingBrace(
-          code,
-          openBrace
-        );
-
-
-      if (
-        openBrace === -1 ||
-        closeBrace === -1
-      ) {
-
-        throw new Error(
-          "Blok switch tidak lengkap."
-        );
-
-      }
-
-
-      const switchBody =
-        code.slice(
-          openBrace + 1,
-          closeBrace
-        );
-
-
-      const labels = [];
-
-
-      const labelRegex =
-        /\bcase\s+([^:]+)\s*:|\bdefault\s*:/g;
-
-
-      let match;
-
-
-      while (
-        (
-          match =
-            labelRegex.exec(
-              switchBody
-            )
-        ) !== null
-      ) {
-
-        labels.push({
-
-          type:
-            match[0]
-              .trim()
-              .startsWith(
-                "default"
-              )
-              ? "default"
-              : "case",
-
-          value:
-            match[1]
-              ? match[1].trim()
-              : null,
-
-          start:
-            match.index,
-
-          bodyStart:
-            labelRegex.lastIndex
-
-        });
-
-      }
-
-
-      let executed =
-        false;
-
-
-      for (
-        let x = 0;
-        x < labels.length;
-        x++
-      ) {
-
-        const label =
-          labels[x];
-
-
-        const nextLabel =
-          labels[x + 1];
-
-
-        const bodyEnd =
-          nextLabel
-            ? nextLabel.start
-            : switchBody.length;
-
-
-        let body =
-          switchBody.slice(
-            label.bodyStart,
-            bodyEnd
-          );
-
-
-        const breakIndex =
-          body.search(
-            /\bbreak\s*;/
-          );
-
-
-        if (
-          breakIndex !== -1
-        ) {
-
-          body =
-            body.slice(
-              0,
-              breakIndex
-            );
-
-        }
-
-
-        let matched =
-          false;
-
-
-        if (
-          label.type === "case"
-        ) {
-
-          const caseValue =
-            parseValue(
-              label.value,
-              vars
-            );
-
-
-          matched =
-            caseValue ===
-            switchValue;
-
+        if (element.type === "checkbox") {
+          element.checked = Boolean(settings[key]);
         } else {
-
-          matched =
-            !executed;
-
+          element.value = settings[key];
         }
+      });
+    }
 
+    document.getElementById("saveNotifications")
+      .addEventListener("click", () => {
+        const settings = {};
 
-        if (matched) {
+        Object.keys(defaultNotifications).forEach(key => {
+          const element = document.getElementById(key);
 
-          execute(
-            body,
-            vars,
-            output
-          );
+          settings[key] = element.type === "checkbox"
+            ? element.checked
+            : element.value;
+        });
 
+        saveJSON(NOTIF_KEY, settings);
+        showNotice("notificationsNotice",
+          "Pengaturan notifikasi berhasil disimpan.");
+      });
 
-          executed =
-            true;
+    // Informasi penyimpanan lokal
+    function refreshStorageInfo() {
+      let bytes = 0;
+      let count = 0;
 
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        const value = localStorage.getItem(key);
 
-          if (
-            label.type === "case"
-          ) {
+        bytes += new Blob([key + value]).size;
+        count++;
+      }
 
-            break;
+      const kb = (bytes / 1024).toFixed(2);
 
+      document.getElementById("storageInfo").textContent =
+        `${count} item penyimpanan • sekitar ${kb} KB`;
+    }
+
+    document.getElementById("refreshStorage")
+      .addEventListener("click", refreshStorageInfo);
+
+    // Ekspor seluruh localStorage menjadi JSON
+    document.getElementById("exportData")
+      .addEventListener("click", () => {
+        const backup = {
+          exportedAt: new Date().toISOString(),
+          application: "CampusFlow",
+          data: {}
+        };
+
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          const rawValue = localStorage.getItem(key);
+
+          try {
+            backup.data[key] = JSON.parse(rawValue);
+          } catch {
+            backup.data[key] = rawValue;
           }
-
         }
 
-      }
-
-
-      i =
-        closeBrace + 1;
-
-
-      continue;
-    }
-
-
-    /* VARIABLE DECLARATION */
-
-    const declaration =
-      code
-        .slice(i)
-        .match(
-          /^(?:final\s+|const\s+)?(?:String|int|double|num|bool|dynamic|List(?:<[^>]+>)?|Map(?:<[^>]+>)?)\s+([A-Za-z_]\w*)\s*=\s*([\s\S]*?);/
+        const blob = new Blob(
+          [JSON.stringify(backup, null, 2)],
+          { type: "application/json" }
         );
 
-
-    if (declaration) {
-
-      const name =
-        declaration[1];
-
-
-      const expression =
-        declaration[2];
-
-
-      vars[name] =
-        parseValue(
-          expression,
-          vars
-        );
-
-
-      i +=
-        declaration[0].length;
-
-
-      continue;
-    }
-
-
-    /* FINAL / CONST */
-
-    const simpleDeclaration =
-      code
-        .slice(i)
-        .match(
-          /^(?:final|const)\s+([A-Za-z_]\w*)\s*=\s*([\s\S]*?);/
-        );
-
-
-    if (
-      simpleDeclaration
-    ) {
-
-      const name =
-        simpleDeclaration[1];
-
-
-      const expression =
-        simpleDeclaration[2];
-
-
-      vars[name] =
-        parseValue(
-          expression,
-          vars
-        );
-
-
-      i +=
-        simpleDeclaration[0].length;
-
-
-      continue;
-    }
-
-
-    /* ASSIGNMENT */
-
-    const assignment =
-      code
-        .slice(i)
-        .match(
-          /^([A-Za-z_]\w*)\s*=\s*([\s\S]*?);/
-        );
-
-
-    if (assignment) {
-
-      const name =
-        assignment[1];
-
-
-      const expression =
-        assignment[2];
-
-
-      vars[name] =
-        parseValue(
-          expression,
-          vars
-        );
-
-
-      i +=
-        assignment[0].length;
-
-
-      continue;
-    }
-
-
-    /* UNKNOWN STATEMENT */
-
-    const semicolon =
-      code.indexOf(
-        ";",
-        i
-      );
-
-
-    if (
-      semicolon === -1
-    ) {
-
-      break;
-
-    }
-
-
-    i =
-      semicolon + 1;
-
-  }
-
-}
-
-
-/* =========================================================
-   COMPILE
-========================================================= */
-
-function compile() {
-
-  const code =
-    document.getElementById(
-      "code"
-    ).value;
-
-
-  const consoleElement =
-    document.getElementById(
-      "console"
-    );
-
-
-  const status =
-    document.getElementById(
-      "status"
-    );
-
-
-  consoleElement.className =
-    "console";
-
-
-  consoleElement.textContent =
-    "";
-
-
-  try {
-
-    const mainIndex =
-      code.indexOf(
-        "void main"
-      );
-
-
-    if (
-      mainIndex === -1
-    ) {
-
-      throw new Error(
-        "Fungsi void main() tidak ditemukan."
-      );
-
-    }
-
-
-    const openBrace =
-      code.indexOf(
-        "{",
-        mainIndex
-      );
-
-
-    if (
-      openBrace === -1
-    ) {
-
-      throw new Error(
-        "Blok main() tidak ditemukan."
-      );
-
-    }
-
-
-    const closeBrace =
-      findClosingBrace(
-        code,
-        openBrace
-      );
-
-
-    if (
-      closeBrace === -1
-    ) {
-
-      throw new Error(
-        "Kurung kurawal main() tidak lengkap."
-      );
-
-    }
-
-
-    const mainBody =
-      code.slice(
-        openBrace + 1,
-        closeBrace
-      );
-
-
-    const vars = {};
-
-    const output = [];
-
-
-    execute(
-      mainBody,
-      vars,
-      output
-    );
-
-
-    if (
-      output.length === 0
-    ) {
-
-      consoleElement.textContent =
-        "Program selesai tanpa output.";
-
-      consoleElement.classList.add(
-        "empty"
-      );
-
-    } else {
-
-      consoleElement.textContent =
-        output.join("\n");
-
-    }
-
-
-    status.textContent =
-      "✓ Program berhasil dijalankan";
-
-  } catch (error) {
-
-    consoleElement.className =
-      "console error";
-
-
-    consoleElement.textContent =
-      "Error: " +
-      error.message;
-
-
-    status.textContent =
-      "✗ Terjadi error";
-
-  }
-
-}
-
-
-/* =========================================================
-   CLEAR CODE
-========================================================= */
-
-function clearCode() {
-
-  document.getElementById(
-    "code"
-  ).value = "";
-
-
-  document.getElementById(
-    "status"
-  ).textContent =
-    "Editor dikosongkan.";
-
-}
-
-
-/* =========================================================
-   CLEAR CONSOLE
-========================================================= */
-
-function clearConsole() {
-
-  const consoleElement =
-    document.getElementById(
-      "console"
-    );
-
-
-  consoleElement.className =
-    "console empty";
-
-
-  consoleElement.textContent =
-    "Output akan tampil di sini...";
-
-
-  document.getElementById(
-    "status"
-  ).textContent =
-    "Ready";
-
-}
-
-
-/* =========================================================
-   FORMAT CODE
-========================================================= */
-
-function formatCode() {
-
-  const textarea =
-    document.getElementById(
-      "code"
-    );
-
-
-  let code =
-    textarea.value.trim();
-
-
-  let result = "";
-
-  let indent = 0;
-
-  let line = "";
-
-  let quote = null;
-
-
-  for (
-    let i = 0;
-    i < code.length;
-    i++
-  ) {
-
-    const char =
-      code[i];
-
-
-    if (
-      quote &&
-      char === quote &&
-      code[i - 1] !== "\\"
-    ) {
-
-      quote = null;
-
-      line += char;
-
-      continue;
-    }
-
-
-    if (
-      !quote &&
-      (
-        char === '"' ||
-        char === "'"
-      )
-    ) {
-
-      quote = char;
-
-      line += char;
-
-      continue;
-    }
-
-
-    if (quote) {
-
-      line += char;
-
-      continue;
-    }
-
-
-    if (
-      char === "{"
-    ) {
-
-      line =
-        line.trim() +
-        " {";
-
-
-      result +=
-        "  ".repeat(indent) +
-        line.trim() +
-        "\n";
-
-
-      line = "";
-
-
-      indent++;
-
-    }
-
-
-    else if (
-      char === "}"
-    ) {
-
-      if (
-        line.trim()
-      ) {
-
-        result +=
-          "  ".repeat(indent) +
-          line.trim() +
-          "\n";
-
-
-        line = "";
-
-      }
-
-
-      indent--;
-
-
-      result +=
-        "  ".repeat(indent) +
-        "}";
-
-
-      if (
-        code[i + 1] !== ";" &&
-        code[i + 1] !== "," &&
-        code[i + 1] !== ")"
-      ) {
-
-        result += "\n";
-
-      }
-
-    }
-
-
-    else if (
-      char === ";"
-    ) {
-
-      line += ";";
-
-
-      result +=
-        "  ".repeat(indent) +
-        line.trim() +
-        "\n";
-
-
-      line = "";
-
-    }
-
-
-    else {
-
-      line += char;
-
-    }
-
-  }
-
-
-  if (
-    line.trim()
-  ) {
-
-    result +=
-      "  ".repeat(indent) +
-      line.trim();
-
-  }
-
-
-  textarea.value =
-    result.trim();
-
-}
-
-
-/* =========================================================
-   LOAD EXAMPLE
-========================================================= */
-
-function loadExample(
-  name
-) {
-
-  if (
-    examples[name]
-  ) {
-
-    document.getElementById(
-      "code"
-    ).value =
-      examples[name];
-
-
-    document.getElementById(
-      "status"
-    ).textContent =
-      "Contoh berhasil dimuat.";
-
-  }
-
-}
-
-
-/* =========================================================
-   CTRL + ENTER
-========================================================= */
-
-document
-  .getElementById(
-    "code"
-  )
-  .addEventListener(
-    "keydown",
-    function(event) {
-
-      if (
-        event.ctrlKey &&
-        event.key === "Enter"
-      ) {
-
-        event.preventDefault();
-
-        compile();
-
-      }
-
-    }
-  );
-
-
-/* =========================================================
-   RUN DEFAULT CODE
-========================================================= */
-
-compile();
-
-</script>
-
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+
+        link.href = url;
+        link.download = "campusflow-backup.json";
+        link.click();
+
+        URL.revokeObjectURL(url);
+        showNotice("dataNotice", "Cadangan JSON berhasil dibuat.");
+        refreshStorageInfo();
+      });
+
+    // Hapus preferensi saja
+    document.getElementById("clearSettings")
+      .addEventListener("click", () => {
+        const prefs = readJSON(PREF_KEY, defaultPreferences);
+        const notifs = readJSON(NOTIF_KEY, defaultNotifications);
+
+        if (prefs.confirmDelete &&
+            !confirm("Hapus preferensi dan pengaturan notifikasi?")) {
+          return;
+        }
+
+        localStorage.removeItem(PREF_KEY);
+        localStorage.removeItem(NOTIF_KEY);
+
+        loadPreferences();
+        loadNotifications();
+        refreshStorageInfo();
+
+        showNotice("dataNotice", "Preferensi berhasil direset.");
+      });
+
+    // Hapus seluruh data lokal
+    document.getElementById("clearAllData")
+      .addEventListener("click", () => {
+        const prefs = readJSON(PREF_KEY, defaultPreferences);
+
+        if (prefs.confirmDelete &&
+            !confirm("Yakin menghapus SEMUA data lokal CampusFlow?")) {
+          return;
+        }
+
+        if (!confirm(
+          "Tindakan ini tidak dapat dibatalkan. Lanjutkan penghapusan?"
+        )) {
+          return;
+        }
+
+        localStorage.clear();
+
+        loadProfile();
+        loadPreferences();
+        loadNotifications();
+        refreshStorageInfo();
+
+        showNotice("dataNotice", "Semua data lokal berhasil dihapus.");
+      });
+
+    // Inisialisasi
+    loadProfile();
+    loadPreferences();
+    loadNotifications();
+    refreshStorageInfo();
+  </script>
 </body>
 </html>
