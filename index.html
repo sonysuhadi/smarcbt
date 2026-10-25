@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FlowDash v2.0 - Light Mode</title>
+    <title>FlowDash v3.0 - Pro Control Center</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Lucide Icons & Font -->
+    <!-- Fonts & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
@@ -17,7 +17,7 @@
 
     <div class="max-w-7xl mx-auto space-y-8">
         
-        <!-- TOP HEADER -->
+        <!-- HEADER -->
         <header class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-6">
             <div class="flex items-center gap-3">
                 <div class="p-3 bg-cyan-500/10 border border-cyan-500/20 rounded-2xl text-cyan-600">
@@ -25,16 +25,20 @@
                 </div>
                 <div>
                     <h1 class="text-2xl font-extrabold tracking-tight text-slate-900 flex items-center gap-2">
-                        FlowDash <span class="px-2 py-0.5 bg-cyan-100 text-cyan-700 text-xs font-semibold rounded-md border border-cyan-200">v2.0</span>
+                        FlowDash <span class="px-2 py-0.5 bg-cyan-100 text-cyan-700 text-xs font-semibold rounded-md border border-cyan-200">v3.0 Pro</span>
                     </h1>
-                    <p class="text-xs md:text-sm text-slate-500">CLI Workstation Control & Monitoring Hub</p>
+                    <p class="text-xs md:text-sm text-slate-500">CLI Workstation Control & Terminal Gateway</p>
                 </div>
             </div>
             
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-3 flex-wrap">
                 <div class="flex items-center gap-2 px-3.5 py-1.5 bg-white border border-slate-200 shadow-sm rounded-xl text-xs text-slate-700 font-medium">
                     <i data-lucide="wifi" class="w-4 h-4 text-emerald-600"></i>
-                    <span id="ip-local">IP: Loading...</span>
+                    <span id="ip-local">IP: Memuat...</span>
+                </div>
+                <div class="flex items-center gap-2 px-3.5 py-1.5 bg-white border border-slate-200 shadow-sm rounded-xl text-xs text-slate-700 font-medium">
+                    <i data-lucide="monitor" class="w-4 h-4 text-indigo-600"></i>
+                    <span id="os-info">OS: Memuat...</span>
                 </div>
                 <span class="inline-flex items-center gap-2 px-3.5 py-1.5 bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-semibold rounded-full">
                     <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
@@ -49,14 +53,14 @@
             <!-- CPU Card -->
             <div class="bg-white border border-slate-200/80 p-5 rounded-2xl shadow-sm hover:shadow-md transition">
                 <div class="flex justify-between items-start mb-3">
-                    <span class="text-xs font-bold uppercase tracking-wider text-slate-500">CPU Load</span>
+                    <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Beban CPU</span>
                     <i data-lucide="activity" class="w-5 h-5 text-cyan-600"></i>
                 </div>
                 <div class="text-3xl font-black text-slate-900 mb-2" id="cpu-load">--%</div>
                 <div class="w-full bg-slate-100 rounded-full h-1.5 mb-2 overflow-hidden">
                     <div id="cpu-bar" class="bg-cyan-500 h-1.5 transition-all duration-500" style="width: 0%"></div>
                 </div>
-                <p class="text-[11px] text-slate-500 truncate" id="cpu-brand">Detecting CPU...</p>
+                <p class="text-[11px] text-slate-500 truncate" id="cpu-brand">Mendeteksi CPU...</p>
             </div>
 
             <!-- RAM Card -->
@@ -88,35 +92,35 @@
             <!-- Battery / System Status -->
             <div class="bg-white border border-slate-200/80 p-5 rounded-2xl shadow-sm hover:shadow-md transition">
                 <div class="flex justify-between items-start mb-3">
-                    <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Status Daya / Uptime</span>
+                    <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Daya & Uptime</span>
                     <i data-lucide="battery-charging" class="w-5 h-5 text-emerald-600"></i>
                 </div>
                 <div class="text-3xl font-black text-slate-900 mb-2" id="battery-status">--%</div>
-                <p class="text-xs text-emerald-600 font-semibold mb-1" id="charging-state">Checking power...</p>
+                <p class="text-xs text-emerald-600 font-semibold mb-1" id="charging-state">Memeriksa daya...</p>
                 <p class="text-[11px] text-slate-500" id="sys-uptime">Uptime: -- min</p>
             </div>
 
         </div>
 
-        <!-- MAIN SECTION: PORT INSPECTOR & QUICK UTILITIES -->
+        <!-- MAIN SECTION: PORT INSPECTOR & TOOLS -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             
-            <!-- TABEL INSPEKTOR PORT (2 Kolom) -->
+            <!-- PORT INSPECTOR TABLE -->
             <div class="lg:col-span-2 bg-white border border-slate-200/80 p-6 rounded-2xl shadow-sm">
                 <div class="flex items-center justify-between mb-6">
                     <div class="flex items-center gap-2">
                         <i data-lucide="network" class="w-5 h-5 text-cyan-600"></i>
-                        <h2 class="text-lg font-bold text-slate-900">Active Local Ports & Processes</h2>
+                        <h2 class="text-lg font-bold text-slate-900">Active Local Ports & Process Manager</h2>
                     </div>
                     <button onclick="fetchPorts()" class="p-2 bg-slate-100 hover:bg-slate-200 rounded-lg text-slate-700 transition text-xs font-semibold flex items-center gap-1">
                         <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> Reload
                     </button>
                 </div>
 
-                <div class="overflow-x-auto">
+                <div class="overflow-x-auto max-h-[320px] overflow-y-auto">
                     <table class="w-full text-left border-collapse text-sm">
                         <thead>
-                            <tr class="border-b border-slate-200 text-xs text-slate-500 uppercase tracking-wider">
+                            <tr class="border-b border-slate-200 text-xs text-slate-500 uppercase tracking-wider sticky top-0 bg-white">
                                 <th class="pb-3 font-semibold">Port</th>
                                 <th class="pb-3 font-semibold">Protokol</th>
                                 <th class="pb-3 font-semibold">Proses / PID</th>
@@ -132,29 +136,29 @@
                 </div>
             </div>
 
-            <!-- KOLOM KANAN: QUICK TOOLS & NOTEPAD -->
+            <!-- SIDEBAR TOOLS (PING TEST & SCRATCHPAD) -->
             <div class="space-y-6">
                 
-                <!-- Network Diagnostic Tool -->
+                <!-- Network Tester -->
                 <div class="bg-white border border-slate-200/80 p-6 rounded-2xl shadow-sm">
                     <div class="flex items-center gap-2 mb-4">
                         <i data-lucide="zap" class="w-5 h-5 text-amber-500"></i>
-                        <h2 class="text-lg font-bold text-slate-900">Network Tester</h2>
+                        <h2 class="text-lg font-bold text-slate-900">Network Latency Tester</h2>
                     </div>
 
                     <button onclick="checkPing()" class="w-full flex items-center justify-between p-3.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl transition group">
                         <div class="flex items-center gap-3">
                             <i data-lucide="radio" class="w-5 h-5 text-cyan-600 group-hover:scale-110 transition-transform"></i>
                             <div class="text-left">
-                                <div class="text-xs font-bold text-slate-900">Tes Latency Ping</div>
-                                <div class="text-[11px] text-slate-500" id="ping-res">Klik untuk menguji respon API</div>
+                                <div class="text-xs font-bold text-slate-900">Uji Respon API Lokal</div>
+                                <div class="text-[11px] text-slate-500" id="ping-res">Klik untuk menguji latensi</div>
                             </div>
                         </div>
                         <i data-lucide="play" class="w-4 h-4 text-slate-400"></i>
                     </button>
                 </div>
 
-                <!-- Scratchpad & Quick Notepad -->
+                <!-- Scratchpad -->
                 <div class="bg-white border border-slate-200/80 p-6 rounded-2xl shadow-sm flex flex-col justify-between">
                     <div>
                         <div class="flex items-center justify-between mb-3">
@@ -164,7 +168,7 @@
                             </div>
                             <span class="text-[10px] text-slate-400 uppercase font-mono">Auto-Saved</span>
                         </div>
-                        <textarea id="quick-note" placeholder="Tulis catatan cepat, snippet kode, atau draft di sini..." class="w-full h-32 bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-800 focus:outline-none focus:border-cyan-500 resize-none font-mono"></textarea>
+                        <textarea id="quick-note" placeholder="Tulis catatan kilat, snippet kode, atau IP address di sini..." class="w-full h-24 bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-800 focus:outline-none focus:border-cyan-500 resize-none font-mono"></textarea>
                     </div>
                     <div class="flex justify-between items-center mt-3">
                         <button onclick="copyNote()" class="text-xs text-slate-500 hover:text-cyan-600 transition flex items-center gap-1 font-medium">
@@ -178,39 +182,60 @@
 
         </div>
 
+        <!-- NEW FEATURE: INTERACTIVE CLI TERMINAL COMMAND RUNNER -->
+        <div class="bg-slate-900 text-slate-100 p-6 rounded-2xl shadow-xl border border-slate-800">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center gap-2">
+                    <i data-lucide="terminal" class="w-5 h-5 text-cyan-400"></i>
+                    <h2 class="text-lg font-bold text-white">Interactive Terminal CLI Runner</h2>
+                </div>
+                <span class="text-xs text-slate-400">Ketik perintah sistem bebas (cth: <code>node -v</code>, <code>npm list</code>, <code>ping 127.0.0.1</code>)</span>
+            </div>
+
+            <!-- Input & Button -->
+            <div class="flex gap-3 mb-4">
+                <input type="text" id="cli-input" placeholder="Ketik perintah terminal di sini lalu tekan Enter atau tombol Run..." class="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-cyan-500 font-mono" onkeypress="handleKeyPress(event)">
+                <button onclick="runCommand()" class="px-5 py-2.5 bg-cyan-500 hover:bg-cyan-600 text-slate-950 text-xs font-bold rounded-xl transition shadow-sm flex items-center gap-1.5">
+                    <i data-lucide="play" class="w-3.5 h-3.5"></i> Run
+                </button>
+            </div>
+
+            <!-- Terminal Output Window -->
+            <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 h-48 overflow-y-auto font-mono text-xs text-emerald-400 select-all" id="cli-output">
+                <span class="text-slate-500">// Output eksekusi terminal akan muncul di sini...</span>
+            </div>
+        </div>
+
     </div>
 
-    <!-- TOAST NOTIFIKASI -->
+    <!-- TOAST NOTIFICATION -->
     <div id="toast" class="fixed bottom-6 right-6 bg-slate-900 text-white px-4 py-3 rounded-xl font-bold text-xs shadow-xl transition-all opacity-0 translate-y-4 pointer-events-none z-50">
         Notification
     </div>
 
-    <!-- SCRIPT UTAMA -->
+    <!-- SCRIPT -->
     <script>
         lucide.createIcons();
 
-        // 1. System Metrics Fetcher
         async function fetchSystem() {
             try {
                 const res = await fetch('/api/system');
                 const data = await res.json();
 
-                // CPU
                 document.getElementById('cpu-load').innerText = `${data.cpu.load}%`;
                 document.getElementById('cpu-bar').style.width = `${data.cpu.load}%`;
                 document.getElementById('cpu-brand').innerText = `${data.cpu.brand} (${data.cpu.cores} Cores)`;
 
-                // RAM
                 document.getElementById('ram-used').innerText = `${data.ram.used} GB`;
                 document.getElementById('ram-total').innerText = `Total ${data.ram.total} GB (${data.ram.free} GB Free)`;
                 document.getElementById('ram-bar').style.width = `${data.ram.percent}%`;
 
-                // Storage
                 document.getElementById('disk-used').innerText = `${data.disk.used} GB`;
                 document.getElementById('disk-total').innerText = `Total ${data.disk.size} GB (Mount: ${data.disk.mount})`;
                 document.getElementById('disk-bar').style.width = `${data.disk.percent}%`;
 
-                // Battery & Uptime
+                document.getElementById('os-info').innerText = `OS: ${data.os.platform} (${data.os.release})`;
+
                 if (data.battery.hasBattery) {
                     document.getElementById('battery-status').innerText = `${data.battery.percent}%`;
                     document.getElementById('charging-state').innerText = data.battery.isCharging ? '⚡ Status: Charging' : '🔋 On Battery';
@@ -222,13 +247,11 @@
                 const hours = Math.floor(data.uptime / 60);
                 const mins = data.uptime % 60;
                 document.getElementById('sys-uptime').innerText = `Uptime: ${hours}j ${mins}m`;
-
             } catch (err) {
-                console.error('Error fetching system data:', err);
+                console.error('Gagal memuat data sistem', err);
             }
         }
 
-        // 2. Network Fetcher
         async function fetchNetwork() {
             try {
                 const res = await fetch('/api/network');
@@ -237,7 +260,6 @@
             } catch (err) {}
         }
 
-        // 3. Port Inspector Fetcher & Process Killer
         async function fetchPorts() {
             const listElem = document.getElementById('ports-list');
             try {
@@ -266,13 +288,12 @@
                     </tr>
                 `).join('');
             } catch (err) {
-                listElem.innerHTML = `<tr><td colspan="4" class="py-4 text-center text-rose-500">Gagal memuat daftar port.</td></tr>`;
+                listElem.innerHTML = `<tr><td colspan="4" class="py-4 text-center text-rose-500">Gagal memuat port.</td></tr>`;
             }
         }
 
         async function killProcess(pid) {
             if (!confirm(`Yakin ingin menghentikan proses dengan PID ${pid}?`)) return;
-
             try {
                 const res = await fetch('/api/kill', {
                     method: 'POST',
@@ -287,24 +308,62 @@
             }
         }
 
-        // 4. Ping Test
+        // Terminal Command Runner Handler
+        async function runCommand() {
+            const inputElem = document.getElementById('cli-input');
+            const outputElem = document.getElementById('cli-output');
+            const command = inputElem.value.trim();
+
+            if (!command) return;
+
+            outputElem.innerHTML += `\n<span class="text-cyan-400">$ ${command}</span>\n<span class="text-slate-400">Mengeksekusi...</span>`;
+            outputElem.scrollTop = outputElem.scrollHeight;
+            inputElem.value = '';
+
+            try {
+                const res = await fetch('/api/exec', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ command })
+                });
+                const data = await res.json();
+                
+                // Ganti baris terakhir dengan hasil output asli
+                const lines = outputElem.innerHTML.split('\n');
+                lines.pop(); // Hapus tulisan mengeksekusi
+                outputElem.innerHTML = lines.join('\n') + `\n<span class="text-emerald-300">${escapeHtml(data.output)}</span>\n`;
+                outputElem.scrollTop = outputElem.scrollHeight;
+            } catch (err) {
+                outputElem.innerHTML += `\n<span class="text-rose-400">Gagal menjalankan perintah.</span>\n`;
+            }
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                runCommand();
+            }
+        }
+
+        function escapeHtml(text) {
+            return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        }
+
         async function checkPing() {
             const resElem = document.getElementById('ping-res');
-            resElem.innerText = 'Testing latency...';
+            resElem.innerText = 'Menguji latensi...';
             const start = Date.now();
             try {
                 await fetch('/api/system');
                 const diff = Date.now() - start;
-                resElem.innerText = `Local API Latency: ${diff}ms`;
+                resElem.innerText = `Latensi API: ${diff}ms`;
             } catch (e) {
-                resElem.innerText = 'Test Failed';
+                resElem.innerText = 'Tes Gagal';
             }
         }
 
-        // 5. Notepad Helpers
         function saveNote() {
-            localStorage.setItem('flowdash_v2_note', document.getElementById('quick-note').value);
-            showToast('Catatan tersimpan di storage lokal!');
+            localStorage.setItem('flowdash_v3_note', document.getElementById('quick-note').value);
+            showToast('Catatan berhasil disimpan!');
         }
 
         function copyNote() {
@@ -314,7 +373,7 @@
         }
 
         function loadNote() {
-            const saved = localStorage.getItem('flowdash_v2_note');
+            const saved = localStorage.getItem('flowdash_v3_note');
             if (saved) document.getElementById('quick-note').value = saved;
         }
 
@@ -325,7 +384,6 @@
             setTimeout(() => toast.classList.add('opacity-0', 'translate-y-4', 'pointer-events-none'), 3000);
         }
 
-        // Auto Polling
         setInterval(fetchSystem, 2000);
         fetchSystem();
         fetchNetwork();
