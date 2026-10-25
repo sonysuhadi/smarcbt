@@ -1,394 +1,417 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FlowDash v3.0 - Pro Control Center</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Fonts & Icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DevPilot — Personal Control Center</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+:root{color-scheme:dark;--bg:#070b14;--panel:#101827;--line:#223047;--muted:#8b9bb4;--blue:#6095ff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:#e9effa;font-family:Inter,Segoe UI,Arial,sans-serif}
+.sidebar{background:#0b1220;border-right:1px solid var(--line)}
+.panel{background:linear-gradient(145deg,#111c2d,#0c1422);border:1px solid var(--line);border-radius:16px}
+.muted{color:var(--muted)}
+.nav{width:100%;display:flex;align-items:center;gap:12px;text-align:left;padding:11px 12px;border-radius:10px;color:#a5b4ca;font-size:13px}
+.nav:hover,.nav.active{background:#192e50;color:white}
+.nav.active{box-shadow:inset 3px 0 #6095ff}
+.page{display:none}.page.active{display:block}
+.btn{padding:9px 13px;background:#182b48;border:1px solid #304766;border-radius:9px;font-size:12px;font-weight:600}
+.btn:hover{background:#23406a}
+input,textarea,select{width:100%;padding:10px 12px;border:1px solid #30415a;border-radius:9px;background:#080f1c;color:#e9effa;outline:none}
+input:focus,textarea:focus,select:focus{border-color:#6095ff}
+.label{display:block;color:#9aabc3;font-size:12px;margin-bottom:7px}
+.kpi{font-size:29px;font-weight:750;letter-spacing:-1px}
+.tag{font-size:10px;padding:4px 7px;border-radius:6px;background:#182943;color:#a9c8ff}
+.meter{height:7px;background:#263248;border-radius:9px;overflow:hidden}
+.meter span{display:block;height:100%;border-radius:9px;background:linear-gradient(90deg,#4285ff,#2dd4bf)}
+.item{padding:13px 0;border-bottom:1px solid #1d2b40}
+.item:last-child{border-bottom:0}
+.smallbtn{font-size:11px;padding:6px 9px;border:1px solid #34445c;border-radius:7px}
+canvas{max-width:100%}
+@media(max-width:800px){
+.sidebar{position:fixed;top:0;bottom:0;left:-260px;width:245px;z-index:50;transition:left .2s}
+.sidebar.open{left:0}
+.mainpad{padding:15px!important}
+.kpi{font-size:25px}
+}
+</style>
 </head>
-<body class="bg-slate-50 text-slate-900 min-h-screen p-4 md:p-8">
+<body>
+<div class="flex min-h-screen">
 
-    <div class="max-w-7xl mx-auto space-y-8">
-        
-        <!-- HEADER -->
-        <header class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-6">
-            <div class="flex items-center gap-3">
-                <div class="p-3 bg-cyan-500/10 border border-cyan-500/20 rounded-2xl text-cyan-600">
-                    <i data-lucide="cpu" class="w-7 h-7"></i>
-                </div>
-                <div>
-                    <h1 class="text-2xl font-extrabold tracking-tight text-slate-900 flex items-center gap-2">
-                        FlowDash <span class="px-2 py-0.5 bg-cyan-100 text-cyan-700 text-xs font-semibold rounded-md border border-cyan-200">v3.0 Pro</span>
-                    </h1>
-                    <p class="text-xs md:text-sm text-slate-500">CLI Workstation Control & Terminal Gateway</p>
-                </div>
-            </div>
-            
-            <div class="flex items-center gap-3 flex-wrap">
-                <div class="flex items-center gap-2 px-3.5 py-1.5 bg-white border border-slate-200 shadow-sm rounded-xl text-xs text-slate-700 font-medium">
-                    <i data-lucide="wifi" class="w-4 h-4 text-emerald-600"></i>
-                    <span id="ip-local">IP: Memuat...</span>
-                </div>
-                <div class="flex items-center gap-2 px-3.5 py-1.5 bg-white border border-slate-200 shadow-sm rounded-xl text-xs text-slate-700 font-medium">
-                    <i data-lucide="monitor" class="w-4 h-4 text-indigo-600"></i>
-                    <span id="os-info">OS: Memuat...</span>
-                </div>
-                <span class="inline-flex items-center gap-2 px-3.5 py-1.5 bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-semibold rounded-full">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
-                    Online
-                </span>
-            </div>
-        </header>
-
-        <!-- GRID 4 KARTU METRIK UTAMA -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            
-            <!-- CPU Card -->
-            <div class="bg-white border border-slate-200/80 p-5 rounded-2xl shadow-sm hover:shadow-md transition">
-                <div class="flex justify-between items-start mb-3">
-                    <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Beban CPU</span>
-                    <i data-lucide="activity" class="w-5 h-5 text-cyan-600"></i>
-                </div>
-                <div class="text-3xl font-black text-slate-900 mb-2" id="cpu-load">--%</div>
-                <div class="w-full bg-slate-100 rounded-full h-1.5 mb-2 overflow-hidden">
-                    <div id="cpu-bar" class="bg-cyan-500 h-1.5 transition-all duration-500" style="width: 0%"></div>
-                </div>
-                <p class="text-[11px] text-slate-500 truncate" id="cpu-brand">Mendeteksi CPU...</p>
-            </div>
-
-            <!-- RAM Card -->
-            <div class="bg-white border border-slate-200/80 p-5 rounded-2xl shadow-sm hover:shadow-md transition">
-                <div class="flex justify-between items-start mb-3">
-                    <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Memory / RAM</span>
-                    <i data-lucide="layers" class="w-5 h-5 text-indigo-600"></i>
-                </div>
-                <div class="text-3xl font-black text-slate-900 mb-2" id="ram-used">-- GB</div>
-                <div class="w-full bg-slate-100 rounded-full h-1.5 mb-2 overflow-hidden">
-                    <div id="ram-bar" class="bg-indigo-600 h-1.5 transition-all duration-500" style="width: 0%"></div>
-                </div>
-                <p class="text-[11px] text-slate-500" id="ram-total">Total -- GB</p>
-            </div>
-
-            <!-- Disk Storage Card -->
-            <div class="bg-white border border-slate-200/80 p-5 rounded-2xl shadow-sm hover:shadow-md transition">
-                <div class="flex justify-between items-start mb-3">
-                    <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Storage Utama</span>
-                    <i data-lucide="hard-drive" class="w-5 h-5 text-amber-600"></i>
-                </div>
-                <div class="text-3xl font-black text-slate-900 mb-2" id="disk-used">-- GB</div>
-                <div class="w-full bg-slate-100 rounded-full h-1.5 mb-2 overflow-hidden">
-                    <div id="disk-bar" class="bg-amber-500 h-1.5 transition-all duration-500" style="width: 0%"></div>
-                </div>
-                <p class="text-[11px] text-slate-500" id="disk-total">Kapasitas -- GB</p>
-            </div>
-
-            <!-- Battery / System Status -->
-            <div class="bg-white border border-slate-200/80 p-5 rounded-2xl shadow-sm hover:shadow-md transition">
-                <div class="flex justify-between items-start mb-3">
-                    <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Daya & Uptime</span>
-                    <i data-lucide="battery-charging" class="w-5 h-5 text-emerald-600"></i>
-                </div>
-                <div class="text-3xl font-black text-slate-900 mb-2" id="battery-status">--%</div>
-                <p class="text-xs text-emerald-600 font-semibold mb-1" id="charging-state">Memeriksa daya...</p>
-                <p class="text-[11px] text-slate-500" id="sys-uptime">Uptime: -- min</p>
-            </div>
-
-        </div>
-
-        <!-- MAIN SECTION: PORT INSPECTOR & TOOLS -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            
-            <!-- PORT INSPECTOR TABLE -->
-            <div class="lg:col-span-2 bg-white border border-slate-200/80 p-6 rounded-2xl shadow-sm">
-                <div class="flex items-center justify-between mb-6">
-                    <div class="flex items-center gap-2">
-                        <i data-lucide="network" class="w-5 h-5 text-cyan-600"></i>
-                        <h2 class="text-lg font-bold text-slate-900">Active Local Ports & Process Manager</h2>
-                    </div>
-                    <button onclick="fetchPorts()" class="p-2 bg-slate-100 hover:bg-slate-200 rounded-lg text-slate-700 transition text-xs font-semibold flex items-center gap-1">
-                        <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> Reload
-                    </button>
-                </div>
-
-                <div class="overflow-x-auto max-h-[320px] overflow-y-auto">
-                    <table class="w-full text-left border-collapse text-sm">
-                        <thead>
-                            <tr class="border-b border-slate-200 text-xs text-slate-500 uppercase tracking-wider sticky top-0 bg-white">
-                                <th class="pb-3 font-semibold">Port</th>
-                                <th class="pb-3 font-semibold">Protokol</th>
-                                <th class="pb-3 font-semibold">Proses / PID</th>
-                                <th class="pb-3 font-semibold text-right">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody id="ports-list" class="divide-y divide-slate-100 text-slate-700">
-                            <tr>
-                                <td colspan="4" class="py-4 text-center text-slate-400">Memuat daftar port...</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- SIDEBAR TOOLS (PING TEST & SCRATCHPAD) -->
-            <div class="space-y-6">
-                
-                <!-- Network Tester -->
-                <div class="bg-white border border-slate-200/80 p-6 rounded-2xl shadow-sm">
-                    <div class="flex items-center gap-2 mb-4">
-                        <i data-lucide="zap" class="w-5 h-5 text-amber-500"></i>
-                        <h2 class="text-lg font-bold text-slate-900">Network Latency Tester</h2>
-                    </div>
-
-                    <button onclick="checkPing()" class="w-full flex items-center justify-between p-3.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl transition group">
-                        <div class="flex items-center gap-3">
-                            <i data-lucide="radio" class="w-5 h-5 text-cyan-600 group-hover:scale-110 transition-transform"></i>
-                            <div class="text-left">
-                                <div class="text-xs font-bold text-slate-900">Uji Respon API Lokal</div>
-                                <div class="text-[11px] text-slate-500" id="ping-res">Klik untuk menguji latensi</div>
-                            </div>
-                        </div>
-                        <i data-lucide="play" class="w-4 h-4 text-slate-400"></i>
-                    </button>
-                </div>
-
-                <!-- Scratchpad -->
-                <div class="bg-white border border-slate-200/80 p-6 rounded-2xl shadow-sm flex flex-col justify-between">
-                    <div>
-                        <div class="flex items-center justify-between mb-3">
-                            <div class="flex items-center gap-2">
-                                <i data-lucide="file-text" class="w-5 h-5 text-emerald-600"></i>
-                                <h2 class="text-lg font-bold text-slate-900">Scratchpad</h2>
-                            </div>
-                            <span class="text-[10px] text-slate-400 uppercase font-mono">Auto-Saved</span>
-                        </div>
-                        <textarea id="quick-note" placeholder="Tulis catatan kilat, snippet kode, atau IP address di sini..." class="w-full h-24 bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-800 focus:outline-none focus:border-cyan-500 resize-none font-mono"></textarea>
-                    </div>
-                    <div class="flex justify-between items-center mt-3">
-                        <button onclick="copyNote()" class="text-xs text-slate-500 hover:text-cyan-600 transition flex items-center gap-1 font-medium">
-                            <i data-lucide="copy" class="w-3.5 h-3.5"></i> Salin Teks
-                        </button>
-                        <button onclick="saveNote()" class="px-3.5 py-1.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-lg transition shadow-sm">Simpan</button>
-                    </div>
-                </div>
-
-            </div>
-
-        </div>
-
-        <!-- NEW FEATURE: INTERACTIVE CLI TERMINAL COMMAND RUNNER -->
-        <div class="bg-slate-900 text-slate-100 p-6 rounded-2xl shadow-xl border border-slate-800">
-            <div class="flex items-center justify-between mb-4">
-                <div class="flex items-center gap-2">
-                    <i data-lucide="terminal" class="w-5 h-5 text-cyan-400"></i>
-                    <h2 class="text-lg font-bold text-white">Interactive Terminal CLI Runner</h2>
-                </div>
-                <span class="text-xs text-slate-400">Ketik perintah sistem bebas (cth: <code>node -v</code>, <code>npm list</code>, <code>ping 127.0.0.1</code>)</span>
-            </div>
-
-            <!-- Input & Button -->
-            <div class="flex gap-3 mb-4">
-                <input type="text" id="cli-input" placeholder="Ketik perintah terminal di sini lalu tekan Enter atau tombol Run..." class="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-cyan-500 font-mono" onkeypress="handleKeyPress(event)">
-                <button onclick="runCommand()" class="px-5 py-2.5 bg-cyan-500 hover:bg-cyan-600 text-slate-950 text-xs font-bold rounded-xl transition shadow-sm flex items-center gap-1.5">
-                    <i data-lucide="play" class="w-3.5 h-3.5"></i> Run
-                </button>
-            </div>
-
-            <!-- Terminal Output Window -->
-            <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 h-48 overflow-y-auto font-mono text-xs text-emerald-400 select-all" id="cli-output">
-                <span class="text-slate-500">// Output eksekusi terminal akan muncul di sini...</span>
-            </div>
-        </div>
-
+<aside id="sidebar" class="sidebar w-[240px] shrink-0 p-4 flex flex-col">
+  <div class="flex items-center gap-3 px-2 py-4 mb-6">
+    <div class="w-10 h-10 rounded-xl bg-blue-500/20 flex items-center justify-center text-blue-300">
+      <i data-lucide="orbit" class="w-6 h-6"></i>
     </div>
-
-    <!-- TOAST NOTIFICATION -->
-    <div id="toast" class="fixed bottom-6 right-6 bg-slate-900 text-white px-4 py-3 rounded-xl font-bold text-xs shadow-xl transition-all opacity-0 translate-y-4 pointer-events-none z-50">
-        Notification
+    <div>
+      <div class="text-lg font-bold">DevPilot<span class="text-blue-400">.</span></div>
+      <div class="text-[10px] muted">PERSONAL CONTROL CENTER</div>
     </div>
+  </div>
 
-    <!-- SCRIPT -->
-    <script>
-        lucide.createIcons();
+  <div class="text-[10px] muted tracking-widest px-3 mb-2">CONTROL CENTER</div>
+  <nav class="space-y-1">
+    <button class="nav active" data-page="overview"><i data-lucide="layout-dashboard" class="w-4"></i>Overview</button>
+    <button class="nav" data-page="health"><i data-lucide="stethoscope" class="w-4"></i>PC Health Check</button>
+    <button class="nav" data-page="storage"><i data-lucide="folder-search" class="w-4"></i>Storage Analyzer</button>
+    <button class="nav" data-page="network"><i data-lucide="network" class="w-4"></i>Network Lab</button>
+    <button class="nav" data-page="workspace"><i data-lucide="code-2" class="w-4"></i>Developer Workspace</button>
+    <button class="nav" data-page="incidents"><i data-lucide="notebook-pen" class="w-4"></i>Incident Journal</button>
+    <button class="nav" data-page="security"><i data-lucide="shield-check" class="w-4"></i>Security Checklist</button>
+    <button class="nav" data-page="reports"><i data-lucide="file-chart-column" class="w-4"></i>Reports</button>
+  </nav>
 
-        async function fetchSystem() {
-            try {
-                const res = await fetch('/api/system');
-                const data = await res.json();
+  <div class="mt-auto pt-6">
+    <div class="panel p-3">
+      <div class="flex items-center gap-2 text-xs"><span class="w-2 h-2 rounded-full bg-emerald-400"></span>DevPilot is running</div>
+      <div class="text-[10px] muted mt-2">Browser dashboard mode</div>
+    </div>
+    <div class="text-[10px] muted mt-4 leading-5">
+      Data storage<br><span class="text-slate-300">Browser local storage</span><br>
+      AI dependency<br><span class="text-emerald-300">None</span>
+    </div>
+  </div>
+</aside>
 
-                document.getElementById('cpu-load').innerText = `${data.cpu.load}%`;
-                document.getElementById('cpu-bar').style.width = `${data.cpu.load}%`;
-                document.getElementById('cpu-brand').innerText = `${data.cpu.brand} (${data.cpu.cores} Cores)`;
+<main class="min-w-0 flex-1">
+<header class="sticky top-0 z-20 flex items-center justify-between gap-3 px-5 md:px-8 py-4 border-b border-slate-800 bg-[#070b14]/95 backdrop-blur">
+  <div class="flex items-center gap-3">
+    <button id="menuBtn" class="btn md:hidden">☰</button>
+    <div>
+      <div class="text-[10px] muted tracking-widest">DEVPILOT / LOCAL</div>
+      <h1 id="pageTitle" class="font-semibold text-xl mt-1">Overview</h1>
+    </div>
+  </div>
+  <div class="flex items-center gap-2">
+    <span id="clock" class="hidden sm:block text-xs muted"></span>
+    <button id="exportBtn" class="btn flex items-center gap-2"><i data-lucide="download" class="w-4"></i><span class="hidden sm:inline">Export report</span></button>
+  </div>
+</header>
 
-                document.getElementById('ram-used').innerText = `${data.ram.used} GB`;
-                document.getElementById('ram-total').innerText = `Total ${data.ram.total} GB (${data.ram.free} GB Free)`;
-                document.getElementById('ram-bar').style.width = `${data.ram.percent}%`;
+<div class="mainpad p-6 xl:p-8 max-w-[1600px] mx-auto">
 
-                document.getElementById('disk-used').innerText = `${data.disk.used} GB`;
-                document.getElementById('disk-total').innerText = `Total ${data.disk.size} GB (Mount: ${data.disk.mount})`;
-                document.getElementById('disk-bar').style.width = `${data.disk.percent}%`;
+<!-- OVERVIEW -->
+<section class="page active" id="page-overview">
+  <div class="flex flex-wrap items-end justify-between gap-3 mb-6">
+    <div><h2 class="text-2xl font-bold">Your PC Command Center</h2>
+    <p class="muted text-sm mt-1">Temukan masalah, kelola proyek, dan rawat perangkatmu.</p></div>
+    <span class="tag">LOCAL-FIRST · NO AI REQUIRED</span>
+  </div>
 
-                document.getElementById('os-info').innerText = `OS: ${data.os.platform} (${data.os.release})`;
+  <div class="grid sm:grid-cols-2 xl:grid-cols-4 gap-3 mb-4">
+    <div class="panel p-4"><div class="flex justify-between text-sm"><span>PC Health Score*</span><i data-lucide="heart-pulse" class="w-5 text-emerald-300"></i></div><div class="flex items-end gap-2 mt-4"><span class="kpi">86</span><span class="text-xs text-emerald-300 mb-1">/100</span></div><div class="meter mt-3"><span style="width:86%"></span></div><p class="text-[10px] muted mt-3">Skor ilustrasi, bukan hasil scan nyata.</p></div>
+    <div class="panel p-4"><div class="flex justify-between text-sm"><span>Projects Tracked</span><i data-lucide="folder-code" class="w-5 text-blue-300"></i></div><div class="kpi mt-4" id="projectCount">0</div><p class="text-xs muted mt-3">Proyek yang kamu simpan.</p></div>
+    <div class="panel p-4"><div class="flex justify-between text-sm"><span>Open Incidents</span><i data-lucide="clipboard-list" class="w-5 text-amber-300"></i></div><div class="kpi mt-4" id="incidentCount">0</div><p class="text-xs muted mt-3">Catatan masalah yang belum selesai.</p></div>
+    <div class="panel p-4"><div class="flex justify-between text-sm"><span>Saved Reports</span><i data-lucide="files" class="w-5 text-violet-300"></i></div><div class="kpi mt-4" id="reportCount">Ready</div><p class="text-xs muted mt-3">Ekspor laporan kapan saja.</p></div>
+  </div>
 
-                if (data.battery.hasBattery) {
-                    document.getElementById('battery-status').innerText = `${data.battery.percent}%`;
-                    document.getElementById('charging-state').innerText = data.battery.isCharging ? '⚡ Status: Charging' : '🔋 On Battery';
-                } else {
-                    document.getElementById('battery-status').innerText = 'Desktop PC';
-                    document.getElementById('charging-state').innerText = '🔌 AC Powered';
-                }
-                
-                const hours = Math.floor(data.uptime / 60);
-                const mins = data.uptime % 60;
-                document.getElementById('sys-uptime').innerText = `Uptime: ${hours}j ${mins}m`;
-            } catch (err) {
-                console.error('Gagal memuat data sistem', err);
-            }
-        }
+  <div class="grid xl:grid-cols-3 gap-4 mb-4">
+    <div class="panel p-5 xl:col-span-2">
+      <div class="flex justify-between items-start gap-3 mb-4"><div><h3 class="font-semibold">System Activity</h3><p class="text-xs muted mt-1">Grafik demo untuk pratinjau antarmuka</p></div><span class="tag">DEMO DATA</span></div>
+      <div class="h-64"><canvas id="activityChart"></canvas></div>
+    </div>
+    <div class="panel p-5">
+      <h3 class="font-semibold">Recommended Actions</h3>
+      <p class="text-xs muted mt-1 mb-3">Mulai dari pemeriksaan sederhana.</p>
+      <div class="item"><div class="flex gap-3"><i data-lucide="check-circle" class="w-5 text-emerald-300 shrink-0"></i><div><b class="text-sm">Run PC Health Check</b><p class="text-xs muted mt-1">Periksa beberapa indikator kesehatan.</p><button class="text-xs text-blue-300 mt-2" data-go="health">Mulai pemeriksaan →</button></div></div></div>
+      <div class="item"><div class="flex gap-3"><i data-lucide="folder-search" class="w-5 text-blue-300 shrink-0"></i><div><b class="text-sm">Review storage</b><p class="text-xs muted mt-1">Cari file besar dalam folder pilihan.</p><button class="text-xs text-blue-300 mt-2" data-go="storage">Analisis folder →</button></div></div></div>
+      <div class="item"><div class="flex gap-3"><i data-lucide="notebook-pen" class="w-5 text-amber-300 shrink-0"></i><div><b class="text-sm">Record an issue</b><p class="text-xs muted mt-1">Simpan gejala dan solusi masalah PC.</p><button class="text-xs text-blue-300 mt-2" data-go="incidents">Buat catatan →</button></div></div></div>
+    </div>
+  </div>
 
-        async function fetchNetwork() {
-            try {
-                const res = await fetch('/api/network');
-                const data = await res.json();
-                document.getElementById('ip-local').innerText = `IP: ${data.ipLocal} (${data.iface})`;
-            } catch (err) {}
-        }
+  <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
+    <button class="panel p-5 text-left hover:border-blue-500" data-go="network"><i data-lucide="wifi" class="w-6 text-cyan-300 mb-4"></i><h3 class="font-semibold">Internet Quality</h3><p class="text-xs muted mt-2">Uji konektivitas dan waktu respons ke endpoint yang dipilih.</p></button>
+    <button class="panel p-5 text-left hover:border-blue-500" data-go="workspace"><i data-lucide="code-2" class="w-6 text-violet-300 mb-4"></i><h3 class="font-semibold">Developer Workspace</h3><p class="text-xs muted mt-2">Simpan proyek, lokasi folder, bahasa, dan catatan teknis.</p></button>
+    <button class="panel p-5 text-left hover:border-blue-500" data-go="security"><i data-lucide="shield-check" class="w-6 text-emerald-300 mb-4"></i><h3 class="font-semibold">Privacy Checklist</h3><p class="text-xs muted mt-2">Checklist manual untuk kebiasaan keamanan dasar.</p></button>
+  </div>
+  <p class="text-[10px] muted mt-5">*Dashboard HTML ini belum membaca sensor atau metrik Windows. Nilai performa yang ditampilkan merupakan data contoh.</p>
+</section>
 
-        async function fetchPorts() {
-            const listElem = document.getElementById('ports-list');
-            try {
-                const res = await fetch('/api/ports');
-                const ports = await res.json();
+<!-- HEALTH -->
+<section class="page" id="page-health">
+  <h2 class="text-2xl font-bold">PC Health Check</h2>
+  <p class="text-sm muted mt-1 mb-5">Masukkan kondisi yang kamu amati untuk mendapatkan rekomendasi berbasis aturan.</p>
+  <div class="panel p-5 max-w-3xl">
+    <div class="grid md:grid-cols-2 gap-4">
+      <div><label class="label">Sisa ruang disk sistem</label><select id="diskFree"><option value="good">Lebih dari 20%</option><option value="warn">10–20%</option><option value="bad">Kurang dari 10%</option></select></div>
+      <div><label class="label">Penggunaan RAM</label><select id="ramUse"><option value="good">Di bawah 80%</option><option value="warn">80–90%</option><option value="bad">Di atas 90%</option></select></div>
+      <div><label class="label">Kondisi suhu CPU (jika diketahui)</label><select id="temp"><option value="unknown">Belum diketahui</option><option value="good">Normal</option><option value="warn">Tinggi</option><option value="bad">Sangat tinggi</option></select></div>
+      <div><label class="label">Kondisi jaringan</label><select id="connection"><option value="good">Normal</option><option value="warn">Lambat / tidak stabil</option><option value="bad">Terputus</option></select></div>
+      <div class="md:col-span-2"><label class="label">Gejala tambahan (opsional)</label><textarea id="symptoms" rows="3" placeholder="Contoh: laptop terasa lambat ketika membuka IDE..."></textarea></div>
+    </div>
+    <button id="runHealth" class="btn mt-4">Analisis kondisi</button>
+    <div id="healthResult" class="mt-5 space-y-3"></div>
+  </div>
+</section>
 
-                if (!ports.length) {
-                    listElem.innerHTML = `<tr><td colspan="4" class="py-4 text-center text-slate-400">Tidak ada port aktif yang terdeteksi.</td></tr>`;
-                    return;
-                }
+<!-- STORAGE -->
+<section class="page" id="page-storage">
+  <h2 class="text-2xl font-bold">Storage Analyzer</h2>
+  <p class="text-sm muted mt-1 mb-5">Pilih folder sendiri untuk menghitung file yang dapat diakses browser.</p>
+  <div class="panel p-5">
+    <div class="flex flex-wrap gap-3 items-center justify-between">
+      <div><h3 class="font-semibold">Folder analysis</h3><p class="text-xs muted mt-1">Tidak menghapus atau mengubah file.</p></div>
+      <label class="btn cursor-pointer">Pilih folder<input id="folderPicker" type="file" webkitdirectory multiple class="hidden"></label>
+    </div>
+    <div id="storageSummary" class="grid sm:grid-cols-3 gap-3 mt-5">
+      <div class="tile p-4 rounded-xl bg-slate-900/60 border border-slate-800"><div class="text-xs muted">Files scanned</div><div class="kpi mt-2">—</div></div>
+      <div class="tile p-4 rounded-xl bg-slate-900/60 border border-slate-800"><div class="text-xs muted">Total size</div><div class="kpi mt-2">—</div></div>
+      <div class="tile p-4 rounded-xl bg-slate-900/60 border border-slate-800"><div class="text-xs muted">Potential duplicates</div><div class="kpi mt-2">—</div></div>
+    </div>
+    <div id="storageResults" class="mt-5 text-sm muted">Belum ada folder yang dipilih.</div>
+    <p class="text-xs muted mt-4">Catatan: browser tidak dapat menjelajahi seluruh disk secara diam-diam. Hanya file yang kamu pilih yang diperiksa.</p>
+  </div>
+</section>
 
-                listElem.innerHTML = ports.map(p => `
-                    <tr class="hover:bg-slate-50 transition">
-                        <td class="py-3 font-mono font-bold text-cyan-600">:${p.port}</td>
-                        <td class="py-3 uppercase text-xs font-semibold text-slate-500">${p.protocol}</td>
-                        <td class="py-3 text-xs">
-                            <span class="text-slate-900 font-medium">${p.process}</span>
-                            <span class="text-slate-400 font-mono ml-1">(PID: ${p.pid})</span>
-                        </td>
-                        <td class="py-3 text-right">
-                            <div class="flex items-center justify-end gap-2">
-                                <a href="http://localhost:${p.port}" target="_blank" class="p-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-md text-xs transition">Buka ↗</a>
-                                ${p.pid !== 'N/A' ? `<button onclick="killProcess('${p.pid}')" class="p-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 rounded-md text-xs transition font-semibold">Kill</button>` : ''}
-                            </div>
-                        </td>
-                    </tr>
-                `).join('');
-            } catch (err) {
-                listElem.innerHTML = `<tr><td colspan="4" class="py-4 text-center text-rose-500">Gagal memuat port.</td></tr>`;
-            }
-        }
+<!-- NETWORK -->
+<section class="page" id="page-network">
+  <h2 class="text-2xl font-bold">Network Lab</h2>
+  <p class="text-sm muted mt-1 mb-5">Tes konektivitas web dari browser. Hasil dipengaruhi CORS, DNS, dan kebijakan server tujuan.</p>
+  <div class="grid lg:grid-cols-2 gap-4">
+    <div class="panel p-5">
+      <h3 class="font-semibold mb-4">Endpoint response test</h3>
+      <label class="label">URL endpoint HTTPS</label>
+      <input id="endpoint" value="https://www.google.com/generate_204">
+      <label class="label mt-4">Jumlah percobaan</label>
+      <select id="attempts"><option value="3">3 kali</option><option value="5">5 kali</option></select>
+      <button id="runNetwork" class="btn mt-4">Mulai tes</button>
+      <div id="networkResult" class="mt-4 text-sm muted">Belum ada tes.</div>
+    </div>
+    <div class="panel p-5">
+      <h3 class="font-semibold mb-3">Apa yang dapat diuji?</h3>
+      <div class="item"><b class="text-sm">HTTP response time</b><p class="text-xs muted mt-1">Waktu permintaan ke endpoint web yang mengizinkan browser mengaksesnya.</p></div>
+      <div class="item"><b class="text-sm">Kestabilan koneksi</b><p class="text-xs muted mt-1">Bandingkan waktu respons antarpercobaan.</p></div>
+      <div class="item"><b class="text-sm">Batasan browser</b><p class="text-xs muted mt-1">Ini bukan ping ICMP dan tidak dapat memastikan kondisi gateway lokal.</p></div>
+    </div>
+  </div>
+</section>
 
-        async function killProcess(pid) {
-            if (!confirm(`Yakin ingin menghentikan proses dengan PID ${pid}?`)) return;
-            try {
-                const res = await fetch('/api/kill', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ pid })
-                });
-                const data = await res.json();
-                showToast(data.message);
-                fetchPorts();
-            } catch (err) {
-                showToast('Gagal memproses eksekusi kill');
-            }
-        }
+<!-- WORKSPACE -->
+<section class="page" id="page-workspace">
+  <h2 class="text-2xl font-bold">Developer Workspace</h2>
+  <p class="text-sm muted mt-1 mb-5">Buat katalog proyek coding agar semua proyek mudah ditemukan.</p>
+  <div class="grid lg:grid-cols-3 gap-4">
+    <div class="panel p-5 lg:col-span-1">
+      <h3 class="font-semibold mb-4">Tambah proyek</h3>
+      <form id="projectForm" class="space-y-4">
+        <div><label class="label">Nama proyek</label><input id="projectName" required placeholder="Contoh: Flutter App"></div>
+        <div><label class="label">Teknologi</label><input id="projectTech" placeholder="Flutter, Python, Node.js"></div>
+        <div><label class="label">Lokasi folder (teks)</label><input id="projectPath" placeholder="C:\projects\my-app"></div>
+        <div><label class="label">Catatan</label><textarea id="projectNote" rows="3" placeholder="Status, tugas selanjutnya..."></textarea></div>
+        <button class="btn w-full" type="submit">Simpan proyek</button>
+      </form>
+    </div>
+    <div class="panel p-5 lg:col-span-2">
+      <div class="flex justify-between items-center mb-4"><h3 class="font-semibold">My projects</h3><span class="tag" id="projectTag">0 PROJECTS</span></div>
+      <div id="projectList" class="space-y-3"></div>
+    </div>
+  </div>
+</section>
 
-        // Terminal Command Runner Handler
-        async function runCommand() {
-            const inputElem = document.getElementById('cli-input');
-            const outputElem = document.getElementById('cli-output');
-            const command = inputElem.value.trim();
+<!-- INCIDENTS -->
+<section class="page" id="page-incidents">
+  <h2 class="text-2xl font-bold">Incident Journal</h2>
+  <p class="text-sm muted mt-1 mb-5">Catat error, penyebab yang dicurigai, dan solusi yang sudah dicoba.</p>
+  <div class="grid lg:grid-cols-3 gap-4">
+    <div class="panel p-5">
+      <h3 class="font-semibold mb-4">Catatan baru</h3>
+      <form id="incidentForm" class="space-y-4">
+        <div><label class="label">Judul masalah</label><input id="incidentTitle" required placeholder="Wi-Fi sering terputus"></div>
+        <div><label class="label">Kategori</label><select id="incidentCategory"><option>Network</option><option>Performance</option><option>Hardware</option><option>Software</option><option>Developer Tools</option><option>Security</option></select></div>
+        <div><label class="label">Detail / solusi</label><textarea id="incidentDetail" rows="4" placeholder="Gejala, langkah pemeriksaan, hasil..."></textarea></div>
+        <button class="btn w-full">Simpan catatan</button>
+      </form>
+    </div>
+    <div class="panel p-5 lg:col-span-2">
+      <h3 class="font-semibold mb-4">Riwayat insiden</h3>
+      <div id="incidentList"></div>
+    </div>
+  </div>
+</section>
 
-            if (!command) return;
+<!-- SECURITY -->
+<section class="page" id="page-security">
+  <h2 class="text-2xl font-bold">Privacy & Security Checklist</h2>
+  <p class="text-sm muted mt-1 mb-5">Checklist manual. Centang hanya setelah kamu benar-benar memverifikasi kondisi tersebut.</p>
+  <div class="panel p-5 max-w-3xl">
+    <div id="securityList" class="space-y-4"></div>
+    <div class="meter mt-6"><span id="securityProgress" style="width:0%"></span></div>
+    <p class="text-xs muted mt-2" id="securityCount">0 item diverifikasi</p>
+    <button id="resetSecurity" class="smallbtn mt-4">Reset checklist</button>
+  </div>
+</section>
 
-            outputElem.innerHTML += `\n<span class="text-cyan-400">$ ${command}</span>\n<span class="text-slate-400">Mengeksekusi...</span>`;
-            outputElem.scrollTop = outputElem.scrollHeight;
-            inputElem.value = '';
+<!-- REPORTS -->
+<section class="page" id="page-reports">
+  <h2 class="text-2xl font-bold">Reports & Data</h2>
+  <p class="text-sm muted mt-1 mb-5">Data proyek dan catatan disimpan di browser ini.</p>
+  <div class="grid md:grid-cols-2 gap-4">
+    <div class="panel p-5"><i data-lucide="file-json" class="w-8 h-8 text-blue-300 mb-4"></i><h3 class="font-semibold">Export report</h3><p class="text-sm muted mt-2 mb-4">Unduh snapshot proyek, insiden, checklist, dan informasi dashboard dalam JSON.</p><button class="btn" id="downloadReport">Download JSON</button></div>
+    <div class="panel p-5"><i data-lucide="database" class="w-8 h-8 text-violet-300 mb-4"></i><h3 class="font-semibold">Local data</h3><p class="text-sm muted mt-2 mb-4">Hapus data DevPilot yang tersimpan di browser. Tindakan ini tidak menghapus file proyek di komputer.</p><button class="btn" id="clearData">Hapus data lokal</button></div>
+  </div>
+  <div class="panel p-5 mt-4"><h3 class="font-semibold">Batasan versi HTML</h3><p class="text-sm muted mt-2 leading-6">Browser tidak dapat membaca suhu CPU, seluruh proses Windows, status service, firewall, startup aplikasi, atau kapasitas seluruh drive secara bebas. Untuk fitur tersebut, hubungkan antarmuka ini ke backend Python lokal yang memiliki izin dan endpoint API yang aman.</p></div>
+</section>
 
-            try {
-                const res = await fetch('/api/exec', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ command })
-                });
-                const data = await res.json();
-                
-                // Ganti baris terakhir dengan hasil output asli
-                const lines = outputElem.innerHTML.split('\n');
-                lines.pop(); // Hapus tulisan mengeksekusi
-                outputElem.innerHTML = lines.join('\n') + `\n<span class="text-emerald-300">${escapeHtml(data.output)}</span>\n`;
-                outputElem.scrollTop = outputElem.scrollHeight;
-            } catch (err) {
-                outputElem.innerHTML += `\n<span class="text-rose-400">Gagal menjalankan perintah.</span>\n`;
-            }
-        }
+<footer class="text-center text-[10px] muted py-8">DevPilot Personal Control Center · Local-first · No AI · No terminal</footer>
+</div>
+</main>
+</div>
 
-        function handleKeyPress(event) {
-            if (event.key === 'Enter') {
-                runCommand();
-            }
-        }
+<script>
+lucide.createIcons();
+const $=id=>document.getElementById(id);
+const pageNames={overview:"Overview",health:"PC Health Check",storage:"Storage Analyzer",network:"Network Lab",workspace:"Developer Workspace",incidents:"Incident Journal",security:"Security Checklist",reports:"Reports"};
+function go(name){
+ document.querySelectorAll(".page").forEach(p=>p.classList.toggle("active",p.id==="page-"+name));
+ document.querySelectorAll(".nav").forEach(b=>b.classList.toggle("active",b.dataset.page===name));
+ $("pageTitle").textContent=pageNames[name]||"DevPilot";
+ $("sidebar").classList.remove("open");
+}
+document.querySelectorAll("[data-page]").forEach(b=>b.addEventListener("click",()=>go(b.dataset.page)));
+document.querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click",()=>go(b.dataset.go)));
+$("menuBtn").onclick=()=>$("sidebar").classList.toggle("open");
+function clock(){ $("clock").textContent=new Date().toLocaleString("id-ID");}
+clock();setInterval(clock,1000);
 
-        function escapeHtml(text) {
-            return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-        }
+const read=(key,fallback)=>{try{return JSON.parse(localStorage.getItem("devpilot_"+key))??fallback}catch{return fallback}};
+const save=(key,val)=>localStorage.setItem("devpilot_"+key,JSON.stringify(val));
+let projects=read("projects",[]), incidents=read("incidents",[]);
+let security=read("security",[]);
+const fmtBytes=n=>{if(n===0)return "0 B";const u=["B","KB","MB","GB","TB"];let i=Math.floor(Math.log(n)/Math.log(1024));return (n/Math.pow(1024,i)).toFixed(i?2:0)+" "+u[i]};
+function updateCounts(){
+ $("projectCount").textContent=projects.length;
+ $("incidentCount").textContent=incidents.filter(x=>!x.done).length;
+ $("projectTag").textContent=projects.length+" PROJECTS";
+}
+function download(filename,obj){
+ const a=document.createElement("a"),url=URL.createObjectURL(new Blob([JSON.stringify(obj,null,2)],{type:"application/json"}));
+ a.href=url;a.download=filename;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+function reportData(){return {app:"DevPilot",generatedAt:new Date().toISOString(),mode:"browser-local",projects,incidents,securityChecklist:security,note:"Tidak berisi pembacaan hardware aktual."};}
+$("exportBtn").onclick=()=>download("devpilot-report.json",reportData());
+$("downloadReport").onclick=()=>download("devpilot-report.json",reportData());
 
-        async function checkPing() {
-            const resElem = document.getElementById('ping-res');
-            resElem.innerText = 'Menguji latensi...';
-            const start = Date.now();
-            try {
-                await fetch('/api/system');
-                const diff = Date.now() - start;
-                resElem.innerText = `Latensi API: ${diff}ms`;
-            } catch (e) {
-                resElem.innerText = 'Tes Gagal';
-            }
-        }
+$("runHealth").onclick=()=>{
+ const checks=[
+ ["Ruang disk", $("diskFree").value,{"good":["Normal","Pertahankan ruang kosong yang cukup."],"warn":["Perlu perhatian","Pertimbangkan menghapus file yang tidak dibutuhkan setelah ditinjau."],"bad":["Risiko tinggi","Cari file besar dan kosongkan ruang dengan hati-hati."]}],
+ ["Penggunaan RAM",$("ramUse").value,{"good":["Normal","Pantau jika komputer mulai melambat."],"warn":["Perlu perhatian","Tutup aplikasi yang tidak diperlukan dan periksa tab browser."],"bad":["Risiko tinggi","Periksa aplikasi yang memakai banyak memori. Simpan pekerjaan sebelum menutup aplikasi."]}],
+ ["Suhu CPU",$("temp").value,{"unknown":["Belum diperiksa","Periksa melalui utilitas yang sesuai dengan perangkat."],"good":["Normal","Pastikan ventilasi perangkat tidak tertutup."],"warn":["Perlu perhatian","Periksa kipas, ventilasi, dan beban kerja."],"bad":["Risiko tinggi","Hentikan beban berat dan biarkan perangkat mendingin. Periksa sistem pendingin."]}],
+ ["Koneksi jaringan",$("connection").value,{"good":["Normal","Tidak ada masalah berdasarkan pilihanmu."],"warn":["Perlu perhatian","Bandingkan koneksi Wi-Fi dan kabel, lalu uji endpoint lain."],"bad":["Terputus","Periksa adapter, router, gateway, dan status ISP."]}]
+ ];
+ let score=100,html="";
+ for(const [name,val,dict] of checks){const [status,advice]=dict[val];if(val==="bad")score-=25;else if(val==="warn")score-=12;
+ const color=val==="bad"?"text-rose-300":val==="warn"?"text-amber-300":val==="unknown"?"text-slate-300":"text-emerald-300";
+ html+=`<div class="p-4 rounded-xl border border-slate-700"><div class="flex justify-between gap-3"><b class="text-sm">${name}</b><b class="${color} text-xs">${status}</b></div><p class="text-xs muted mt-2">${advice}</p></div>`;
+ }
+ $("healthResult").innerHTML=`<div class="panel p-4 mb-3"><div class="text-xs muted">Rule-based score</div><div class="text-3xl font-bold mt-1">${Math.max(0,score)}<span class="text-sm muted">/100</span></div><p class="text-xs muted mt-2">Skor berdasarkan jawabanmu, bukan hasil pemindaian otomatis.</p></div>`+html;
+};
 
-        function saveNote() {
-            localStorage.setItem('flowdash_v3_note', document.getElementById('quick-note').value);
-            showToast('Catatan berhasil disimpan!');
-        }
+$("folderPicker").addEventListener("change",e=>{
+ const files=Array.from(e.target.files||[]);
+ if(!files.length)return;
+ let total=0;const groups=new Map(),exts=new Map(),large=[];
+ for(const f of files){
+   total+=f.size;
+   const ext=(f.name.includes(".")?f.name.split(".").pop():"[tanpa ekstensi]").toLowerCase();
+   exts.set(ext,(exts.get(ext)||0)+f.size);
+   const key=f.name.toLowerCase()+"|"+f.size;
+   if(!groups.has(key))groups.set(key,[]);
+   groups.get(key).push(f.webkitRelativePath||f.name);
+   if(f.size>100*1024*1024)large.push({name:f.webkitRelativePath||f.name,size:f.size});
+ }
+ const duplicates=[...groups.entries()].filter(([k,v])=>v.length>1);
+ $("storageSummary").innerHTML=[
+ ["Files scanned",files.length.toLocaleString("id-ID")],
+ ["Total size",fmtBytes(total)],
+ ["Potential duplicates",duplicates.length]
+ ].map(([a,b])=>`<div class="panel p-4"><div class="text-xs muted">${a}</div><div class="kpi mt-2">${b}</div></div>`).join("");
+ const topExt=[...exts.entries()].sort((a,b)=>b[1]-a[1]).slice(0,8);
+ $("storageResults").innerHTML=`<h3 class="font-semibold mb-3">Largest files</h3>`+
+ (large.sort((a,b)=>b.size-a.size).slice(0,10).map(f=>`<div class="item flex justify-between gap-3 text-xs"><span class="break-all">${f.name}</span><span class="shrink-0 text-blue-300">${fmtBytes(f.size)}</span></div>`).join("")||`<p class="muted text-xs mb-4">Tidak ada file lebih besar dari 100 MB pada folder yang dipilih.</p>`)+
+ `<h3 class="font-semibold mt-5 mb-3">Largest file types</h3>`+
+ topExt.map(([ext,size])=>`<div class="mb-3"><div class="flex justify-between text-xs mb-2"><span>.${ext}</span><span>${fmtBytes(size)}</span></div><div class="meter"><span style="width:${Math.max(2,size/Math.max(1,total)*100)}%"></span></div></div>`).join("")+
+ `<h3 class="font-semibold mt-5 mb-3">Possible duplicates</h3>`+
+ (duplicates.slice(0,15).map(([key,paths])=>`<div class="item text-xs"><div class="text-amber-300">${paths.length} files · ${fmtBytes(Number(key.split("|").pop()))}</div>${paths.map(p=>`<div class="muted mt-1 break-all">${p}</div>`).join("")}</div>`).join("")||`<p class="text-xs muted">Tidak ditemukan nama dan ukuran file yang sama.</p>`);
+});
 
-        function copyNote() {
-            const text = document.getElementById('quick-note').value;
-            navigator.clipboard.writeText(text);
-            showToast('Teks berhasil disalin ke clipboard!');
-        }
+$("runNetwork").onclick=async()=>{
+ const url=$("endpoint").value.trim(),count=Number($("attempts").value),box=$("networkResult");
+ if(!/^https?:\/\//i.test(url)){box.textContent="Masukkan URL yang valid.";return;}
+ box.textContent="Menjalankan tes…";
+ let results=[];
+ for(let i=0;i<count;i++){
+  const start=performance.now();
+  try{
+   await fetch(url,{mode:"no-cors",cache:"no-store",signal:AbortSignal.timeout(6000)});
+   results.push({ok:true,ms:Math.round(performance.now()-start)});
+  }catch(err){results.push({ok:false,ms:Math.round(performance.now()-start)});}
+ }
+ const ok=results.filter(x=>x.ok),avg=ok.length?Math.round(ok.reduce((a,b)=>a+b.ms,0)/ok.length):null;
+ box.innerHTML=`<div class="grid grid-cols-2 gap-3"><div class="tile"><div class="text-xs muted">Requests initiated</div><div class="text-xl font-bold mt-1">${ok.length}/${count}</div></div><div class="tile"><div class="text-xs muted">Average time*</div><div class="text-xl font-bold mt-1">${avg===null?"N/A":avg+" ms"}</div></div></div><p class="text-xs muted mt-3">${ok.length===count?"Browser berhasil memulai semua permintaan.":"Sebagian permintaan gagal atau timeout."} *no-cors tidak memberi akses ke status HTTP dan bukan pengukuran ping ICMP.</p>`;
+};
 
-        function loadNote() {
-            const saved = localStorage.getItem('flowdash_v3_note');
-            if (saved) document.getElementById('quick-note').value = saved;
-        }
+$("projectForm").addEventListener("submit",e=>{
+ e.preventDefault();
+ projects.unshift({id:Date.now(),name:$("projectName").value.trim(),tech:$("projectTech").value.trim(),path:$("projectPath").value.trim(),note:$("projectNote").value.trim(),created:new Date().toISOString()});
+ save("projects",projects);e.target.reset();renderProjects();
+});
+function renderProjects(){
+ updateCounts();
+ $("projectList").innerHTML=projects.length?projects.map(p=>`<div class="p-4 rounded-xl border border-slate-700 bg-slate-950/30"><div class="flex justify-between gap-3"><div class="min-w-0"><h4 class="font-semibold break-words">${escapeHtml(p.name)}</h4><div class="text-xs text-blue-300 mt-1">${escapeHtml(p.tech||"Teknologi belum diisi")}</div><div class="text-xs muted mt-2 break-all">${escapeHtml(p.path||"Lokasi folder belum diisi")}</div>${p.note?`<p class="text-xs muted mt-2">${escapeHtml(p.note)}</p>`:""}</div><button class="smallbtn h-fit" data-delete-project="${p.id}">Hapus</button></div></div>`).join(""):`<div class="text-sm muted py-8 text-center">Belum ada proyek. Tambahkan proyek pertamamu.</div>`;
+ document.querySelectorAll("[data-delete-project]").forEach(b=>b.onclick=()=>{projects=projects.filter(p=>p.id!==Number(b.dataset.deleteProject));save("projects",projects);renderProjects();});
+}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+renderProjects();
 
-        function showToast(msg) {
-            const toast = document.getElementById('toast');
-            toast.innerText = msg;
-            toast.classList.remove('opacity-0', 'translate-y-4', 'pointer-events-none');
-            setTimeout(() => toast.classList.add('opacity-0', 'translate-y-4', 'pointer-events-none'), 3000);
-        }
+$("incidentForm").addEventListener("submit",e=>{
+ e.preventDefault();
+ incidents.unshift({id:Date.now(),title:$("incidentTitle").value.trim(),category:$("incidentCategory").value,detail:$("incidentDetail").value.trim(),done:false,created:new Date().toISOString()});
+ save("incidents",incidents);e.target.reset();renderIncidents();
+});
+function renderIncidents(){
+ updateCounts();
+ $("incidentList").innerHTML=incidents.length?incidents.map(x=>`<div class="item"><div class="flex justify-between gap-3"><div><div class="font-semibold text-sm ${x.done?"line-through muted":""}">${escapeHtml(x.title)}</div><div class="text-xs muted mt-1">${escapeHtml(x.category)} · ${new Date(x.created).toLocaleString("id-ID")}</div></div><button class="smallbtn" data-done="${x.id}">${x.done?"Buka kembali":"Selesai"}</button></div><p class="text-xs muted mt-3 whitespace-pre-wrap">${escapeHtml(x.detail||"Tidak ada detail.")}</p></div>`).join(""):`<p class="muted text-sm py-8 text-center">Belum ada catatan masalah.</p>`;
+ document.querySelectorAll("[data-done]").forEach(b=>b.onclick=()=>{incidents=incidents.map(x=>x.id===Number(b.dataset.done)?{...x,done:!x.done}:x);save("incidents",incidents);renderIncidents();});
+}
+renderIncidents();
 
-        setInterval(fetchSystem, 2000);
-        fetchSystem();
-        fetchNetwork();
-        fetchPorts();
-        loadNote();
-    </script>
+const securityItems=[
+ "Windows dan aplikasi diperbarui melalui sumber resmi",
+ "Firewall aktif dan konfigurasinya telah diperiksa",
+ "Antivirus atau proteksi endpoint aktif",
+ "Backup file penting tersedia",
+ "Password akun penting unik dan kuat",
+ "Autentikasi dua faktor diaktifkan jika tersedia",
+ "Aplikasi startup yang tidak dikenal telah ditinjau",
+ "Tidak membagikan dashboard lokal ke internet tanpa proteksi"
+];
+function renderSecurity(){
+ $("securityList").innerHTML=securityItems.map((t,i)=>`<label class="flex gap-3 items-start text-sm"><input type="checkbox" data-security="${i}" class="mt-1 !w-4 !h-4 accent-blue-500" ${security.includes(i)?"checked":""}><span>${t}</span></label>`).join("");
+ const checks=document.querySelectorAll("[data-security]");
+ const update=()=>{security=[...document.querySelectorAll("[data-security]:checked")].map(c=>Number(c.dataset.security));save("security",security);$("securityProgress").style.width=(security.length/securityItems.length*100)+"%";$("securityCount").textContent=security.length+" dari "+securityItems.length+" item diverifikasi";};
+ checks.forEach(c=>c.addEventListener("change",update));update();
+}
+renderSecurity();
+$("resetSecurity").onclick=()=>{if(confirm("Reset semua checklist?")){security=[];save("security",security);renderSecurity();}};
+$("clearData").onclick=()=>{
+ if(confirm("Hapus semua proyek, insiden, dan checklist DevPilot dari browser ini?")){
+  projects=[];incidents=[];security=[];
+  save("projects",projects);save("incidents",incidents);save("security",security);
+  renderProjects();renderIncidents();renderSecurity();
+ }
+};
+
+const chartCtx=$("activityChart");
+const history=Array.from({length:20},(_,i)=>({label:`-${(19-i)*3}s`,cpu:20+Math.random()*45,ram:50+Math.random()*30}));
+new Chart(chartCtx,{type:"line",data:{labels:history.map(x=>x.label),datasets:[
+ {label:"CPU (demo %)",data:history.map(x=>x.cpu),borderColor:"#5794ff",backgroundColor:"#5794ff22",fill:true,tension:.35,pointRadius:0},
+ {label:"RAM (demo %)",data:history.map(x=>x.ram),borderColor:"#b17bff",backgroundColor:"#b17bff11",fill:true,tension:.35,pointRadius:0}
+]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:"#a6b5ca",usePointStyle:true,boxWidth:8}}},scales:{x:{ticks:{color:"#71829b",maxTicksLimit:6},grid:{color:"#1c293c"}},y:{min:0,max:100,ticks:{color:"#71829b",callback:v=>v+"%"},grid:{color:"#1c293c"}}}}});
+</script>
 </body>
 </html>
