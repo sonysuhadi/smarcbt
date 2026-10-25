@@ -1,953 +1,223 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CampusFlow - Settings</title>
-
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    :root {
-      --bg: #f5f7fb;
-      --card: #ffffff;
-      --text: #172033;
-      --muted: #718096;
-      --border: #e5eaf2;
-      --primary: #6558e8;
-      --input: #f8f9fc;
-    }
-
-    body.dark {
-      --bg: #111827;
-      --card: #1f2937;
-      --text: #f3f4f6;
-      --muted: #a3afc2;
-      --border: #374151;
-      --input: #111827;
-    }
-
-    body {
-      margin: 0;
-      background: var(--bg);
-      color: var(--text);
-      font-family: Inter, Arial, sans-serif;
-      transition: background .2s, color .2s;
-    }
-
-    .container {
-      width: min(100% - 32px, 1000px);
-      margin: 35px auto;
-    }
-
-    .header {
-      margin-bottom: 28px;
-    }
-
-    .header h1 {
-      margin: 0 0 8px;
-      font-size: 30px;
-    }
-
-    .header p,
-    .muted {
-      color: var(--muted);
-      line-height: 1.6;
-    }
-
-    .settings-layout {
-      display: grid;
-      grid-template-columns: 220px minmax(0, 1fr);
-      gap: 22px;
-      align-items: start;
-    }
-
-    .sidebar,
-    .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 22px;
-    }
-
-    .sidebar {
-      position: sticky;
-      top: 20px;
-    }
-
-    .nav-item {
-      display: block;
-      width: 100%;
-      padding: 12px;
-      margin: 5px 0;
-      border: 0;
-      border-radius: 10px;
-      background: transparent;
-      color: var(--text);
-      text-align: left;
-      cursor: pointer;
-      font-size: 14px;
-    }
-
-    .nav-item.active,
-    .nav-item:hover {
-      background: #efedff;
-      color: var(--primary);
-    }
-
-    body.dark .nav-item.active,
-    body.dark .nav-item:hover {
-      background: #37315f;
-      color: #c4bfff;
-    }
-
-    .section {
-      display: none;
-    }
-
-    .section.active {
-      display: block;
-    }
-
-    .card {
-      margin-bottom: 18px;
-    }
-
-    .card h2 {
-      font-size: 19px;
-      margin: 0 0 6px;
-    }
-
-    .card-description {
-      margin: 0 0 22px;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.6;
-    }
-
-    .form-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 17px;
-    }
-
-    .field {
-      margin-bottom: 17px;
-    }
-
-    .field.full {
-      grid-column: 1 / -1;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 8px;
-      font-size: 13px;
-      font-weight: 600;
-    }
-
-    input,
-    select {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid var(--border);
-      border-radius: 9px;
-      background: var(--input);
-      color: var(--text);
-      outline: none;
-      font-size: 14px;
-    }
-
-    input:focus,
-    select:focus {
-      border-color: var(--primary);
-    }
-
-    .avatar-row {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      margin-bottom: 25px;
-    }
-
-    .avatar {
-      width: 65px;
-      height: 65px;
-      display: grid;
-      place-items: center;
-      border-radius: 18px;
-      background: #e9e7ff;
-      color: var(--primary);
-      font-size: 25px;
-      font-weight: 700;
-    }
-
-    .avatar-row strong {
-      display: block;
-      margin-bottom: 5px;
-    }
-
-    .avatar-row small {
-      color: var(--muted);
-    }
-
-    .setting-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 15px;
-      padding: 17px 0;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .setting-row:last-child {
-      border-bottom: 0;
-    }
-
-    .setting-row strong {
-      display: block;
-      font-size: 14px;
-      margin-bottom: 5px;
-    }
-
-    .setting-row p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.5;
-    }
-
-    .switch {
-      width: 45px;
-      height: 25px;
-      position: relative;
-      flex-shrink: 0;
-    }
-
-    .switch input {
-      width: 0;
-      height: 0;
-      opacity: 0;
-    }
-
-    .slider {
-      position: absolute;
-      inset: 0;
-      border-radius: 30px;
-      background: #cbd5e1;
-      cursor: pointer;
-      transition: .2s;
-    }
-
-    .slider::before {
-      content: "";
-      position: absolute;
-      width: 19px;
-      height: 19px;
-      left: 3px;
-      top: 3px;
-      border-radius: 50%;
-      background: white;
-      transition: .2s;
-    }
-
-    .switch input:checked + .slider {
-      background: var(--primary);
-    }
-
-    .switch input:checked + .slider::before {
-      transform: translateX(20px);
-    }
-
-    .button-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 20px;
-    }
-
-    .btn {
-      padding: 11px 16px;
-      border: 1px solid var(--border);
-      border-radius: 9px;
-      background: var(--card);
-      color: var(--text);
-      cursor: pointer;
-      font-size: 13px;
-      font-weight: 600;
-    }
-
-    .btn.primary {
-      background: var(--primary);
-      border-color: var(--primary);
-      color: white;
-    }
-
-    .btn.danger {
-      color: #dc2626;
-      border-color: #fecaca;
-    }
-
-    .btn:hover {
-      opacity: .85;
-    }
-
-    .notice {
-      display: none;
-      margin-top: 15px;
-      padding: 12px;
-      border-radius: 9px;
-      background: #dcfce7;
-      color: #166534;
-      font-size: 13px;
-    }
-
-    .danger-zone {
-      border-color: #fecaca;
-    }
-
-    .data-stat {
-      padding: 15px;
-      background: var(--input);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      margin-top: 12px;
-    }
-
-    .data-stat strong {
-      display: block;
-      margin-bottom: 5px;
-    }
-
-    @media (max-width: 700px) {
-      .settings-layout {
-        grid-template-columns: 1fr;
-      }
-
-      .sidebar {
-        position: static;
-        display: flex;
-        gap: 5px;
-        overflow-x: auto;
-        padding: 10px;
-      }
-
-      .nav-item {
-        white-space: nowrap;
-        width: auto;
-      }
-
-      .form-grid {
-        grid-template-columns: 1fr;
-        gap: 0;
-      }
-
-      .field.full {
-        grid-column: auto;
-      }
-
-      .container {
-        margin-top: 22px;
-      }
-
-      .header h1 {
-        font-size: 25px;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlowDash - Local Control Center</title>
+    <!-- Tailwind CSS (via CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Inter & Lucide Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
 </head>
+<body class="bg-slate-950 text-slate-100 min-h-screen p-4 md:p-8">
 
-<body>
-  <main class="container">
-    <header class="header">
-      <h1>Pengaturan</h1>
-      <p>Kelola profil mahasiswa, preferensi aplikasi, dan data CampusFlow.</p>
-    </header>
+    <div class="max-w-6xl mx-auto space-y-8">
+        
+        <!-- HEADER -->
+        <header class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-6">
+            <div>
+                <div class="flex items-center gap-3">
+                    <div class="p-2.5 bg-cyan-500/10 border border-cyan-500/30 rounded-xl text-cyan-400">
+                        <i data-lucide="layout-dashboard" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold tracking-tight text-white">FlowDash Center</h1>
+                        <p class="text-xs md:text-sm text-slate-400">CLI Gateway & Control Panel Dashboard</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-3">
+                <span class="inline-flex items-center gap-2 px-3.5 py-1.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs font-semibold rounded-full">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                    Gateway Active: localhost:4040
+                </span>
+            </div>
+        </header>
 
-    <div class="settings-layout">
-      <aside class="sidebar">
-        <button class="nav-item active" data-target="profile">
-          👤 Profil Mahasiswa
-        </button>
-        <button class="nav-item" data-target="preferences">
-          ⚙️ Preferensi
-        </button>
-        <button class="nav-item" data-target="notifications">
-          🔔 Notifikasi
-        </button>
-        <button class="nav-item" data-target="data">
-          💾 Pengelolaan Data
-        </button>
-      </aside>
-
-      <div>
-        <!-- PROFIL -->
-        <section class="section active" id="profile">
-          <div class="card">
-            <h2>Profil Mahasiswa</h2>
-            <p class="card-description">
-              Informasi identitas yang digunakan pada dashboard CampusFlow.
-            </p>
-
-            <div class="avatar-row">
-              <div class="avatar" id="avatar">S</div>
-              <div>
-                <strong id="displayName">Mahasiswa</strong>
-                <small id="displayProgram">Lengkapi informasi akademik kamu</small>
-              </div>
+        <!-- KARTU STATISTIK SYSTEM (GRID 3 KOLOM) -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            
+            <!-- CPU Load Card -->
+            <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl shadow-xl hover:border-slate-700 transition">
+                <div class="flex items-center justify-between mb-4">
+                    <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Penggunaan CPU</span>
+                    <i data-lucide="cpu" class="w-5 h-5 text-cyan-400"></i>
+                </div>
+                <div class="flex items-baseline justify-between mb-3">
+                    <span class="text-4xl font-extrabold text-white" id="cpu-load">--%</span>
+                    <span class="text-xs text-slate-400" id="cpu-cores">-- Cores</span>
+                </div>
+                <!-- Progress Bar -->
+                <div class="w-full bg-slate-800 rounded-full h-2 overflow-hidden">
+                    <div id="cpu-bar" class="bg-cyan-400 h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
+                </div>
             </div>
 
-            <form id="profileForm">
-              <div class="form-grid">
-                <div class="field full">
-                  <label for="fullName">Nama lengkap</label>
-                  <input id="fullName" name="fullName"
-                    placeholder="Contoh: Sony Kurniawan Suhadi" required>
+            <!-- RAM Usage Card -->
+            <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl shadow-xl hover:border-slate-700 transition">
+                <div class="flex items-center justify-between mb-4">
+                    <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Memory / RAM</span>
+                    <i data-lucide="hard-drive" class="w-5 h-5 text-indigo-400"></i>
+                </div>
+                <div class="flex items-baseline justify-between mb-3">
+                    <span class="text-4xl font-extrabold text-white" id="ram-used">-- GB</span>
+                    <span class="text-xs text-slate-400" id="ram-total">Total -- GB</span>
+                </div>
+                <!-- Progress Bar -->
+                <div class="w-full bg-slate-800 rounded-full h-2 overflow-hidden">
+                    <div id="ram-bar" class="bg-indigo-500 h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <!-- System Uptime Card -->
+            <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl shadow-xl hover:border-slate-700 transition">
+                <div class="flex items-center justify-between mb-4">
+                    <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Uptime Komputer</span>
+                    <i data-lucide="clock" class="w-5 h-5 text-emerald-400"></i>
+                </div>
+                <div class="text-4xl font-extrabold text-white mb-3" id="sys-uptime">-- Jam -- Min</div>
+                <p class="text-xs text-slate-400">Aktif sejak boot terakhir</p>
+            </div>
+
+        </div>
+
+        <!-- FITUR UTAMA: QUICK TOOLS & NOTEPAD -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            <!-- Kolom Kiri: Quick Actions (2 Kolom di Layar Besar) -->
+            <div class="lg:col-span-2 bg-slate-900/80 border border-slate-800 p-6 rounded-2xl shadow-xl">
+                <div class="flex items-center gap-2 mb-6">
+                    <i data-lucide="zap" class="w-5 h-5 text-amber-400"></i>
+                    <h2 class="text-lg font-bold text-white">Aksi Cepat (Quick Actions)</h2>
                 </div>
 
-                <div class="field">
-                  <label for="email">Email mahasiswa</label>
-                  <input id="email" name="email" type="email"
-                    placeholder="nama@email.com">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <!-- Tombol Ping Server -->
+                    <button onclick="checkPing()" class="flex items-center justify-between p-4 bg-slate-800/60 hover:bg-slate-800 border border-slate-700/60 rounded-xl transition text-left group">
+                        <div class="flex items-center gap-3">
+                            <i data-lucide="wifi" class="w-5 h-5 text-cyan-400 group-hover:scale-110 transition-transform"></i>
+                            <div>
+                                <div class="text-sm font-semibold text-white">Tes Koneksi Ping</div>
+                                <div class="text-xs text-slate-400" id="ping-result">Klik untuk cek laten internet</div>
+                            </div>
+                        </div>
+                        <i data-lucide="chevron-right" class="w-4 h-4 text-slate-500"></i>
+                    </button>
+
+                    <!-- Tombol Clean Temp (Simulasi) -->
+                    <button onclick="triggerToast('Log sistem berhasil diperbarui!')" class="flex items-center justify-between p-4 bg-slate-800/60 hover:bg-slate-800 border border-slate-700/60 rounded-xl transition text-left group">
+                        <div class="flex items-center gap-3">
+                            <i data-lucide="refresh-cw" class="w-5 h-5 text-emerald-400 group-hover:scale-110 transition-transform"></i>
+                            <div>
+                                <div class="text-sm font-semibold text-white">Refresh Status API</div>
+                                <div class="text-xs text-slate-400">Sinkronkan data sekarang</div>
+                            </div>
+                        </div>
+                        <i data-lucide="chevron-right" class="w-4 h-4 text-slate-500"></i>
+                    </button>
                 </div>
+            </div>
 
-                <div class="field">
-                  <label for="studentId">NPM / NIM</label>
-                  <input id="studentId" name="studentId"
-                    placeholder="Masukkan NPM atau NIM">
+            <!-- Kolom Kanan: Scratchpad / Catatan Kilat -->
+            <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl shadow-xl flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center gap-2 mb-4">
+                        <i data-lucide="sticky-note" class="w-5 h-5 text-cyan-400"></i>
+                        <h2 class="text-lg font-bold text-white">Catatan Cepat</h2>
+                    </div>
+                    <textarea id="quick-note" placeholder="Tulis catatan sementara di sini..." class="w-full h-32 bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm text-slate-200 focus:outline-none focus:border-cyan-500/50 resize-none"></textarea>
                 </div>
-
-                <div class="field">
-                  <label for="campus">Nama perguruan tinggi</label>
-                  <input id="campus" name="campus"
-                    placeholder="Nama universitas">
+                <div class="flex justify-end gap-2 mt-4">
+                    <button onclick="saveNote()" class="px-4 py-2 bg-cyan-500 hover:bg-cyan-600 text-slate-950 text-xs font-bold rounded-lg transition">Simpan</button>
                 </div>
-
-                <div class="field">
-                  <label for="faculty">Fakultas / Direktorat</label>
-                  <input id="faculty" name="faculty"
-                    placeholder="Nama fakultas atau direktorat">
-                </div>
-
-                <div class="field">
-                  <label for="program">Program studi</label>
-                  <input id="program" name="program"
-                    placeholder="Contoh: Teknik Komputer">
-                </div>
-
-                <div class="field">
-                  <label for="degree">Jenjang pendidikan</label>
-                  <select id="degree" name="degree">
-                    <option value="">Pilih jenjang</option>
-                    <option>D1</option>
-                    <option>D2</option>
-                    <option>D3</option>
-                    <option>D4</option>
-                    <option>S1</option>
-                    <option>S2</option>
-                    <option>S3</option>
-                  </select>
-                </div>
-
-                <div class="field">
-                  <label for="semester">Semester</label>
-                  <select id="semester" name="semester">
-                    <option value="">Pilih semester</option>
-                    <option>Semester 1</option>
-                    <option>Semester 2</option>
-                    <option>Semester 3</option>
-                    <option>Semester 4</option>
-                    <option>Semester 5</option>
-                    <option>Semester 6</option>
-                    <option>Semester 7</option>
-                    <option>Semester 8</option>
-                    <option>Semester 9 atau lebih</option>
-                  </select>
-                </div>
-
-                <div class="field">
-                  <label for="className">Kelas</label>
-                  <input id="className" name="className"
-                    placeholder="Contoh: 3DC02">
-                </div>
-              </div>
-
-              <div class="button-row">
-                <button class="btn primary" type="submit">
-                  Simpan Profil
-                </button>
-                <button class="btn" type="reset">Reset Form</button>
-              </div>
-            </form>
-
-            <div class="notice" id="profileNotice">
-              Profil berhasil disimpan.
-            </div>
-          </div>
-        </section>
-
-        <!-- PREFERENSI -->
-        <section class="section" id="preferences">
-          <div class="card">
-            <h2>Preferensi Aplikasi</h2>
-            <p class="card-description">
-              Atur tampilan dan kebiasaan penggunaan CampusFlow.
-            </p>
-
-            <div class="setting-row">
-              <div>
-                <strong>Mode gelap</strong>
-                <p>Mengubah tampilan aplikasi menjadi tema gelap.</p>
-              </div>
-              <label class="switch">
-                <input type="checkbox" id="darkMode">
-                <span class="slider"></span>
-              </label>
             </div>
 
-            <div class="setting-row">
-              <div>
-                <strong>Awal minggu</strong>
-                <p>Tentukan hari pertama pada tampilan kalender.</p>
-              </div>
-              <select id="weekStart" style="width:140px">
-                <option value="monday">Senin</option>
-                <option value="sunday">Minggu</option>
-              </select>
-            </div>
+        </div>
 
-            <div class="setting-row">
-              <div>
-                <strong>Konfirmasi sebelum menghapus</strong>
-                <p>Tampilkan konfirmasi saat akan menghapus data.</p>
-              </div>
-              <label class="switch">
-                <input type="checkbox" id="confirmDelete" checked>
-                <span class="slider"></span>
-              </label>
-            </div>
-
-            <div class="button-row">
-              <button class="btn primary" id="savePreferences">
-                Simpan Preferensi
-              </button>
-            </div>
-
-            <div class="notice" id="preferencesNotice">
-              Preferensi berhasil disimpan.
-            </div>
-          </div>
-        </section>
-
-        <!-- NOTIFIKASI -->
-        <section class="section" id="notifications">
-          <div class="card">
-            <h2>Pengaturan Notifikasi</h2>
-            <p class="card-description">
-              Pilih pengingat yang ingin diaktifkan.
-            </p>
-
-            <div class="setting-row">
-              <div>
-                <strong>Pengingat tugas</strong>
-                <p>Mengingatkan kamu mengenai tugas dan tenggat waktu.</p>
-              </div>
-              <label class="switch">
-                <input type="checkbox" id="taskReminder" checked>
-                <span class="slider"></span>
-              </label>
-            </div>
-
-            <div class="setting-row">
-              <div>
-                <strong>Pengingat jadwal kuliah</strong>
-                <p>Pengingat untuk jadwal kelas yang akan berlangsung.</p>
-              </div>
-              <label class="switch">
-                <input type="checkbox" id="classReminder" checked>
-                <span class="slider"></span>
-              </label>
-            </div>
-
-            <div class="setting-row">
-              <div>
-                <strong>Pengingat catatan</strong>
-                <p>Pengingat untuk meninjau catatan belajar.</p>
-              </div>
-              <label class="switch">
-                <input type="checkbox" id="noteReminder">
-                <span class="slider"></span>
-              </label>
-            </div>
-
-            <div class="field" style="margin-top:22px">
-              <label for="reminderTime">Waktu pengingat default</label>
-              <select id="reminderTime">
-                <option value="5">5 menit sebelumnya</option>
-                <option value="15">15 menit sebelumnya</option>
-                <option value="30">30 menit sebelumnya</option>
-                <option value="60">1 jam sebelumnya</option>
-                <option value="1440">1 hari sebelumnya</option>
-              </select>
-            </div>
-
-            <p class="muted" style="font-size:12px">
-              Pengaturan ini menyimpan preferensi pengingat. Notifikasi
-              otomatis memerlukan dukungan sistem notifikasi tambahan.
-            </p>
-
-            <div class="button-row">
-              <button class="btn primary" id="saveNotifications">
-                Simpan Notifikasi
-              </button>
-            </div>
-
-            <div class="notice" id="notificationsNotice">
-              Pengaturan notifikasi berhasil disimpan.
-            </div>
-          </div>
-        </section>
-
-        <!-- PENGELOLAAN DATA -->
-        <section class="section" id="data">
-          <div class="card">
-            <h2>Pengelolaan Data</h2>
-            <p class="card-description">
-              Cadangkan atau hapus data lokal CampusFlow.
-            </p>
-
-            <div class="data-stat">
-              <strong>📦 Penyimpanan lokal</strong>
-              <span class="muted" id="storageInfo">
-                Menghitung data tersimpan...
-              </span>
-            </div>
-
-            <div class="button-row">
-              <button class="btn primary" id="exportData">
-                Ekspor Cadangan JSON
-              </button>
-              <button class="btn" id="refreshStorage">
-                Perbarui Informasi
-              </button>
-            </div>
-          </div>
-
-          <div class="card danger-zone">
-            <h2>Zona Berbahaya</h2>
-            <p class="card-description">
-              Penghapusan data bersifat permanen untuk data lokal yang dipilih.
-              Ekspor cadangan terlebih dahulu jika diperlukan.
-            </p>
-
-            <div class="button-row">
-              <button class="btn danger" id="clearSettings">
-                Hapus Preferensi
-              </button>
-              <button class="btn danger" id="clearAllData">
-                Hapus Semua Data Lokal
-              </button>
-            </div>
-          </div>
-
-          <div class="notice" id="dataNotice"></div>
-        </section>
-      </div>
     </div>
-  </main>
 
-  <script>
-    const PROFILE_KEY = "campusflow_profile";
-    const PREF_KEY = "campusflow_preferences";
-    const NOTIF_KEY = "campusflow_notifications";
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="fixed bottom-6 right-6 bg-cyan-500 text-slate-950 px-4 py-3 rounded-xl font-medium text-sm shadow-2xl transition-all opacity-0 translate-y-4 pointer-events-none">
+        Pesan Notifikasi
+    </div>
 
-    const defaultProfile = {
-      fullName: "",
-      email: "",
-      studentId: "",
-      campus: "",
-      faculty: "",
-      program: "",
-      degree: "",
-      semester: "",
-      className: ""
-    };
+    <!-- JAVASCRIPT UNTUK INTERAKSI & FETCH API -->
+    <script>
+        // Inisialisasi Lucide Icons
+        lucide.createIcons();
 
-    const defaultPreferences = {
-      darkMode: false,
-      weekStart: "monday",
-      confirmDelete: true
-    };
+        // 1. Fetch Data Real-time dari Backend Express
+        async function updateDashboard() {
+            try {
+                const res = await fetch('/api/system');
+                if (!res.ok) return;
+                const data = await res.json();
 
-    const defaultNotifications = {
-      taskReminder: true,
-      classReminder: true,
-      noteReminder: false,
-      reminderTime: "15"
-    };
+                // Update CPU UI
+                document.getElementById('cpu-load').innerText = `${data.cpuLoad}%`;
+                document.getElementById('cpu-bar').style.width = `${data.cpuLoad}%`;
 
-    function readJSON(key, fallback) {
-      try {
-        const value = localStorage.getItem(key);
-        return value ? { ...fallback, ...JSON.parse(value) } : { ...fallback };
-      } catch {
-        return { ...fallback };
-      }
-    }
+                // Update RAM UI
+                const ramPercent = Math.round((data.usedRam / data.totalRam) * 100);
+                document.getElementById('ram-used').innerText = `${data.usedRam} GB`;
+                document.getElementById('ram-total').innerText = `Total ${data.totalRam} GB`;
+                document.getElementById('ram-bar').style.width = `${ramPercent}%`;
 
-    function saveJSON(key, value) {
-      localStorage.setItem(key, JSON.stringify(value));
-    }
+                // Update Uptime UI
+                const hours = Math.floor(data.uptime / 60);
+                const mins = data.uptime % 60;
+                document.getElementById('sys-uptime').innerText = `${hours}j ${mins}m`;
 
-    function showNotice(id, message) {
-      const element = document.getElementById(id);
-      element.textContent = message;
-      element.style.display = "block";
-
-      setTimeout(() => {
-        element.style.display = "none";
-      }, 3500);
-    }
-
-    // Navigasi antarpengaturan
-    document.querySelectorAll(".nav-item").forEach(button => {
-      button.addEventListener("click", () => {
-        document.querySelectorAll(".nav-item").forEach(item => {
-          item.classList.remove("active");
-        });
-
-        document.querySelectorAll(".section").forEach(section => {
-          section.classList.remove("active");
-        });
-
-        button.classList.add("active");
-        document.getElementById(button.dataset.target)
-          .classList.add("active");
-      });
-    });
-
-    // Profil mahasiswa
-    const profileForm = document.getElementById("profileForm");
-
-    function loadProfile() {
-      const profile = readJSON(PROFILE_KEY, defaultProfile);
-
-      Object.keys(defaultProfile).forEach(key => {
-        profileForm.elements[key].value = profile[key] || "";
-      });
-
-      updateProfilePreview(profile);
-    }
-
-    function updateProfilePreview(profile) {
-      const name = profile.fullName || "Mahasiswa";
-
-      document.getElementById("displayName").textContent = name;
-      document.getElementById("avatar").textContent =
-        name.trim().charAt(0).toUpperCase() || "S";
-
-      document.getElementById("displayProgram").textContent =
-        [profile.program, profile.className]
-          .filter(Boolean)
-          .join(" • ") || "Lengkapi informasi akademik kamu";
-    }
-
-    profileForm.addEventListener("submit", event => {
-      event.preventDefault();
-
-      const profile = {};
-      Object.keys(defaultProfile).forEach(key => {
-        profile[key] = profileForm.elements[key].value.trim();
-      });
-
-      saveJSON(PROFILE_KEY, profile);
-      updateProfilePreview(profile);
-      showNotice("profileNotice", "Profil berhasil disimpan.");
-    });
-
-    // Preferensi
-    const darkMode = document.getElementById("darkMode");
-
-    function applyTheme(enabled) {
-      document.body.classList.toggle("dark", enabled);
-    }
-
-    function loadPreferences() {
-      const prefs = readJSON(PREF_KEY, defaultPreferences);
-
-      darkMode.checked = Boolean(prefs.darkMode);
-      document.getElementById("weekStart").value = prefs.weekStart;
-      document.getElementById("confirmDelete").checked =
-        Boolean(prefs.confirmDelete);
-
-      applyTheme(darkMode.checked);
-    }
-
-    darkMode.addEventListener("change", () => {
-      applyTheme(darkMode.checked);
-    });
-
-    document.getElementById("savePreferences")
-      .addEventListener("click", () => {
-        const prefs = {
-          darkMode: darkMode.checked,
-          weekStart: document.getElementById("weekStart").value,
-          confirmDelete:
-            document.getElementById("confirmDelete").checked
-        };
-
-        saveJSON(PREF_KEY, prefs);
-        applyTheme(prefs.darkMode);
-        showNotice("preferencesNotice", "Preferensi berhasil disimpan.");
-      });
-
-    // Notifikasi
-    function loadNotifications() {
-      const settings = readJSON(NOTIF_KEY, defaultNotifications);
-
-      Object.keys(defaultNotifications).forEach(key => {
-        const element = document.getElementById(key);
-        if (!element) return;
-
-        if (element.type === "checkbox") {
-          element.checked = Boolean(settings[key]);
-        } else {
-          element.value = settings[key];
-        }
-      });
-    }
-
-    document.getElementById("saveNotifications")
-      .addEventListener("click", () => {
-        const settings = {};
-
-        Object.keys(defaultNotifications).forEach(key => {
-          const element = document.getElementById(key);
-
-          settings[key] = element.type === "checkbox"
-            ? element.checked
-            : element.value;
-        });
-
-        saveJSON(NOTIF_KEY, settings);
-        showNotice("notificationsNotice",
-          "Pengaturan notifikasi berhasil disimpan.");
-      });
-
-    // Informasi penyimpanan lokal
-    function refreshStorageInfo() {
-      let bytes = 0;
-      let count = 0;
-
-      for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        const value = localStorage.getItem(key);
-
-        bytes += new Blob([key + value]).size;
-        count++;
-      }
-
-      const kb = (bytes / 1024).toFixed(2);
-
-      document.getElementById("storageInfo").textContent =
-        `${count} item penyimpanan • sekitar ${kb} KB`;
-    }
-
-    document.getElementById("refreshStorage")
-      .addEventListener("click", refreshStorageInfo);
-
-    // Ekspor seluruh localStorage menjadi JSON
-    document.getElementById("exportData")
-      .addEventListener("click", () => {
-        const backup = {
-          exportedAt: new Date().toISOString(),
-          application: "CampusFlow",
-          data: {}
-        };
-
-        for (let i = 0; i < localStorage.length; i++) {
-          const key = localStorage.key(i);
-          const rawValue = localStorage.getItem(key);
-
-          try {
-            backup.data[key] = JSON.parse(rawValue);
-          } catch {
-            backup.data[key] = rawValue;
-          }
+            } catch (error) {
+                console.error('Gagal mengambil data sistem:', error);
+            }
         }
 
-        const blob = new Blob(
-          [JSON.stringify(backup, null, 2)],
-          { type: "application/json" }
-        );
-
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement("a");
-
-        link.href = url;
-        link.download = "campusflow-backup.json";
-        link.click();
-
-        URL.revokeObjectURL(url);
-        showNotice("dataNotice", "Cadangan JSON berhasil dibuat.");
-        refreshStorageInfo();
-      });
-
-    // Hapus preferensi saja
-    document.getElementById("clearSettings")
-      .addEventListener("click", () => {
-        const prefs = readJSON(PREF_KEY, defaultPreferences);
-        const notifs = readJSON(NOTIF_KEY, defaultNotifications);
-
-        if (prefs.confirmDelete &&
-            !confirm("Hapus preferensi dan pengaturan notifikasi?")) {
-          return;
+        // 2. Fitur Tes Ping Sederhana
+        async function checkPing() {
+            const resultElem = document.getElementById('ping-result');
+            resultElem.innerText = "Mengukur...";
+            const start = Date.now();
+            try {
+                await fetch('/api/system');
+                const duration = Date.now() - start;
+                resultElem.innerText = `Latency: ${duration} ms (Lokal)`;
+            } catch (e) {
+                resultElem.innerText = "Gagal terhubung ke API";
+            }
         }
 
-        localStorage.removeItem(PREF_KEY);
-        localStorage.removeItem(NOTIF_KEY);
-
-        loadPreferences();
-        loadNotifications();
-        refreshStorageInfo();
-
-        showNotice("dataNotice", "Preferensi berhasil direset.");
-      });
-
-    // Hapus seluruh data lokal
-    document.getElementById("clearAllData")
-      .addEventListener("click", () => {
-        const prefs = readJSON(PREF_KEY, defaultPreferences);
-
-        if (prefs.confirmDelete &&
-            !confirm("Yakin menghapus SEMUA data lokal CampusFlow?")) {
-          return;
+        // 3. Simpan Catatan di LocalStorage Browser
+        function saveNote() {
+            const text = document.getElementById('quick-note').value;
+            localStorage.setItem('flowdash_note', text);
+            triggerToast('Catatan berhasil disimpan!');
         }
 
-        if (!confirm(
-          "Tindakan ini tidak dapat dibatalkan. Lanjutkan penghapusan?"
-        )) {
-          return;
+        function loadNote() {
+            const saved = localStorage.getItem('flowdash_note');
+            if (saved) document.getElementById('quick-note').value = saved;
         }
 
-        localStorage.clear();
+        // Helper Toast Notification
+        function triggerToast(message) {
+            const toast = document.getElementById('toast');
+            toast.innerText = message;
+            toast.classList.remove('opacity-0', 'translate-y-4', 'pointer-events-none');
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-4', 'pointer-events-none');
+            }, 3000);
+        }
 
-        loadProfile();
-        loadPreferences();
-        loadNotifications();
-        refreshStorageInfo();
-
-        showNotice("dataNotice", "Semua data lokal berhasil dihapus.");
-      });
-
-    // Inisialisasi
-    loadProfile();
-    loadPreferences();
-    loadNotifications();
-    refreshStorageInfo();
-  </script>
+        // Jalankan polling data setiap 2 detik sekali
+        setInterval(updateDashboard, 2000);
+        updateDashboard();
+        loadNote();
+    </script>
 </body>
 </html>
